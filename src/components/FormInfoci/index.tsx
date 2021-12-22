@@ -139,7 +139,7 @@ export const FormInfoci = () => {
         variant="contained" 
        
       >
-        Entrar
+        GERAR XML
       </Button>
     </div>
       
