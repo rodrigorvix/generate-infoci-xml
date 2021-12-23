@@ -14,11 +14,13 @@ const  initialValues = {
     estruturaInicialNormaInternaDemContabeis:"",
 }
 
+const regexNumbers = /^[0-9]+$/;
+
 const validationSchema = yup.object({
   estruturaInicialIdNumRegistro: yup
     .string()
     .required('O campo é obrigatório')
-    .matches(/^[0-9]+$/, "Apenas números")
+    .matches(regexNumbers, "Apenas números")
     .max(5, 'Máximo de 5 dígitos'),
 
   estruturaInicialNivelControleInterno: yup
@@ -28,19 +30,19 @@ const validationSchema = yup.object({
   estruturaInicialQuantidadeTotalServidores: yup
     .string()
     .required('O campo é obrigatório')
-    .matches(/^[0-9]+$/, "Apenas números")
+    .matches(regexNumbers, "Apenas números")
     .max(5, 'Máximo de 5 dígitos'),
 
   estruturaInicialQuantidadeServidoresEfetivos: yup
     .string()
     .required('O campo é obrigatório')
-    .matches(/^[0-9]+$/, "Apenas números")
+    .matches(regexNumbers, "Apenas números")
     .max(5, 'Máximo de 5 dígitos'),
 
     estruturaInicialQuantidadeContadores: yup
     .string()
     .required('O campo é obrigatório')
-    .matches(/^[0-9]+$/, "Apenas números")
+    .matches(regexNumbers, "Apenas números")
     .max(5, 'Máximo de 5 dígitos'),
 
     estruturaInicialNormaInternaGestaoOrcamentaria: yup

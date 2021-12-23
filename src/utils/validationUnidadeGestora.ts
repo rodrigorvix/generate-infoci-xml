@@ -10,12 +10,14 @@ const  initialValues = {
   unidadeGestoraOpiniaoPrestacaoContasControleInterno: "",
   
 }
+const regexYear = /^\d{4}$/;
+const regexNumbers = /^[0-9]+$/;
 
 const validationSchema = yup.object({
   unidadeGestoraIdNumRegistro: yup
     .string()
     .required('O campo é obrigatório')
-    .matches(/^[0-9]+$/, "Apenas números")
+    .matches(regexNumbers, "Apenas números")
     .max(5, 'Máximo de 5 dígitos'),
 
     unidadeGestoraNivelControleInterno: yup
@@ -35,9 +37,7 @@ const validationSchema = yup.object({
     unidadeGestoraExercicioUltimaManifestacaoControleInterno: yup
     .string()
     .required('O campo é obrigatório')
-    .matches(/^[0-9]+$/, "Apenas números")
-    .min(4, 'É necessário de 4 dígitos')
-    .max(4, 'É necessário de 4 dígitos'),
+    .matches(regexYear, "Formato AAAA"),
 
     unidadeGestoraOpiniaoPrestacaoContasControleInterno: yup
     .number()

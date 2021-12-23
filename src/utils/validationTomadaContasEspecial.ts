@@ -15,6 +15,10 @@ const  initialValues = {
   tomadaContasEspecialMotivoBaixaDebito:""
 }
 
+const regexDate = /^\d{4}-(0?[1-9]|1[012])-(0?[1-9]|[12][0-9]|3[01])$/;
+const regexYear = /^\d{4}$/;
+const regexDecimal = /^\d{0,14}(,\d{1,2})?$/;
+
 const validationSchema = yup.object({
   tomadaContasEspecialIdNumRegistro: yup
     .string()
@@ -33,10 +37,10 @@ const validationSchema = yup.object({
     .max(16, 'Máximo de 16 dígitos'),
 
     tomadaContasEspecialAnoProcesso: yup
-    .number()
+    .string()
     .required('O campo é obrigatório')
-    .max(4, 'É necessário ter 4 dígitos')
-    .min(4, 'É necessário ter 4 dígitos'),
+    .matches(regexYear, "Formato AAAA"),
+   
 
     tomadaContasEspecialFatoMotivo: yup
     .number()
@@ -45,22 +49,22 @@ const validationSchema = yup.object({
     tomadaContasEspecialDataCiencia: yup
     .string()
     .required('O campo é obrigatório')
-    .matches(/^((0?[1-9]|1[012])[- /.](0?[1-9]|[12][0-9]|3[01])[- /.](19|20)?[0-9]{2})*$/, "Apenas no formato AAAA-MM-DD"),
+    .matches(regexDate, "Apenas no formato AAAA-MM-DD"),
 
     tomadaContasEspecialDataInstauracao: yup
     .string()
     .required('O campo é obrigatório')
-    .matches(/^((0?[1-9]|1[012])[- /.](0?[1-9]|[12][0-9]|3[01])[- /.](19|20)?[0-9]{2})*$/, "Apenas no formato AAAA-MM-DD"),
+    .matches(regexDate, "Apenas no formato AAAA-MM-DD"),
 
     tomadaContasEspecialDataEnvioTribunalContas: yup
     .string()
-    .matches(/^((0?[1-9]|1[012])[- /.](0?[1-9]|[12][0-9]|3[01])[- /.](19|20)?[0-9]{2})*$/, "Apenas no formato AAAA-MM-DD"),
+    .matches(regexDate, "Apenas no formato AAAA-MM-DD"),
 
     tomadaContasEspecialValorDebito: yup
-    .number()
+    .string()
     .required('O campo é obrigatório')
-    .max(14, 'É necessário ter 4 dígitos'),
-    
+    .matches(regexDecimal, 'Apenas números de no máximo 14 dígitos antes da vírgula e 2 dígitos depois da vírgula'),
+  
     tomadaContasEspecialSituacaoEm31do12: yup
     .number()
     .required('O campo é obrigatório'),
