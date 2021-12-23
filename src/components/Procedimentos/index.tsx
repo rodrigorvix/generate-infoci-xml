@@ -1,8 +1,8 @@
-import { TextField, MenuItem } from "@mui/material";
+import { TextField, MenuItem, Button } from "@mui/material";
 
 import { ProcedimentosStyle } from "./style";
 
-export const Procedimentos = ({ formik }: any) => {
+export const Procedimentos = ({ formik, setValue }: any) => {
   return (
     <ProcedimentosStyle id="Procedimentos">
       <legend>Informações de Controle Interno Procedimentos</legend>
@@ -227,8 +227,16 @@ export const Procedimentos = ({ formik }: any) => {
         </MenuItem>
         
       </TextField>  
+      
+      <div data-button="next-previous">
+          <Button variant="contained" onClick={() => setValue(1)}>
+            Anterior
+          </Button>
 
-     
+          <Button variant="contained" onClick={() => setValue(3)}>
+            Próximo
+          </Button>
+      </div>
     </ProcedimentosStyle>
   );
 };

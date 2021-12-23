@@ -1,9 +1,10 @@
 
+import { Button } from "@mui/material";
 import { TextField, MenuItem} from "@mui/material";
 
 import { EstruturaInicialStyle } from "./style";
 
-export const EstruturaInicial = ({formik}:any) => {
+export const EstruturaInicial = ({formik, setValue}:any) => {
   
   return (
     <EstruturaInicialStyle 
@@ -177,6 +178,12 @@ de toda a administração</MenuItem>
 de toda a administração</MenuItem>
           <MenuItem value={4}>4 - Não existem normas internas definidas no âmbito desta temática</MenuItem>
         </TextField>
+        
+        <div data-button="next">
+          <Button variant="contained" onClick={() => setValue(1)}>
+            Próximo
+          </Button>
+        </div>
         
       </EstruturaInicialStyle>
   );

@@ -1,8 +1,8 @@
-import { TextField, MenuItem } from "@mui/material";
+import { TextField, MenuItem, Button } from "@mui/material";
 
 import { UnidadeGestoraStyle } from "./style";
 
-export const UnidadeGestora = ({ formik }: any) => {
+export const UnidadeGestora = ({ formik, setValue }: any) => {
   return (
     <UnidadeGestoraStyle id="UnidadeGestora">
       <legend>Informações de Controle Interno da Unidade Gestora</legend>
@@ -135,6 +135,16 @@ export const UnidadeGestora = ({ formik }: any) => {
         <MenuItem value={3}>3 - Irregular</MenuItem>
         <MenuItem value={4}>4 - Não foi emitida opinião</MenuItem>
       </TextField>
+
+      <div data-button="next-previous">
+          <Button variant="contained" onClick={() => setValue(0)}>
+            Anterior
+          </Button>
+
+          <Button variant="contained" onClick={() => setValue(2)}>
+            Próximo
+          </Button>
+      </div>
     </UnidadeGestoraStyle>
   );
 };

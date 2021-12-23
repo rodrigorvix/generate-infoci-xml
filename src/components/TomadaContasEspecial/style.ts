@@ -17,4 +17,18 @@ export const TomadaContasEspecialraStyle = styled.fieldset`
       font-size: 1rem;
     }  
   }
+
+  div[data-button="previous"] {
+   text-align: start;
+
+    .MuiButton-root {
+      background: var(--blue-500);
+      width: 100px;
+     
+     &:hover {
+       filter:brightness(0.8)
+     }
+    }
+
+  }
 `;

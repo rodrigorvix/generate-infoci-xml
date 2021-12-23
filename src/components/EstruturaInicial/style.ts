@@ -17,4 +17,17 @@ export const EstruturaInicialStyle = styled.fieldset`
       font-size: 1rem;
     }  
   }
+  div[data-button="next"] {
+   text-align: end;
+
+    .MuiButton-root {
+      background: var(--blue-500);
+      width: 100px;
+     
+     &:hover {
+       filter:brightness(0.8)
+     }
+    }
+
+  }
 `;

@@ -17,4 +17,18 @@ export const UnidadeGestoraStyle = styled.fieldset`
       font-size: 1rem;
     }  
   }
+
+  div[data-button="next-previous"] {
+   display: flex;
+   justify-content: space-between;
+  
+   .MuiButton-root {
+      background: var(--blue-500);
+      width: 100px;
+     
+     &:hover {
+       filter:brightness(0.8)
+     }
+    }
+  }
 `;

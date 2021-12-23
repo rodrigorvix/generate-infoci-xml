@@ -17,7 +17,7 @@ const  initialValues = {
 
 const regexDate = /^\d{4}-(0?[1-9]|1[012])-(0?[1-9]|[12][0-9]|3[01])$/;
 const regexYear = /^\d{4}$/;
-const regexDecimal = /^\d{0,14}(,\d{1,2})?$/;
+const regexDecimal = /^\d{0,14}(.\d{1,2})?$/;
 
 const validationSchema = yup.object({
   tomadaContasEspecialIdNumRegistro: yup

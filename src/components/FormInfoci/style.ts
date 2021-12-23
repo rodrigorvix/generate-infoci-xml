@@ -2,7 +2,7 @@ import styled from "styled-components"
 
 export const FormInfociStyle = styled.form`
   
-  div[data-button="button"] {
+  div[data-button="submit"] {
     display:flex;
     justify-content: center;
     align-items: center;

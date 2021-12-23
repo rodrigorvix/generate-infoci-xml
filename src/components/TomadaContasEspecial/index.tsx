@@ -1,8 +1,8 @@
-import { TextField, MenuItem } from "@mui/material";
+import { TextField, MenuItem, Button } from "@mui/material";
 
 import { TomadaContasEspecialraStyle } from "./style";
 
-export const TomadaContasEspecial = ({ formik }: any) => {
+export const TomadaContasEspecial = ({ formik, setValue }: any) => {
   return (
     <TomadaContasEspecialraStyle id="UnidadeGestora">
       <legend>Informações de Controle Interno da Tomada de Contas Especial</legend>
@@ -266,6 +266,12 @@ export const TomadaContasEspecial = ({ formik }: any) => {
           5 - Quitação ao responsável pelo recolhimento do débito.
         </MenuItem>
       </TextField>
+
+      <div data-button="previous">
+          <Button variant="contained" onClick={() => setValue(2)}>
+            Anterior
+          </Button>
+        </div>
     </TomadaContasEspecialraStyle>
   );
 };
