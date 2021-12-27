@@ -5,7 +5,7 @@ import { UnidadeGestoraStyle } from "./style";
 export const UnidadeGestora = ({ formik, setValue }: any) => {
   return (
     <UnidadeGestoraStyle id="UnidadeGestora">
-      <legend>Informações de Controle Interno da Unidade Gestora</legend>
+      <legend>Informações de Controle Interno - Unidade Gestora</legend>
 
       <TextField
         variant="outlined"

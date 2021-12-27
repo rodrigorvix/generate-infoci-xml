@@ -9,7 +9,7 @@ export const EstruturaInicial = ({formik, setValue}:any) => {
   return (
     <EstruturaInicialStyle 
       id="EstruturaInicial">
-        <legend>Informações de Controle Interno Estrutura Inicial</legend>
+        <legend>Informações de Controle Interno - Estrutura Inicial</legend>
 
         <TextField
         variant="outlined"

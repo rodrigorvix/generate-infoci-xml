@@ -18,10 +18,12 @@ export const HeaderStyle = styled.header`
       font-size: 2rem;
     }  
   }
-  
   h2 {
+    font-weight: bold;
+  }
+ 
+  h2, p {
     font-size: 1rem;
-    font-weight: normal;
     color:black;
 
     span{

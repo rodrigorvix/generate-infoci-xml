@@ -5,7 +5,7 @@ import { TomadaContasEspecialraStyle } from "./style";
 export const TomadaContasEspecial = ({ formik, setValue }: any) => {
   return (
     <TomadaContasEspecialraStyle id="UnidadeGestora">
-      <legend>Informações de Controle Interno da Tomada de Contas Especial</legend>
+      <legend>Informações de Controle Interno - Tomada de Contas Especial</legend>
 
       <TextField
         variant="outlined"

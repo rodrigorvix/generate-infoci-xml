@@ -5,7 +5,7 @@ import { ProcedimentosStyle } from "./style";
 export const Procedimentos = ({ formik, setValue }: any) => {
   return (
     <ProcedimentosStyle id="Procedimentos">
-      <legend>Informações de Controle Interno Procedimentos</legend>
+      <legend>Informações de Controle Interno - Procedimentos</legend>
 
       <TextField
         variant="outlined"
