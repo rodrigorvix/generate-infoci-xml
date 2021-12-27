@@ -14,6 +14,7 @@ import validationUnidadeGestora from "../../utils/validationUnidadeGestora";
 import validationProcedimentos from "../../utils/validationProcedimentos";
 import validationTomadaContasEspecial from "../../utils/validationTomadaContasEspecial";
 import { createSchemaINFOCIXML } from "../../utils/functions/createSchemaINFOCIXML";
+import { download } from "../../utils/functions/downloadXML";
 
 import { FormInfociStyle } from "./style";
 import { Procedimentos } from "../Procedimentos";
@@ -72,7 +73,7 @@ export const FormInfoci = () => {
 
     validationSchema: validationSchema,
     onSubmit: (values, { resetForm }) => {
-      console.log(values);
+     
       const xml = createSchemaINFOCIXML(values);
       const filename = "INFOCI.XML";
       download(filename, xml);
@@ -82,37 +83,10 @@ export const FormInfoci = () => {
 
   React.useEffect(() => {
     if (!formik.isValid && formik.submitCount > 0) {
-      console.log("Deu ruim");
+      alert(`Um ou mais campos dos formulários não foram preenchidos corretamente.`)
       console.log(formik.errors);
     }
   }, [formik.handleSubmit, formik.isValid, formik.submitCount, formik.errors]);
-
-  function download(filename: string, textInput: any) {
-    let element = document.createElement("a");
-    element.setAttribute(
-      "href",
-      'data:application/xml,<?xml version="1.0" encoding="UTF-8"?>' + encodeURIComponent(textInput)
-    );
-    element.setAttribute("download", filename);
-    document.body.appendChild(element);
-    element.click();
-    document.body.removeChild(element);
-    
-    // let element = document.createElement("a");
-    // element.setAttribute(
-    //   "href",
-    //   "data:text/plain;charset=utf-8, " + encodeURIComponent(textInput)
-    // );
-    // element.setAttribute("download", filename);
-    // document.body.appendChild(element);
-    // element.click();
-    // document.body.removeChild(element);
-  }
-  // function testeDownload() {
-  //   const text = "Rodrigo está testando o download de um arquivo ";
-  //   const filename = "output.txt";
-  //   download(filename, text);
-  // }
 
   return (
     <FormInfociStyle noValidate onSubmit={formik.handleSubmit}>
