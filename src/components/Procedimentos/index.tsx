@@ -29,18 +29,18 @@ export const Procedimentos = ({ formik, setValue }: any) => {
         fullWidth
         select
         inputProps={{ MenuProps: { disableScrollLock: true } }}
-        id="procedimentosInicialNivelControleInterno"
-        name="procedimentosInicialNivelControleInterno"
-        value={formik.values.procedimentosInicialNivelControleInterno}
+        id="procedimentosNivelControleInterno"
+        name="procedimentosNivelControleInterno"
+        value={formik.values.procedimentosNivelControleInterno}
         label="Nível de Controle Interno"
         onChange={formik.handleChange}
         error={
-          formik.touched.procedimentosInicialNivelControleInterno &&
-          Boolean(formik.errors.procedimentosInicialNivelControleInterno)
+          formik.touched.procedimentosNivelControleInterno &&
+          Boolean(formik.errors.procedimentosNivelControleInterno)
         }
         helperText={
-          formik.touched.procedimentosInicialNivelControleInterno &&
-          formik.errors.procedimentosInicialNivelControleInterno
+          formik.touched.procedimentosNivelControleInterno &&
+          formik.errors.procedimentosNivelControleInterno
         }
       >
         <MenuItem value={1}>1 – Unidade Central </MenuItem>

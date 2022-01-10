@@ -3,7 +3,7 @@ import * as yup from "yup";
 const  initialValues = {
  
   procedimentosIdNumRegistro: "",
-  procedimentosInicialNivelControleInterno:"",
+  procedimentosNivelControleInterno:"",
   procedimentosCodigoUnidadeGestora: "",
   procedimentosCodigoProcedimento: "",
   procedimentosTipoPontoControle:"",
@@ -21,7 +21,7 @@ const validationSchema = yup.object({
     .matches(/^[0-9]+$/, "Apenas números")
     .max(5, 'Máximo de 5 dígitos'),
 
-    procedimentosInicialNivelControleInterno: yup
+    procedimentosNivelControleInterno: yup
     .number()
     .required('O campo é obrigatório'),
 
