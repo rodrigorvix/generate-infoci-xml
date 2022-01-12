@@ -13,7 +13,6 @@ export const FormInfociStyle = styled.form`
         font-weight: bold;
       }
     }
-
   }
 
   div[data-button="submit"] {
