@@ -90,6 +90,12 @@ export const FormInfoci = () => {
 
   return (
     <FormInfociStyle noValidate onSubmit={formik.handleSubmit}>
+
+      <div data-form="description">
+        <p>Preencha todos os campos do formulário abaixo e clique no botão <span>Próximo</span>.</p>
+        <p>Após finalizar o preenchimento de todos os formulários clique no botão <span>Gerar XML</span> para realizar o download do arquivo <span>INFOCI.XML</span>.</p>
+       
+      </div>
       <Box sx={{ width: "100%" }}>
         <Box sx={{ borderBottom: 1 }} style={{ background: "var(--blue-300)" }}>
           <Tabs

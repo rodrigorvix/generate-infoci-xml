@@ -8,11 +8,11 @@ function App() {
   return (
   <>
     <GlobalStyled/>
-    <ContainerStyle>
       <Header/>
+    <ContainerStyle>
       <FormInfoci/>
-      <Footer/>
     </ContainerStyle>
+      <Footer/>
     
   </>
   );
