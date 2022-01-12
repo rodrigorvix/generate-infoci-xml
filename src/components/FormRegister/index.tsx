@@ -1,3 +1,5 @@
+import { createBrowserHistory} from 'history';
+
 import { useState } from "react";
 import axios, { AxiosError } from "axios";
 import {
@@ -15,16 +17,27 @@ import { Visibility, VisibilityOff } from "@mui/icons-material";
 import { useFormik } from "formik";
 import * as yup from "yup";
 import { FormRegisterStyle } from "./style";
+import { FormSignIn } from '../FormSignIn';
 
 export const FormRegister = () => {
+
+  const history = createBrowserHistory();
 
   const [showPassword, setShowPassword] = useState(false);
 
   const validationSchema = yup.object({
+    name: yup
+    .string()
+    .required("Nome do orgão é obrigatório."),
+
     email: yup
       .string()
       .email("Digite um e-mail válido.")
       .required("E-mail é obrigatório."),
+
+      secretary_name: yup
+      .string()
+      .required("Nome do orgão é obrigatório."),
 
     password: yup
       .string()
@@ -41,22 +54,25 @@ export const FormRegister = () => {
 
   const formik = useFormik({
     initialValues: {
+      name:"",
+      secretary_name:"",
       email: "",
       password: "",
       passwordConfirmation: "",
     },
     validationSchema: validationSchema,
 
-    onSubmit: (values) => {
-      const valuesSubmit = { email: values.email, password: values.password };
+    onSubmit: (values:any) => {
+      const valuesSubmit = { name:values.name, secretary_name:values.secretary_name, email: values.email, password: values.password };
 
      
       axios
-      .post("http://localhost:8080/v1/api/user", valuesSubmit)
-      .then((response) => {
+      .post("http://localhost:3333/users", valuesSubmit)
+      .then((response:any) => {
         const { data } = response;
+        
         if (data) {
-          // history.push("/");
+        history.push("/",<FormSignIn/>);
         }
       })
       .catch((reason: AxiosError) => { 
@@ -73,6 +89,19 @@ export const FormRegister = () => {
       <TextField
         variant="outlined"
         fullWidth
+        id="name"
+        label="Nome"
+        name="name"
+        autoComplete="name"
+        autoFocus
+        onChange={formik.handleChange}
+        error={formik.touched.name && Boolean(formik.errors.name)}
+        helperText={formik.touched.name && formik.errors.name}
+      />
+
+      <TextField
+        variant="outlined"
+        fullWidth
         id="email"
         label="Email"
         name="email"
@@ -81,6 +110,19 @@ export const FormRegister = () => {
         onChange={formik.handleChange}
         error={formik.touched.email && Boolean(formik.errors.email)}
         helperText={formik.touched.email && formik.errors.email}
+      />
+
+      <TextField
+        variant="outlined"
+        fullWidth
+        id="secretary_name"
+        label="Nome do órgão"
+        name="secretary_name"
+        autoComplete="secretary_name"
+        autoFocus
+        onChange={formik.handleChange}
+        error={formik.touched.secretary_name && Boolean(formik.errors.secretary_name)}
+        helperText={formik.touched.secretary_name && formik.errors.secretary_name}
       />
 
       <TextField

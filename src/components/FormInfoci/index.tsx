@@ -1,3 +1,6 @@
+import { createBrowserHistory} from 'history';
+
+import axios, { AxiosError } from "axios";
 import * as React from "react";
 import Tabs from "@mui/material/Tabs";
 import Tab from "@mui/material/Tab";
@@ -50,6 +53,8 @@ function a11yProps(index: number) {
 }
 
 export const FormInfoci = () => {
+  const history = createBrowserHistory();
+
   const [value, setValue] = React.useState(0);
 
   const handleChange = (event: React.SyntheticEvent, newValue: number) => {
@@ -88,13 +93,36 @@ export const FormInfoci = () => {
     }
   }, [formik.handleSubmit, formik.isValid, formik.submitCount, formik.errors]);
 
+  function saveForm() {
+    const valuesSave = formik.values;
+
+    console.log(valuesSave);
+    
+     axios
+     .post(`http:localhost:3333/form`, valuesSave)
+     .then((response:any) => {
+       const { data } = response;
+      
+       if (data) {
+       history.push("/form");
+       }
+     })
+     .catch((reason: AxiosError) => { 
+        alert('Esse endereço de e-mail já foi cadastrado!')
+      
+     })
+  }
+
   return (
     <FormInfociStyle noValidate onSubmit={formik.handleSubmit}>
 
       <div data-form="description">
         <p>Preencha todos os campos do formulário abaixo e clique no botão <span>Próximo</span>.</p>
         <p>Após finalizar o preenchimento de todos os formulários clique no botão <span>Gerar XML</span> para realizar o download do arquivo <span>INFOCI.XML</span>.</p>
-       
+
+       <div>
+       <button type="button" onClick={saveForm}>Salvar</button>
+       </div>
       </div>
       <Box sx={{ width: "100%" }}>
         <Box sx={{ borderBottom: 1 }} style={{ background: "var(--blue-300)" }}>

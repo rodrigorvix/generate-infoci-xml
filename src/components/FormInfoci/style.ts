@@ -13,6 +13,17 @@ export const FormInfociStyle = styled.form`
         font-weight: bold;
       }
     }
+    div {
+      display:flex;
+      justify-content: end;
+      button {
+        background: var(--blue-500);
+        padding: 0.5rem 1rem;
+        color: white;
+        border-radius:8px;
+        cursor: pointer;
+      }
+    }
   }
 
   div[data-button="submit"] {

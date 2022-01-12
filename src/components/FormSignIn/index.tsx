@@ -1,3 +1,5 @@
+import { createBrowserHistory} from 'history';
+
 import { useState } from "react";
 import axios, { AxiosError } from "axios";
 import {
@@ -15,9 +17,11 @@ import { Visibility, VisibilityOff } from "@mui/icons-material";
 import { useFormik } from "formik";
 import * as yup from "yup";
 import { FormSignInStyle } from "./style";
+import { FormInfoci } from '../FormInfoci';
 
 
 export const FormSignIn = () => {
+  const history = createBrowserHistory();
  
   const [showPassword, setShowPassword] = useState(false);
 
@@ -39,14 +43,30 @@ export const FormSignIn = () => {
       password: "",
     },
     validationSchema: validationSchema,
-    onSubmit: (values) => {
+    onSubmit: (values:any) => {
   
-      axios.post('http://localhost:8080/v1/api/auth', values)
-        .then(response => {
+      axios.post('http://localhost:3333/sessions', values)
+        .then((response:any) => {
           const { data } = response
+         
+          
           if (data) {
-            localStorage.setItem('app-token', data)
-            // history.push('/user')
+            localStorage.setItem('app-token', data.token)
+
+            // axios.post('http://localhost:3333/forms', {form:{}})
+
+            // .then((response:any) => {
+            //   const { data } = response
+             
+              
+            //   if (data) {
+            //     localStorage.setItem('app-token', data.token)
+                
+            //     history.push('/form',<FormInfoci/>)
+            //   }
+            // })
+
+            history.push('/form',<FormInfoci/>)
           }
         })
         .catch((reason: AxiosError) => { 
