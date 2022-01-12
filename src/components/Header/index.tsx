@@ -22,11 +22,6 @@ export const Header = () => {
          <div data-nav="items">
 
            <div data-nav="websites">
-            
-            <a href="https://secont.es.gov.br/" title="Site da SECONT" target="_blank">Site da SECONT</a>
-           </div>
-
-           <div data-nav="websites">
             <FontAwesomeIcon icon={faHeadset} />
             <a  href="https://ouvidoria.es.gov.br/" title="Site da Ouvidoria ES" target="_blank">Fale conosco</a>
            </div>
@@ -34,7 +29,7 @@ export const Header = () => {
            
          </div>
         </nav>
-        <h1>Prestação de Contas</h1>
+        <h1>Prestação de Contas - INFOCI</h1>
         <h2>Conforme Portaria Normativa 88/2021 do Tribunal de Contas do Estado do Espírito Santo.</h2>
         
        

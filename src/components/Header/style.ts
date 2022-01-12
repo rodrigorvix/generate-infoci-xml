@@ -2,14 +2,19 @@ import styled from "styled-components";
 
 export const HeaderStyle = styled.header`
   
-  
   color: var(--blue-500);
-
+  
   nav {
-    height: 2.5rem;
-    background-color: var(--blue-300);
-    
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 1000;
     width: 100vw;
+    height: 2.5rem;
+    
+    background-color: var(--blue-300);
+    box-shadow: 4px 4px 4px rgba(0,0,0,0.2);
+    
     padding: 0 4rem;
     font-size: 1rem;
 
@@ -40,6 +45,7 @@ export const HeaderStyle = styled.header`
   }
 
     h1 {
+    margin-top : 2.5rem;
     font-size: 2.25rem;
     text-transform: uppercase;
     font-weight: bold;

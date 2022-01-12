@@ -2,8 +2,8 @@ import styled from "styled-components"
 
 export const FormInfociStyle = styled.form`
   
-  margin-top: 1.25rem;
-
+  margin: 1rem 0;
+ 
   div[data-form="description"] {
     margin-bottom: 1rem;
     p {
