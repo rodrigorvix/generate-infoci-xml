@@ -2,16 +2,16 @@ import * as yup from "yup";
 
 const  initialValues = {
  
-    estruturaInicialIdNumRegistro: "",
-    estruturaInicialNivelControleInterno:"",
-    estruturaInicialQuantidadeTotalServidores: "",
-    estruturaInicialQuantidadeServidoresEfetivos: "",
-    estruturaInicialQuantidadeContadores:"",
-    estruturaInicialNormaInternaGestaoOrcamentaria: "",
-    estruturaInicialNormaInternaGestaoFinanceira:"",
-    estruturaInicialNormaInternaGestaoPatrimonial:"",
-    estruturaInicialNormaInternaGestaoFiscal:"",
-    estruturaInicialNormaInternaDemContabeis:"",
+    // estruturaInicialIdNumRegistro: "",
+    // estruturaInicialNivelControleInterno:"",
+    // estruturaInicialQuantidadeTotalServidores: "",
+    // estruturaInicialQuantidadeServidoresEfetivos: "",
+    // estruturaInicialQuantidadeContadores:"",
+    // estruturaInicialNormaInternaGestaoOrcamentaria: "",
+    // estruturaInicialNormaInternaGestaoFinanceira:"",
+    // estruturaInicialNormaInternaGestaoPatrimonial:"",
+    // estruturaInicialNormaInternaGestaoFiscal:"",
+    // estruturaInicialNormaInternaDemContabeis:"",
 }
 
 const regexNumbers = /^[0-9]+$/;

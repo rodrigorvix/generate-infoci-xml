@@ -1,4 +1,5 @@
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
+import { createBrowserHistory} from 'history';
 
 import { NewRegister } from '../pages/NewRegister';
 import { SignIn } from "../pages/SignIn";
@@ -8,11 +9,14 @@ import {PrivateRoute} from '../components/PrivateRoute'
 
 
 export const RoutesForm = () => {
+
+
+
   return (
     
     <>
-      <BrowserRouter>
-        <Routes>
+      <BrowserRouter >
+        <Routes >
           <Route path="/" element={<SignIn />} />
           <Route path="/register" element={<NewRegister />} />
           {/* <Route path="/user" element={<FormUser />} /> */}

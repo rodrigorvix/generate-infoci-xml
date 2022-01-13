@@ -2,17 +2,17 @@ import * as yup from "yup";
 
 const  initialValues = {
  
-  tomadaContasEspecialIdNumRegistro: "",
-  tomadaContasEspecialCodigoUnidadeGestora:"",
-  tomadaContasEspecialProcesso: "",
-  tomadaContasEspecialAnoProcesso: "",
-  tomadaContasEspecialFatoMotivo:"",
-  tomadaContasEspecialDataCiencia: "",
-  tomadaContasEspecialDataInstauracao:"",
-  tomadaContasEspecialDataEnvioTribunalContas:"",
-  tomadaContasEspecialValorDebito:"",
-  tomadaContasEspecialSituacaoEm31do12:"",
-  tomadaContasEspecialMotivoBaixaDebito:""
+  // tomadaContasEspecialIdNumRegistro: "",
+  // tomadaContasEspecialCodigoUnidadeGestora:"",
+  // tomadaContasEspecialProcesso: "",
+  // tomadaContasEspecialAnoProcesso: "",
+  // tomadaContasEspecialFatoMotivo:"",
+  // tomadaContasEspecialDataCiencia: "",
+  // tomadaContasEspecialDataInstauracao:"",
+  // tomadaContasEspecialDataEnvioTribunalContas:"",
+  // tomadaContasEspecialValorDebito:"",
+  // tomadaContasEspecialSituacaoEm31do12:"",
+  // tomadaContasEspecialMotivoBaixaDebito:""
 }
 
 const regexDate = /^\d{4}-(0?[1-9]|1[012])-(0?[1-9]|[12][0-9]|3[01])$/;

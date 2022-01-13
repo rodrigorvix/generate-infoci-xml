@@ -1,5 +1,6 @@
 import { createBrowserHistory} from 'history';
 
+
 import { useState } from "react";
 import axios, { AxiosError } from "axios";
 import {
@@ -18,10 +19,13 @@ import { useFormik } from "formik";
 import * as yup from "yup";
 import { FormSignInStyle } from "./style";
 import { FormInfoci } from '../FormInfoci';
+import { useNavigate } from 'react-router-dom';
 
 
 export const FormSignIn = () => {
   const history = createBrowserHistory();
+
+  const navigate = useNavigate();
  
   const [showPassword, setShowPassword] = useState(false);
 
@@ -47,26 +51,25 @@ export const FormSignIn = () => {
   
       axios.post('http://localhost:3333/sessions', values)
         .then((response:any) => {
+
           const { data } = response
-         
-          
+
           if (data) {
             localStorage.setItem('app-token', data.token)
-
-            // axios.post('http://localhost:3333/forms', {form:{}})
-
-            // .then((response:any) => {
-            //   const { data } = response
-             
+           
+            axios.post('http://localhost:3333/forms',{},{
+              headers: {"Authorization":`Bearer ${data.token}`}
+            }).then((response:any)=> {
               
-            //   if (data) {
-            //     localStorage.setItem('app-token', data.token)
-                
-            //     history.push('/form',<FormInfoci/>)
-            //   }
-            // })
+              axios.get('http://localhost:3333/forms', {
+                headers: {"Authorization": `Bearer ${data.token}`}
+              }).then((response:any) => {
 
-            history.push('/form',<FormInfoci/>)
+                const { data } = response;
+ 
+               navigate('/form',{ state: data })
+              });
+            })
           }
         })
         .catch((reason: AxiosError) => { 

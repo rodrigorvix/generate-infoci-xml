@@ -2,12 +2,12 @@ import * as yup from "yup";
 
 const  initialValues = {
  
-  unidadeGestoraIdNumRegistro: "",
-  unidadeGestoraNivelControleInterno:"",
-  unidadeGestoraCodigoUnidadeGestora: "",
-  unidadeGestoraResponsavelUnidadeGestora: "",
-  unidadeGestoraExercicioUltimaManifestacaoControleInterno:"",
-  unidadeGestoraOpiniaoPrestacaoContasControleInterno: "",
+  // unidadeGestoraIdNumRegistro: "",
+  // unidadeGestoraNivelControleInterno:"",
+  // unidadeGestoraCodigoUnidadeGestora: "",
+  // unidadeGestoraResponsavelUnidadeGestora: "",
+  // unidadeGestoraExercicioUltimaManifestacaoControleInterno:"",
+  // unidadeGestoraOpiniaoPrestacaoContasControleInterno: "",
   
 }
 const regexYear = /^\d{4}$/;

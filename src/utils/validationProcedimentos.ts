@@ -2,16 +2,16 @@ import * as yup from "yup";
 
 const  initialValues = {
  
-  procedimentosIdNumRegistro: "",
-  procedimentosNivelControleInterno:"",
-  procedimentosCodigoUnidadeGestora: "",
-  procedimentosCodigoProcedimento: "",
-  procedimentosTipoPontoControle:"",
-  procedimentosUniversoAnalisado: "",
-  procedimentosAmostraSelecionada:"",
-  procedimentosDescricaoAnalise:"",
-  procedimentosTipoProcedimentoAnalisado:"",
-  procedimentosSituacaoAnalise:"",
+  // procedimentosIdNumRegistro: "",
+  // procedimentosNivelControleInterno:"",
+  // procedimentosCodigoUnidadeGestora: "",
+  // procedimentosCodigoProcedimento: "",
+  // procedimentosTipoPontoControle:"",
+  // procedimentosUniversoAnalisado: "",
+  // procedimentosAmostraSelecionada:"",
+  // procedimentosDescricaoAnalise:"",
+  // procedimentosTipoProcedimentoAnalisado:"",
+  // procedimentosSituacaoAnalise:"",
 }
 
 const validationSchema = yup.object({
