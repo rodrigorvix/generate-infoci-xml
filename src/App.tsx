@@ -1,15 +1,13 @@
 import { Footer } from './components/Footer';
-import { FormInfoci } from './components/FormInfoci';
-import { FormRegister } from './components/FormRegister';
-import { FormSignIn } from './components/FormSignIn';
 import { Header } from './components/Header';
-import { RoutesForm } from './Routes';
+import { GlobalStorage } from './context/GlobalStorage';
+import { RoutesForm } from './routes';
 import { ContainerStyle } from './styles/container';
 import { GlobalStyled } from './styles/global';
 
 function App() {
   return (
-  <>
+  <GlobalStorage>
     <GlobalStyled/>
       <Header/>
     <ContainerStyle>
@@ -23,7 +21,7 @@ function App() {
     </ContainerStyle>
       <Footer/>
     
-  </>
+  </GlobalStorage>
   );
 }
 

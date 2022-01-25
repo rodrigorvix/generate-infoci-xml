@@ -1,30 +1,25 @@
-import { createBrowserHistory} from 'history';
+import { useFormik } from "formik";
+import * as yup from "yup";
+import { useNavigate } from 'react-router-dom';
 
-
-import { useState } from "react";
-import axios, { AxiosError } from "axios";
+import { useContext, useState } from "react";
 import {
   TextField,
   Button,
-  Typography,
-  Link,
   InputAdornment,
   IconButton,
 } from "@mui/material";
-// import { history } from "../../history";
-
 import { Visibility, VisibilityOff } from "@mui/icons-material";
 
-import { useFormik } from "formik";
-import * as yup from "yup";
-import { FormSignInStyle } from "./style";
-import { FormInfoci } from '../FormInfoci';
-import { useNavigate } from 'react-router-dom';
+import baseAPI from '../../utils/baseAPI';
 
+import { FormSignInStyle } from "./style";
+import axios from "axios";
+import { GlobalContext } from "../../context/GlobalStorage";
 
 export const FormSignIn = () => {
-  const history = createBrowserHistory();
 
+  const context = useContext(GlobalContext);
   const navigate = useNavigate();
  
   const [showPassword, setShowPassword] = useState(false);
@@ -48,34 +43,33 @@ export const FormSignIn = () => {
     },
     validationSchema: validationSchema,
     onSubmit: (values:any) => {
-  
-      axios.post('http://localhost:3333/sessions', values)
-        .then((response:any) => {
+     
+      const { email, password} = values;
 
-          const { data } = response
+      const valuesLogin = {
+        email,
+        senha: password,
+      };
 
-          if (data) {
-            localStorage.setItem('app-token', data.token)
-           
-            axios.post('http://localhost:3333/forms',{},{
-              headers: {"Authorization":`Bearer ${data.token}`}
-            }).then((response:any)=> {
-              
-              axios.get('http://localhost:3333/forms', {
-                headers: {"Authorization": `Bearer ${data.token}`}
-              }).then((response:any) => {
+      axios.post(`${baseAPI.URL}/sessions`, valuesLogin)
+        .then((response: any) => {
+          
+          const { data } = response;
+        
+          localStorage.setItem('app-token', data.token)
+          context.setUserAuth({
+            id: data.usuario.id,
+            name: data.usuario.nome,
+            token: data.token,
 
-                const { data } = response;
- 
-               navigate('/form',{ state: data })
-              });
-            })
-          }
+          });
+          
+          navigate('/select_ug');
+
         })
-        .catch((reason: AxiosError) => { 
-          alert('E-mail ou senha incorretos!')
-         
-       })
+        .catch(() => {
+          alert("Endereço de e-mail ou senha incorretos.")
+        })
     },
   });
 
@@ -120,13 +114,6 @@ export const FormSignIn = () => {
         }}
       />
 
-      <Typography component="p">
-        Não possui conta ainda?
-        <Link href="/register">
-          {" "}
-          Registre-se aqui
-        </Link>
-      </Typography>
       <div>
         <Button
           type="submit"

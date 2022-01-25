@@ -2,7 +2,7 @@ import styled from "styled-components";
 
 export const FormSignInStyle = styled.form`
 
-  height: calc(100vh - 102px - 2.5rem);
+  height: 70vh;
   width: 100%;
   display: flex;
   justify-content: center;
@@ -29,14 +29,10 @@ export const FormSignInStyle = styled.form`
         }
       }
     }
-    .MuiOutlinedInput-root {
-     input {
-       font-size: 1rem;
-     }
-    }
 
     button[type="submit"] {
       background-color: var(--blue-300);
+      padding: 0.75rem;
     }
   }
 
