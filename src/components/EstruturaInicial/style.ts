@@ -1,9 +1,8 @@
 import styled from "styled-components";
 
-export const EstruturaInicialStyle = styled.fieldset`
+export const EstruturaInicialStyle = styled.form`
 
   padding: 1rem;
-  border: none;
   display: flex;
   flex-direction: column;
   gap: 1rem;
@@ -17,7 +16,8 @@ export const EstruturaInicialStyle = styled.fieldset`
       font-size: 1rem;
     }  
   }
-  div[data-button="next"] {
+  
+  div[data-button="right"] {
    text-align: end;
 
     .MuiButton-root {

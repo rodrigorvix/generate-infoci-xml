@@ -1,6 +1,6 @@
 import styled from "styled-components"
 
-export const FormInfociStyle = styled.form`
+export const FormInfociStyle = styled.main`
   
   margin: 1rem 0;
  

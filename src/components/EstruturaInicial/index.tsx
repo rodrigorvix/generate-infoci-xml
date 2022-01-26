@@ -5,8 +5,13 @@ import { TextField, MenuItem} from "@mui/material";
 
 import { EstruturaInicialStyle } from "./style";
 import validationEstruturaInicial from '../../utils/validationEstruturaInicial';
+import { useContext } from 'react';
+import { GlobalContext } from '../../context/GlobalStorage';
 
-export const EstruturaInicial = ({setValue}:any) => {
+
+export const EstruturaInicial = (props: any) => {
+
+  const context = useContext(GlobalContext);
   
   const initialValues = {
     estruturaInicialIdNumRegistro: '',
@@ -30,14 +35,26 @@ export const EstruturaInicial = ({setValue}:any) => {
     validationSchema: validationSchema,
     onSubmit: (values, { resetForm }) => {
      console.log("Estrutura inicial válida.")
+    context.setValueTab(1);
     },
-  })
+  });
+
+  function saveEstruturaInicial() {
+    console.log("Salvando...")
+  }
+
 
   return (
-    <EstruturaInicialStyle 
-      id="EstruturaInicial">
-        <legend>Informações de Controle Interno - Estrutura Inicial</legend>
+    <EstruturaInicialStyle onSubmit={formik.handleSubmit}>
+     
+        <div data-button="right">
+        <Button variant="contained" onClick={saveEstruturaInicial}>
+            Salvar
+          </Button>
+        </div>
 
+        <legend>Informações de Controle Interno - Estrutura Inicial</legend>
+       
         <TextField
         variant="outlined"
         fullWidth
@@ -206,12 +223,13 @@ de toda a administração</MenuItem>
           <MenuItem value={4}>4 - Não existem normas internas definidas no âmbito desta temática</MenuItem>
         </TextField>
         
-        <div data-button="next">
-          <Button variant="contained" onClick={() => setValue(1)}>
+        <div data-button="right">
+          <Button variant="contained" type='submit'>
             Próximo
           </Button>
         </div>
-        
+
+     
       </EstruturaInicialStyle>
   );
 }

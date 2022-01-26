@@ -25,6 +25,7 @@ import { TomadaContasEspecial } from '../TomadaContasEspecial'
 import { useLocation, useNavigate } from 'react-router-dom'
 import { Type } from 'typescript'
 import { ListaUnidadeGestora } from '../ListaUnidadeGestora'
+import { GlobalContext } from '../../context/GlobalStorage'
 
 interface PropsState {
   // createdAt: string
@@ -76,6 +77,11 @@ interface TabPanelProps {
   value: number
 }
 
+interface RefProps {
+  passandoParaOPai: () => void,
+}
+
+
 function TabPanel(props: TabPanelProps) {
   const { children, value, index, ...other } = props
 
@@ -100,13 +106,16 @@ function a11yProps(index: number) {
 }
 
 export const FormInfoci = (props: any) => {
-  // const location = useLocation();
-  // const state = location.state as PropsState;
+  
+  const [value, setValue] = React.useState(0);
 
-  const [value, setValue] = React.useState(0)
+  const context = React.useContext(GlobalContext);
 
+  // const handleChange = (event: React.SyntheticEvent, newValue: number) => {
+  //   setValue(newValue)
+  // }
   const handleChange = (event: React.SyntheticEvent, newValue: number) => {
-    setValue(newValue)
+    context.setValueTab(newValue)
   }
 
   const initialValues = {
@@ -178,15 +187,9 @@ export const FormInfoci = (props: any) => {
     }
   }, [formik.handleSubmit, formik.isValid, formik.submitCount, formik.errors])
 
-  // function saveForm() {
-  //   const form = {
-  //     ...formik.values,
-  //   }
-  //   console.log(form)
-  // }
 
   return (
-    <FormInfociStyle noValidate onSubmit={formik.handleSubmit}>
+    <FormInfociStyle >
       <div data-form="description">
         {/* <p>
           Preencha todos os campos do formulário abaixo e clique no botão{' '}
@@ -201,7 +204,8 @@ export const FormInfoci = (props: any) => {
       <Box sx={{ width: '100%' }}>
         <Box sx={{ borderBottom: 1 }} style={{ background: 'var(--blue-300)' }}>
           <Tabs
-            value={value}
+            // value={value}
+            value={context.valueTab}
             onChange={handleChange}
             aria-label="basic tabs example"
             centered
@@ -216,6 +220,7 @@ export const FormInfoci = (props: any) => {
             <Tab
               style={{ color: 'white', fontWeight: 'bold' }}
               label="Unidade Gestora"
+              disabled
               {...a11yProps(1)}
             />
             <Tab
@@ -230,17 +235,17 @@ export const FormInfoci = (props: any) => {
             />
           </Tabs>
         </Box>
-        <TabPanel value={value} index={0}>
-          <EstruturaInicial setValue={setValue} />
+        <TabPanel value={context.valueTab} index={0}>
+          <EstruturaInicial/>
         </TabPanel>
-        <TabPanel value={value} index={1}>
+        <TabPanel value={context.valueTab} index={1} >
           {/* <UnidadeGestora formik={formik} setValue={setValue} /> */}
           <ListaUnidadeGestora formik={formik} setValue={setValue}/>
         </TabPanel>
-        <TabPanel value={value} index={2}>
+        <TabPanel value={context.valueTab} index={2}>
           <Procedimentos formik={formik} setValue={setValue} />
         </TabPanel>
-        <TabPanel value={value} index={3}>
+        <TabPanel value={context.valueTab} index={3}>
           <TomadaContasEspecial formik={formik} setValue={setValue} />
         </TabPanel>
       </Box>
