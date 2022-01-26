@@ -24,20 +24,21 @@ import { Procedimentos } from '../Procedimentos'
 import { TomadaContasEspecial } from '../TomadaContasEspecial'
 import { useLocation, useNavigate } from 'react-router-dom'
 import { Type } from 'typescript'
+import { ListaUnidadeGestora } from '../ListaUnidadeGestora'
 
 interface PropsState {
-  createdAt: string
-  estruturaInicialIdNumRegistro: string
-  estruturaInicialNivelControleInterno: string
-  estruturaInicialNormaInternaDemContabeis: string
-  estruturaInicialNormaInternaGestaoFinanceira: string
-  estruturaInicialNormaInternaGestaoFiscal: string
-  estruturaInicialNormaInternaGestaoOrcamentaria: string
-  estruturaInicialNormaInternaGestaoPatrimonial: string
-  estruturaInicialQuantidadeContadores: string
-  estruturaInicialQuantidadeServidoresEfetivos: string
-  estruturaInicialQuantidadeTotalServidores: string
-  id: number
+  // createdAt: string
+  // estruturaInicialIdNumRegistro: string
+  // estruturaInicialNivelControleInterno: string
+  // estruturaInicialNormaInternaDemContabeis: string
+  // estruturaInicialNormaInternaGestaoFinanceira: string
+  // estruturaInicialNormaInternaGestaoFiscal: string
+  // estruturaInicialNormaInternaGestaoOrcamentaria: string
+  // estruturaInicialNormaInternaGestaoPatrimonial: string
+  // estruturaInicialQuantidadeContadores: string
+  // estruturaInicialQuantidadeServidoresEfetivos: string
+  // estruturaInicialQuantidadeTotalServidores: string
+  // id: number
   procedimentosAmostraSelecionada: string
   procedimentosCodigoProcedimento: string
   procedimentosCodigoUnidadeGestora: string
@@ -65,8 +66,8 @@ interface PropsState {
   unidadeGestoraNivelControleInterno: string
   unidadeGestoraOpiniaoPrestacaoContasControleInterno: string
   unidadeGestoraResponsavelUnidadeGestora: string
-  updatedAt: string
-  user_id: number
+  // updatedAt: string
+  // user_id: number
 }
 
 interface TabPanelProps {
@@ -99,53 +100,53 @@ function a11yProps(index: number) {
 }
 
 export const FormInfoci = (props: any) => {
-  const location = useLocation();
-  const state = location.state as PropsState;
+  // const location = useLocation();
+  // const state = location.state as PropsState;
 
-  const [value, setValue] = React.useState(0);
+  const [value, setValue] = React.useState(0)
 
   const handleChange = (event: React.SyntheticEvent, newValue: number) => {
     setValue(newValue)
   }
 
   const initialValues = {
-    estruturaInicialIdNumRegistro: `${state.estruturaInicialIdNumRegistro}`,
-    estruturaInicialNivelControleInterno: `${state.estruturaInicialNivelControleInterno}`,
-    estruturaInicialQuantidadeTotalServidores: `${state.estruturaInicialQuantidadeTotalServidores}`,
-    estruturaInicialQuantidadeServidoresEfetivos: `${state.estruturaInicialQuantidadeServidoresEfetivos}`,
-    estruturaInicialQuantidadeContadores: `${state.estruturaInicialQuantidadeContadores}`,
-    estruturaInicialNormaInternaGestaoOrcamentaria: `${state.estruturaInicialNormaInternaGestaoOrcamentaria}`,
-    estruturaInicialNormaInternaGestaoFinanceira: `${state.estruturaInicialNormaInternaGestaoFinanceira}`,
-    estruturaInicialNormaInternaGestaoPatrimonial: `${state.estruturaInicialNormaInternaGestaoPatrimonial}`,
-    estruturaInicialNormaInternaGestaoFiscal: `${state.estruturaInicialNormaInternaGestaoFiscal}`,
-    estruturaInicialNormaInternaDemContabeis: `${state.estruturaInicialNormaInternaDemContabeis}`,
-    procedimentosIdNumRegistro: `${state.procedimentosIdNumRegistro}`,
-    procedimentosNivelControleInterno: `${state.procedimentosNivelControleInterno}`,
-    procedimentosCodigoUnidadeGestora: `${state.procedimentosCodigoUnidadeGestora}`,
-    procedimentosCodigoProcedimento: `${state.procedimentosCodigoProcedimento}`,
-    procedimentosTipoPontoControle: `${state.procedimentosTipoPontoControle}`,
-    procedimentosUniversoAnalisado: `${state.procedimentosUniversoAnalisado}`,
-    procedimentosAmostraSelecionada: `${state.procedimentosAmostraSelecionada}`,
-    procedimentosDescricaoAnalise: `${state.procedimentosDescricaoAnalise}`,
-    procedimentosTipoProcedimentoAnalisado: `${state.procedimentosTipoProcedimentoAnalisado}`,
-    procedimentosSituacaoAnalise: `${state.procedimentosSituacaoAnalise}`,
-    unidadeGestoraIdNumRegistro: `${state.unidadeGestoraIdNumRegistro}`,
-    unidadeGestoraNivelControleInterno: `${state.unidadeGestoraNivelControleInterno}`,
-    unidadeGestoraCodigoUnidadeGestora: `${state.unidadeGestoraCodigoUnidadeGestora}`,
-    unidadeGestoraResponsavelUnidadeGestora: `${state.unidadeGestoraResponsavelUnidadeGestora}`,
-    unidadeGestoraExercicioUltimaManifestacaoControleInterno: `${state.unidadeGestoraExercicioUltimaManifestacaoControleInterno}`,
-    unidadeGestoraOpiniaoPrestacaoContasControleInterno: `${state.unidadeGestoraOpiniaoPrestacaoContasControleInterno}`,
-    tomadaContasEspecialIdNumRegistro: `${state.tomadaContasEspecialIdNumRegistro}`,
-    tomadaContasEspecialCodigoUnidadeGestora: `${state.tomadaContasEspecialCodigoUnidadeGestora}`,
-    tomadaContasEspecialProcesso: `${state.tomadaContasEspecialProcesso}`,
-    tomadaContasEspecialAnoProcesso: `${state.tomadaContasEspecialAnoProcesso}`,
-    tomadaContasEspecialFatoMotivo: `${state.tomadaContasEspecialFatoMotivo}`,
-    tomadaContasEspecialDataCiencia: `${state.tomadaContasEspecialDataCiencia}`,
-    tomadaContasEspecialDataInstauracao: `${state.tomadaContasEspecialDataInstauracao}`,
-    tomadaContasEspecialDataEnvioTribunalContas: `${state.tomadaContasEspecialDataEnvioTribunalContas}`,
-    tomadaContasEspecialValorDebito: `${state.tomadaContasEspecialValorDebito}`,
-    tomadaContasEspecialSituacaoEm31do12: `${state.tomadaContasEspecialSituacaoEm31do12}`,
-    tomadaContasEspecialMotivoBaixaDebito: `${state.tomadaContasEspecialMotivoBaixaDebito}`,
+    estruturaInicialIdNumRegistro: '',
+    estruturaInicialNivelControleInterno: ``,
+    estruturaInicialQuantidadeTotalServidores: ``,
+    estruturaInicialQuantidadeServidoresEfetivos: ``,
+    estruturaInicialQuantidadeContadores: ``,
+    estruturaInicialNormaInternaGestaoOrcamentaria: ``,
+    estruturaInicialNormaInternaGestaoFinanceira: ``,
+    estruturaInicialNormaInternaGestaoPatrimonial: ``,
+    estruturaInicialNormaInternaGestaoFiscal: ``,
+    estruturaInicialNormaInternaDemContabeis: ``,
+    procedimentosIdNumRegistro: ``,
+    procedimentosNivelControleInterno: ``,
+    procedimentosCodigoUnidadeGestora: ``,
+    procedimentosCodigoProcedimento: ``,
+    procedimentosTipoPontoControle: ``,
+    procedimentosUniversoAnalisado: ``,
+    procedimentosAmostraSelecionada: ``,
+    procedimentosDescricaoAnalise: ``,
+    procedimentosTipoProcedimentoAnalisado: ``,
+    procedimentosSituacaoAnalise: ``,
+    unidadeGestoraIdNumRegistro: ``,
+    unidadeGestoraNivelControleInterno: ``,
+    unidadeGestoraCodigoUnidadeGestora: ``,
+    unidadeGestoraResponsavelUnidadeGestora: ``,
+    unidadeGestoraExercicioUltimaManifestacaoControleInterno: ``,
+    unidadeGestoraOpiniaoPrestacaoContasControleInterno: ``,
+    tomadaContasEspecialIdNumRegistro: ``,
+    tomadaContasEspecialCodigoUnidadeGestora: ``,
+    tomadaContasEspecialProcesso: ``,
+    tomadaContasEspecialAnoProcesso: ``,
+    tomadaContasEspecialFatoMotivo: ``,
+    tomadaContasEspecialDataCiencia: ``,
+    tomadaContasEspecialDataInstauracao: ``,
+    tomadaContasEspecialDataEnvioTribunalContas: ``,
+    tomadaContasEspecialValorDebito: ``,
+    tomadaContasEspecialSituacaoEm31do12: ``,
+    tomadaContasEspecialMotivoBaixaDebito: ``,
     // ...validationEstruturaInicial.initialValues,
     // ...validationUnidadeGestora.initialValues,
     // ...validationProcedimentos.initialValues,
@@ -177,32 +178,17 @@ export const FormInfoci = (props: any) => {
     }
   }, [formik.handleSubmit, formik.isValid, formik.submitCount, formik.errors])
 
-  function saveForm() {
-   
-    const form = {
-      ...formik.values,
-    }
-    console.log(form);
-
-     axios
-     .put(`http:localhost:3333/form/${state.id}`,form )
-     .then((response:any) => {
-       const { data } = response;
-
-      //  if (data) {
-      //  history.push("/form");
-      //  }
-     })
-     .catch((reason: AxiosError) => {
-        alert('Esse endereço de e-mail já foi cadastrado!')
-
-     })
-  }
+  // function saveForm() {
+  //   const form = {
+  //     ...formik.values,
+  //   }
+  //   console.log(form)
+  // }
 
   return (
     <FormInfociStyle noValidate onSubmit={formik.handleSubmit}>
       <div data-form="description">
-        <p>
+        {/* <p>
           Preencha todos os campos do formulário abaixo e clique no botão{' '}
           <span>Próximo</span>.
         </p>
@@ -210,13 +196,7 @@ export const FormInfoci = (props: any) => {
           Após finalizar o preenchimento de todos os formulários clique no botão{' '}
           <span>Gerar XML</span> para realizar o download do arquivo{' '}
           <span>INFOCI.XML</span>.
-        </p>
-
-        <div>
-          <button type="button" onClick={saveForm}>
-            Salvar
-          </button>
-        </div>
+        </p> */}
       </div>
       <Box sx={{ width: '100%' }}>
         <Box sx={{ borderBottom: 1 }} style={{ background: 'var(--blue-300)' }}>
@@ -251,10 +231,11 @@ export const FormInfoci = (props: any) => {
           </Tabs>
         </Box>
         <TabPanel value={value} index={0}>
-          <EstruturaInicial formik={formik} setValue={setValue} />
+          <EstruturaInicial setValue={setValue} />
         </TabPanel>
         <TabPanel value={value} index={1}>
-          <UnidadeGestora formik={formik} setValue={setValue} />
+          {/* <UnidadeGestora formik={formik} setValue={setValue} /> */}
+          <ListaUnidadeGestora formik={formik} setValue={setValue}/>
         </TabPanel>
         <TabPanel value={value} index={2}>
           <Procedimentos formik={formik} setValue={setValue} />

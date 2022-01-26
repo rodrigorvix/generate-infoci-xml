@@ -9,6 +9,8 @@ interface UserAuthProps {
 interface ResultContext {
   userAuth: UserAuthProps,
   setUserAuth: Dispatch<SetStateAction<UserAuthProps>>,
+  formId: string,
+  setFormId: (formId: string) => void,
 }
 
 interface ContextPropsType {
@@ -19,10 +21,11 @@ export const GlobalContext = createContext({} as ResultContext);
 
 export const GlobalStorage = (props:ContextPropsType) => {
   const [userAuth, setUserAuth] = useState<UserAuthProps>({});
+  const [formId, setFormId] = useState("");
   
 
   return (
-    <GlobalContext.Provider value={{userAuth, setUserAuth}}>
+    <GlobalContext.Provider value={{userAuth, setUserAuth, formId, setFormId}}>
       {props.children}
     </GlobalContext.Provider>
   );

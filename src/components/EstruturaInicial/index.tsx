@@ -1,11 +1,38 @@
+import { useFormik } from 'formik'
 
 import { Button } from "@mui/material";
 import { TextField, MenuItem} from "@mui/material";
 
 import { EstruturaInicialStyle } from "./style";
+import validationEstruturaInicial from '../../utils/validationEstruturaInicial';
 
-export const EstruturaInicial = ({formik, setValue}:any) => {
+export const EstruturaInicial = ({setValue}:any) => {
   
+  const initialValues = {
+    estruturaInicialIdNumRegistro: '',
+    estruturaInicialNivelControleInterno: ``,
+    estruturaInicialQuantidadeTotalServidores: ``,
+    estruturaInicialQuantidadeServidoresEfetivos: ``,
+    estruturaInicialQuantidadeContadores: ``,
+    estruturaInicialNormaInternaGestaoOrcamentaria: ``,
+    estruturaInicialNormaInternaGestaoFinanceira: ``,
+    estruturaInicialNormaInternaGestaoPatrimonial: ``,
+    estruturaInicialNormaInternaGestaoFiscal: ``,
+    estruturaInicialNormaInternaDemContabeis: ``,
+    
+  }
+
+  const validationSchema = validationEstruturaInicial.validationSchema;
+
+  const formik = useFormik({
+    initialValues: initialValues,
+
+    validationSchema: validationSchema,
+    onSubmit: (values, { resetForm }) => {
+     console.log("Estrutura inicial válida.")
+    },
+  })
+
   return (
     <EstruturaInicialStyle 
       id="EstruturaInicial">

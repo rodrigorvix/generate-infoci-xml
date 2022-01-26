@@ -11,6 +11,7 @@ export const FooterStyle = styled.footer`
   width: 100vw;
   position: fixed;
   bottom:0;
+  z-index:100;
     
   p {
     font-size: 0.875rem;
