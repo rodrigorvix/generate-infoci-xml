@@ -223,11 +223,13 @@ export const FormInfoci = (props: any) => {
             <Tab
               style={{ color: 'white', fontWeight: 'bold' }}
               label="Procedimentos"
+              disabled
               {...a11yProps(2)}
             />
             <Tab
               style={{ color: 'white', fontWeight: 'bold' }}
               label="Tomada Contas Especial"
+              disabled
               {...a11yProps(3)}
             />
           </Tabs>
@@ -239,7 +241,7 @@ export const FormInfoci = (props: any) => {
           <UnidadeGestora />
         </TabPanel>
         <TabPanel value={context.valueTab} index={2}>
-          <Procedimentos formik={formik} setValue={setValue} />
+          <Procedimentos />
         </TabPanel>
         <TabPanel value={context.valueTab} index={3}>
           <TomadaContasEspecial formik={formik} setValue={setValue} />

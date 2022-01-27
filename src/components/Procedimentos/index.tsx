@@ -1,10 +1,96 @@
+import { useFormik } from 'formik';
+
 import { TextField, MenuItem, Button } from "@mui/material";
 
+import validationProcedimentos from '../../utils/validationProcedimentos';
 import { ProcedimentosStyle } from "./style";
+import { useContext, useState } from 'react';
+import { GlobalContext } from '../../context/GlobalStorage';
 
-export const Procedimentos = ({ formik, setValue }: any) => {
+export const Procedimentos = () => {
+
+  const context = useContext(GlobalContext);
+  const [buttonId, setButtonId] = useState("");
+  const [selectProcedimento, setSelectProcedimento] = useState(1);
+
+  const initialValues = {
+    
+    procedimentosIdNumRegistro: ``,
+    procedimentosNivelControleInterno: ``,
+    procedimentosCodigoUnidadeGestora: ``,
+    procedimentosCodigoProcedimento: ``,
+    procedimentosTipoPontoControle: ``,
+    procedimentosUniversoAnalisado: ``,
+    procedimentosAmostraSelecionada: ``,
+    procedimentosDescricaoAnalise: ``,
+    procedimentosTipoProcedimentoAnalisado: ``,
+    procedimentosSituacaoAnalise: ``,
+
+  }
+  const validationSchema = validationProcedimentos.validationSchema;
+
+  const formik = useFormik({
+    initialValues: initialValues,
+
+    validationSchema: validationSchema,
+
+    onSubmit: (values, { resetForm }) => {
+     console.log("Procedimento válido.");
+     console.log("Salvando.");
+
+     const newProcedimento = window.confirm("Deseja preencher outro Procedimento ?");
+     
+     if (newProcedimento) {
+       console.log("Gerando um procedimento vazio...")
+       return ;
+     }
+
+     const tab = buttonId === "next" ? 3 : 1;
+     context.setValueTab(tab);
+    
+    },
+  });
+
+  function handleSelectProcedimento(e: any) {
+    setSelectProcedimento(e.target.value);
+    console.log("Executa chamada a API");
+    console.log(e.target.value);
+  }
+
+  function getIdButton(e: any) {
+    setButtonId(e.target.id);
+  }
+
+  function saveProcedimento() {
+    console.log("Salvando...")
+  }
   return (
-    <ProcedimentosStyle id="Procedimentos">
+    <ProcedimentosStyle onSubmit={formik.handleSubmit}>
+
+<div data-header="headerForm">
+       
+       <TextField
+        fullWidth
+        select
+        inputProps={{ MenuProps: { disableScrollLock: true } }}
+        id="procedimento"
+        name="procedimento"
+        value={selectProcedimento}
+        label="Procedimento(s)"
+        onChange={handleSelectProcedimento}
+      >
+        <MenuItem value={1}>Procedimento-001 </MenuItem>
+        <MenuItem value={2}>Procedimento-002</MenuItem>
+      </TextField>
+
+       <div data-button="save">
+        <Button variant="contained" onClick={saveProcedimento}>
+            Salvar
+          </Button>
+        </div>
+
+       </div>
+
       <legend>Informações de Controle Interno - Procedimentos</legend>
 
       <TextField
@@ -229,11 +315,11 @@ export const Procedimentos = ({ formik, setValue }: any) => {
       </TextField>  
       
       <div data-button="next-previous">
-          <Button variant="contained" onClick={() => setValue(1)}>
+          <Button variant="contained" type="submit" id="previous" onClick={getIdButton}>
             Anterior
           </Button>
 
-          <Button variant="contained" onClick={() => setValue(3)}>
+          <Button variant="contained" type="submit" id="next"  onClick={getIdButton} >
             Próximo
           </Button>
       </div>

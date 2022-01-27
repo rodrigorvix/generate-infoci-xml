@@ -34,7 +34,8 @@ export const EstruturaInicial = (props: any) => {
 
     validationSchema: validationSchema,
     onSubmit: (values, { resetForm }) => {
-     console.log("Estrutura inicial válida.")
+    console.log("Estrutura inicial válida.");
+    console.log("Salvando...")
     context.setValueTab(1);
     },
   });

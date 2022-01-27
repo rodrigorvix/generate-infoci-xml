@@ -1,85 +1,84 @@
 import { useFormik } from 'formik'
 
-import { TextField, MenuItem, Button } from "@mui/material";
+import { TextField, MenuItem, Button } from '@mui/material'
 
-import { UnidadeGestoraStyle } from "./style";
-import validationUnidadeGestora from '../../utils/validationUnidadeGestora';
-import { useContext, useRef, useState } from 'react';
-import { GlobalContext } from '../../context/GlobalStorage';
+import { UnidadeGestoraStyle } from './style'
+import validationUnidadeGestora from '../../utils/validationUnidadeGestora'
+import { useContext, useRef, useState } from 'react'
+import { GlobalContext } from '../../context/GlobalStorage'
 
 export const UnidadeGestora = (props: any) => {
+  const context = useContext(GlobalContext)
+  const [buttonId, setButtonId] = useState('')
+  const [selectUnidadeGestora, setSelectUnidadeGestora] = useState(1)
 
-  const context = useContext(GlobalContext);
-  const [buttonId, setButtonId] = useState("");
-  const [selectUnidadeGestora, setSelectUnidadeGestora] = useState(1);
-
- 
   const initialValues = {
-    
     unidadeGestoraIdNumRegistro: ``,
     unidadeGestoraNivelControleInterno: ``,
     unidadeGestoraCodigoUnidadeGestora: ``,
     unidadeGestoraResponsavelUnidadeGestora: ``,
     unidadeGestoraExercicioUltimaManifestacaoControleInterno: ``,
     unidadeGestoraOpiniaoPrestacaoContasControleInterno: ``,
-
   }
 
-  const validationSchema = validationUnidadeGestora.validationSchema;
+  const validationSchema = validationUnidadeGestora.validationSchema
 
   const formik = useFormik({
     initialValues: initialValues,
 
     validationSchema: validationSchema,
     onSubmit: (values, { resetForm }) => {
-     console.log("Unidade gestora válida.");
-     
-     const tab = buttonId === "next" ? 2 : 0;
-     context.setValueTab(tab);
-    
+      console.log('Unidade gestora válida.')
+      console.log('Salvando...')
+
+      const tab = buttonId === 'next' ? 2 : 0
+      context.setValueTab(tab)
     },
-  });
+  })
 
   function handleSelectUnidadeGestora(e: any) {
+
+    formik.handleSubmit();
+
+    console.log(formik.errors);
+
+    context.setValueTab(1);
     setSelectUnidadeGestora(e.target.value);
-    console.log("Executa chamada a API");
-    console.log(e.target.value);
+    console.log('Executa chamada a API');
+    // console.log(e.target.value);
   }
 
   function getIdButton(e: any) {
-    setButtonId(e.target.id);
+    setButtonId(e.target.id)
   }
 
   function saveUnidadeGestora() {
-    console.log("Salvando...")
+    console.log('Salvando...')
   }
 
   return (
     <UnidadeGestoraStyle onSubmit={formik.handleSubmit}>
+      <div data-header="headerForm">
+        <TextField
+          fullWidth
+          select
+          inputProps={{ MenuProps: { disableScrollLock: true } }}
+          id="unidadeGestora"
+          name="unidadeGestora"
+          value={selectUnidadeGestora}
+          label="Unidade Gestora"
+          onChange={handleSelectUnidadeGestora}
+        >
+          <MenuItem value={1}>Unidade Gestora-001</MenuItem>
+          <MenuItem value={2}>Unidade Gestora-002</MenuItem>
+        </TextField>
 
-       <div data-header="headerForm">
-       
-       <TextField
-        fullWidth
-        select
-        inputProps={{ MenuProps: { disableScrollLock: true } }}
-        id="unidadeGestora"
-        name="unidadeGestora"
-        value={selectUnidadeGestora}
-        label="Unidade Gestora"
-        onChange={handleSelectUnidadeGestora}
-      >
-        <MenuItem value={1}>Unidade Gestora-001 </MenuItem>
-        <MenuItem value={2}>Unidade Gestora-002</MenuItem>
-      </TextField>
-
-       <div data-button="save">
-        <Button variant="contained" onClick={saveUnidadeGestora}>
+        <div data-button="save">
+          <Button variant="contained" onClick={saveUnidadeGestora}>
             Salvar
           </Button>
         </div>
-
-       </div>
+      </div>
 
       <legend>Informações de Controle Interno - Unidade Gestora</legend>
 
@@ -174,7 +173,7 @@ export const UnidadeGestora = (props: any) => {
             .unidadeGestoraExercicioUltimaManifestacaoControleInterno &&
           Boolean(
             formik.errors
-              .unidadeGestoraExercicioUltimaManifestacaoControleInterno
+              .unidadeGestoraExercicioUltimaManifestacaoControleInterno,
           )
         }
         helperText={
@@ -198,7 +197,7 @@ export const UnidadeGestora = (props: any) => {
         error={
           formik.touched.unidadeGestoraOpiniaoPrestacaoContasControleInterno &&
           Boolean(
-            formik.errors.unidadeGestoraOpiniaoPrestacaoContasControleInterno
+            formik.errors.unidadeGestoraOpiniaoPrestacaoContasControleInterno,
           )
         }
         helperText={
@@ -213,14 +212,24 @@ export const UnidadeGestora = (props: any) => {
       </TextField>
 
       <div data-button="next-previous">
-          <Button variant="contained" type="submit" id="previous" onClick={getIdButton}>
-            Anterior
-          </Button>
+        <Button
+          variant="contained"
+          type="submit"
+          id="previous"
+          onClick={getIdButton}
+        >
+          Anterior
+        </Button>
 
-          <Button variant="contained" type="submit" id="next"  onClick={getIdButton} >
-            Próximo
-          </Button>
+        <Button
+          variant="contained"
+          type="submit"
+          id="next"
+          onClick={getIdButton}
+        >
+          Próximo
+        </Button>
       </div>
     </UnidadeGestoraStyle>
-  );
-};
+  )
+}
