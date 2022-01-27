@@ -1,12 +1,38 @@
 import styled from "styled-components";
 
-export const UnidadeGestoraStyle = styled.fieldset`
+export const UnidadeGestoraStyle = styled.form`
 
   padding: 1rem;
   border: none;
   display: flex;
   flex-direction: column;
   gap: 1rem;
+
+  div[data-header="headerForm"] {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    .MuiFormControl-root {
+      width: 250px;
+    }
+
+    div[data-button="save"] {
+      text-align: right;
+  
+      .MuiButton-root {
+        background: var(--blue-500);
+        width: 100px;
+       
+       &:hover {
+         filter:brightness(0.8);
+       }
+      }
+      
+    }
+  }
+
+  
 
   legend {
     font-size:1.25rem;
@@ -27,7 +53,7 @@ export const UnidadeGestoraStyle = styled.fieldset`
       width: 100px;
      
      &:hover {
-       filter:brightness(0.8)
+       filter:brightness(0.8);
      }
     }
   }

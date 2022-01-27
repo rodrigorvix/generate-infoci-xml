@@ -1,4 +1,3 @@
-import { createBrowserHistory } from 'history'
 
 import axios, { AxiosError } from 'axios'
 import * as React from 'react'
@@ -23,8 +22,6 @@ import { FormInfociStyle } from './style'
 import { Procedimentos } from '../Procedimentos'
 import { TomadaContasEspecial } from '../TomadaContasEspecial'
 import { useLocation, useNavigate } from 'react-router-dom'
-import { Type } from 'typescript'
-import { ListaUnidadeGestora } from '../ListaUnidadeGestora'
 import { GlobalContext } from '../../context/GlobalStorage'
 
 interface PropsState {
@@ -239,8 +236,7 @@ export const FormInfoci = (props: any) => {
           <EstruturaInicial/>
         </TabPanel>
         <TabPanel value={context.valueTab} index={1} >
-          {/* <UnidadeGestora formik={formik} setValue={setValue} /> */}
-          <ListaUnidadeGestora formik={formik} setValue={setValue}/>
+          <UnidadeGestora />
         </TabPanel>
         <TabPanel value={context.valueTab} index={2}>
           <Procedimentos formik={formik} setValue={setValue} />
