@@ -23,6 +23,7 @@ import { Procedimentos } from '../Procedimentos'
 import { TomadaContasEspecial } from '../TomadaContasEspecial'
 import { useLocation, useNavigate } from 'react-router-dom'
 import { GlobalContext } from '../../context/GlobalStorage'
+import { GenerateXML } from '../GenerateXML'
 
 interface PropsState {
   // createdAt: string
@@ -232,6 +233,12 @@ export const FormInfoci = (props: any) => {
               disabled
               {...a11yProps(3)}
             />
+            <Tab
+              style={{ color: 'white', fontWeight: 'bold' }}
+              label="Gerar XML"
+              disabled
+              {...a11yProps(4)}
+            />
           </Tabs>
         </Box>
         <TabPanel value={context.valueTab} index={0}>
@@ -244,7 +251,10 @@ export const FormInfoci = (props: any) => {
           <Procedimentos />
         </TabPanel>
         <TabPanel value={context.valueTab} index={3}>
-          <TomadaContasEspecial formik={formik} setValue={setValue} />
+          <TomadaContasEspecial />
+        </TabPanel>
+        <TabPanel value={context.valueTab} index={4}>
+          <GenerateXML />
         </TabPanel>
       </Box>
 

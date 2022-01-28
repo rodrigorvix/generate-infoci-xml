@@ -6,10 +6,13 @@ import validationProcedimentos from '../../utils/validationProcedimentos';
 import { ProcedimentosStyle } from "./style";
 import { useContext, useState } from 'react';
 import { GlobalContext } from '../../context/GlobalStorage';
+import { useNavigate } from 'react-router-dom';
 
 export const Procedimentos = () => {
 
   const context = useContext(GlobalContext);
+  const navigate = useNavigate();
+
   const [buttonId, setButtonId] = useState("");
   const [selectProcedimento, setSelectProcedimento] = useState(1);
 
@@ -45,16 +48,40 @@ export const Procedimentos = () => {
        return ;
      }
 
+     const tomadaContasExist = window.confirm("Deseja incluir alguma Tomada de Contas Especial ?");
+      
      const tab = buttonId === "next" ? 3 : 1;
+     
+     if(!tomadaContasExist) {
+       const navigateUnidadeGestora = window.confirm("Deseja incluir informações de outra Unidade Gestora ?");
+
+       if(navigateUnidadeGestora) {
+          navigate('/select_ug');
+          context.setValueTab(0);
+          return;
+       }
+       console.log("Ir para a geração de XML.")
+       context.setValueTab(4);
+       return;
+     }
      context.setValueTab(tab);
     
     },
   });
 
-  function handleSelectProcedimento(e: any) {
+  async function handleSelectProcedimento(e: any) {
+    const validate = await formik.validateForm(formik.values);
+
+    if(Object.entries(validate).length > 0) {
+      alert("Preencha todos os campos corretamente antes de alternar de registro.");
+      formik.handleSubmit();
+      context.setValueTab(2);
+      return;
+    }
+    
     setSelectProcedimento(e.target.value);
-    console.log("Executa chamada a API");
-    console.log(e.target.value);
+    console.log('Executa chamada a API');
+    // console.log(e.target.value);
   }
 
   function getIdButton(e: any) {

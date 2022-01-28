@@ -4,7 +4,7 @@ import { TextField, MenuItem, Button } from '@mui/material'
 
 import { UnidadeGestoraStyle } from './style'
 import validationUnidadeGestora from '../../utils/validationUnidadeGestora'
-import { useContext, useRef, useState } from 'react'
+import { useContext, useState } from 'react'
 import { GlobalContext } from '../../context/GlobalStorage'
 
 export const UnidadeGestora = (props: any) => {
@@ -34,15 +34,19 @@ export const UnidadeGestora = (props: any) => {
       const tab = buttonId === 'next' ? 2 : 0
       context.setValueTab(tab)
     },
-  })
+  });
 
-  function handleSelectUnidadeGestora(e: any) {
+  async function handleSelectUnidadeGestora(e: any) {
+  
+    const validate = await formik.validateForm(formik.values);
 
-    formik.handleSubmit();
-
-    console.log(formik.errors);
-
-    context.setValueTab(1);
+    if(Object.entries(validate).length > 0) {
+      alert("Preencha todos os campos corretamente antes de alternar de registro.");
+      formik.handleSubmit();
+      context.setValueTab(1);
+      return;
+    }
+    
     setSelectUnidadeGestora(e.target.value);
     console.log('Executa chamada a API');
     // console.log(e.target.value);
