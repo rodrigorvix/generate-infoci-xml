@@ -6,6 +6,7 @@ import { useNavigate } from "react-router-dom";
 import validationTomadaContasEspecial from '../../utils/validationTomadaContasEspecial'
 import { TomadaContasEspecialraStyle } from "./style";
 import { GlobalContext } from '../../context/GlobalStorage';
+import { ConfirmDialog } from '../ConfirmDialog';
 
 export const TomadaContasEspecial = () => {
 
@@ -14,6 +15,20 @@ export const TomadaContasEspecial = () => {
   
   const [buttonId, setButtonId] = useState("");
   const [selectTomadaContas, setSelectTomadaContas] = useState(1);
+  const [openDialogUnidadeGestora, setOpenDialogUnidadeGestora] = useState(false);
+
+  function responseDialogUnidadeGestoraYes(){
+
+    navigate('/select_ug');
+    context.setValueTab(0);
+    return;
+  }
+
+  function responseDialogUnidadeGestoraNo(){
+    console.log("Ir para a geração de XML.")
+    context.setValueTab(4);
+    return;
+  }
 
   const initialValues = {
     tomadaContasEspecialIdNumRegistro: ``,
@@ -37,29 +52,13 @@ export const TomadaContasEspecial = () => {
     validationSchema: validationSchema,
     onSubmit: (values, { resetForm }) => {
 
-      if(buttonId === "next") {
-
-        const newTomadaContas = window.confirm("Deseja preencher outra Tomada de Contas Especial ?");
-     
-      if (newTomadaContas) {
-        console.log("Gerando uma Tomada de Contas Especial vazia...")
-        return ;
-      }
-
-      const navigateUnidadeGestora = window.confirm("Deseja incluir informações de outra Unidade Gestora ?");
-
-        if(navigateUnidadeGestora) {
-           navigate('/select_ug');
-           context.setValueTab(0);
-           return;
-        }
-
-        console.log("Ir para a geração de XML.")
-        context.setValueTab(4);
+      if(buttonId === "previous") {
+        context.setValueTab(2) ;
         return;
-      }
-      
-        context.setValueTab(2);
+       }
+  
+      setOpenDialogUnidadeGestora(true);
+
      },
   });
 
@@ -383,6 +382,14 @@ export const TomadaContasEspecial = () => {
             Próximo
           </Button>
       </div>
+
+      <ConfirmDialog 
+        open={openDialogUnidadeGestora} 
+        setOpen={setOpenDialogUnidadeGestora} 
+        titleMessage={"Deseja incluir informações de outra Unidade Gestora ?"}
+        responseYes={responseDialogUnidadeGestoraYes}
+        responseNo ={responseDialogUnidadeGestoraNo}
+        />
   </TomadaContasEspecialraStyle>
   );
 };

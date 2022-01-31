@@ -82,33 +82,13 @@ export const Procedimentos = () => {
      console.log("Procedimento válido.");
      console.log("Salvando.");
 
-    //  const newProcedimento = window.confirm("Deseja preencher outro Procedimento ?");
+     if(buttonId === "previous") {
+      context.setValueTab(1) ;
+      return;
+     }
 
     setOpenDialogProcedimento(true);
 
-    // if (newProcedimento) {
-    //   console.log("Gerando um procedimento vazio...")
-    //  return ;
-    //   }
-
-    //  const tomadaContasExist = window.confirm("Deseja incluir alguma Tomada de Contas Especial ?");
-      
-    //  const tab = buttonId === "next" ? 3 : 1;
-     
-    //  if(!tomadaContasExist) {
-    //    const navigateUnidadeGestora = window.confirm("Deseja incluir informações de outra Unidade Gestora ?");
-
-    //    if(navigateUnidadeGestora) {
-    //       navigate('/select_ug');
-    //       context.setValueTab(0);
-    //       return;
-    //    }
-    //    console.log("Ir para a geração de XML.")
-    //    context.setValueTab(4);
-    //    return;
-    //  }
-    //  context.setValueTab(tab);
-    
     },
   });
 
@@ -129,7 +109,7 @@ export const Procedimentos = () => {
 
   function getIdButton(e: any) {
     setButtonId(e.target.id);
-  }
+   }
 
   function saveProcedimento() {
     console.log("Salvando...")
