@@ -7,6 +7,8 @@ import { ProcedimentosStyle } from "./style";
 import { useContext, useState } from 'react';
 import { GlobalContext } from '../../context/GlobalStorage';
 import { useNavigate } from 'react-router-dom';
+import { ConfirmDialog } from '../ConfirmDialog';
+
 
 export const Procedimentos = () => {
 
@@ -15,6 +17,45 @@ export const Procedimentos = () => {
 
   const [buttonId, setButtonId] = useState("");
   const [selectProcedimento, setSelectProcedimento] = useState(1);
+  const [openDialogProcedimento, setOpenDialogProcedimento] = useState(false);
+  const [openDialogTomadaContas, setOpenDialogTomadaContas] = useState(false);
+  const [openDialogUnidadeGestora, setOpenDialogUnidadeGestora] = useState(false);
+  
+  
+  function responseDialogProcedimentoYes(){
+    console.log("Gerando um novo procedimento...");
+    return;
+  }
+
+  function responseDialogProcedimentoNo(){
+    setOpenDialogTomadaContas(true);
+    return;
+  }
+
+  function responseDialogTomadaContasYes(){
+
+    context.setValueTab(3);
+    console.log("Gerando uma tomada de contas.");
+    return;
+  }
+
+  function responseDialogTomadaContasNo(){
+    setOpenDialogUnidadeGestora(true);
+    return;
+  }
+
+  function responseDialogUnidadeGestoraYes(){
+
+    navigate('/select_ug');
+    context.setValueTab(0);
+    return;
+  }
+
+  function responseDialogUnidadeGestoraNo(){
+    console.log("Ir para a geração de XML.")
+    context.setValueTab(4);
+    return;
+  }
 
   const initialValues = {
     
@@ -41,30 +82,32 @@ export const Procedimentos = () => {
      console.log("Procedimento válido.");
      console.log("Salvando.");
 
-     const newProcedimento = window.confirm("Deseja preencher outro Procedimento ?");
-     
-     if (newProcedimento) {
-       console.log("Gerando um procedimento vazio...")
-       return ;
-     }
+    //  const newProcedimento = window.confirm("Deseja preencher outro Procedimento ?");
 
-     const tomadaContasExist = window.confirm("Deseja incluir alguma Tomada de Contas Especial ?");
+    setOpenDialogProcedimento(true);
+
+    // if (newProcedimento) {
+    //   console.log("Gerando um procedimento vazio...")
+    //  return ;
+    //   }
+
+    //  const tomadaContasExist = window.confirm("Deseja incluir alguma Tomada de Contas Especial ?");
       
-     const tab = buttonId === "next" ? 3 : 1;
+    //  const tab = buttonId === "next" ? 3 : 1;
      
-     if(!tomadaContasExist) {
-       const navigateUnidadeGestora = window.confirm("Deseja incluir informações de outra Unidade Gestora ?");
+    //  if(!tomadaContasExist) {
+    //    const navigateUnidadeGestora = window.confirm("Deseja incluir informações de outra Unidade Gestora ?");
 
-       if(navigateUnidadeGestora) {
-          navigate('/select_ug');
-          context.setValueTab(0);
-          return;
-       }
-       console.log("Ir para a geração de XML.")
-       context.setValueTab(4);
-       return;
-     }
-     context.setValueTab(tab);
+    //    if(navigateUnidadeGestora) {
+    //       navigate('/select_ug');
+    //       context.setValueTab(0);
+    //       return;
+    //    }
+    //    console.log("Ir para a geração de XML.")
+    //    context.setValueTab(4);
+    //    return;
+    //  }
+    //  context.setValueTab(tab);
     
     },
   });
@@ -350,6 +393,30 @@ export const Procedimentos = () => {
             Próximo
           </Button>
       </div>
+
+      <ConfirmDialog 
+        open={openDialogProcedimento} 
+        setOpen={setOpenDialogProcedimento} 
+        titleMessage={"Deseja incluir outro Procedimento ?"}
+        responseYes={responseDialogProcedimentoYes}
+        responseNo ={responseDialogProcedimentoNo}
+        />
+
+<ConfirmDialog 
+        open={openDialogTomadaContas} 
+        setOpen={setOpenDialogTomadaContas} 
+        titleMessage={"Deseja incluir alguma Tomada de Contas Especial ?"}
+        responseYes={responseDialogTomadaContasYes}
+        responseNo ={responseDialogTomadaContasNo}
+        />
+
+<ConfirmDialog 
+        open={openDialogUnidadeGestora} 
+        setOpen={setOpenDialogUnidadeGestora} 
+        titleMessage={"Deseja incluir informações de outra Unidade Gestora ?"}
+        responseYes={responseDialogUnidadeGestoraYes}
+        responseNo ={responseDialogUnidadeGestoraNo}
+        />
     </ProcedimentosStyle>
   );
 };

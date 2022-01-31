@@ -13,6 +13,7 @@ interface ResultContext {
   setUserAuth: Dispatch<SetStateAction<UserAuthProps>>,
   formId: string,
   setFormId: (formId: string) => void,
+  
 }
 
 interface ContextPropsType {
@@ -25,6 +26,7 @@ export const GlobalStorage = (props:ContextPropsType) => {
   const [valueTab, setValueTab] = useState(0)
   const [userAuth, setUserAuth] = useState<UserAuthProps>({});
   const [formId, setFormId] = useState("");
+  
   
 
   return (
