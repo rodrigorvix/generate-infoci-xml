@@ -2,19 +2,50 @@ import { useFormik } from "formik";
 import * as yup from "yup";
 
 import { Button, MenuItem, TextField } from '@mui/material'
-import { useContext, useState } from 'react'
+import { useContext, useEffect, useState } from 'react'
 import { GlobalContext } from '../../context/GlobalStorage'
+import baseAPI from '../../utils/baseAPI';
 import { InputUGStyle } from './style'
 import { useNavigate } from "react-router-dom";
+import axios from "axios";
 
 interface ValuesProps {
   formId :string,
 }
 
+interface InputUGProps {
+  id: number,
+  codigoUnidadeGestora: string,
+  descricaoUnidadeGestora: string,
+}
+
+
+
 export const InputUG = () => {
   const context = useContext(GlobalContext);
+  const [inputUGInfo, setInputUGInfo] = useState<InputUGProps[]>([]);
   const navigate = useNavigate();
+  const token = localStorage.getItem('app-token');
 
+  useEffect(() => {
+
+    axios.get(`${baseAPI.URL}/forms`, { headers: baseAPI.HEADERS(token) })
+      .then((response: any) => {
+        const { data } = response;
+
+        const newInputUGInfo = data.map(({id, codigoUnidadeGestora, descricaoUnidadeGestora}: any) => {
+          return {
+            id, 
+            codigoUnidadeGestora, 
+            descricaoUnidadeGestora
+          }
+        })
+
+        setInputUGInfo([...newInputUGInfo]);
+      })
+  },[])
+
+ 
   const validationSchema = yup.object({
     formId: yup
       .string()
@@ -52,10 +83,13 @@ export const InputUG = () => {
             helperText={formik.touched.formId && formik.errors.formId}
             
           >
-            
-            <MenuItem value={"1"}>SECONT</MenuItem>
+            {inputUGInfo.map((data:InputUGProps) => {
+               return <MenuItem value={`${data.codigoUnidadeGestora}`} key={data.id}>{data.descricaoUnidadeGestora}</MenuItem>
+            })}
+
+            {/* <MenuItem value={"1"}>SECONT</MenuItem>
             <MenuItem value={"2"}>SESA</MenuItem>
-            <MenuItem value={"3"}>SEGER</MenuItem>
+            <MenuItem value={"3"}>SEGER</MenuItem>  */}
           </TextField>
 
           <Button type="submit" fullWidth variant="contained" color="primary">

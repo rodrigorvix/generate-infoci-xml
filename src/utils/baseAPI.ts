@@ -1,6 +1,6 @@
 const URL = "http://localhost:3333";
 
-const HEADERS = (token:string) => {
+const HEADERS = (token:string | null) => {
   return {
     "Authorization": `Bearer ${token}`
   }
