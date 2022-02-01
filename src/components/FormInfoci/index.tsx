@@ -105,87 +105,17 @@ function a11yProps(index: number) {
 
 export const FormInfoci = (props: any) => {
   
-  const [value, setValue] = React.useState(0);
-
   const context = React.useContext(GlobalContext);
 
-  // const handleChange = (event: React.SyntheticEvent, newValue: number) => {
-  //   setValue(newValue)
-  // }
   const handleChange = (event: React.SyntheticEvent, newValue: number) => {
     context.setValueTab(newValue)
   }
 
-  const initialValues = {
-    estruturaInicialIdNumRegistro: '',
-    estruturaInicialNivelControleInterno: ``,
-    estruturaInicialQuantidadeTotalServidores: ``,
-    estruturaInicialQuantidadeServidoresEfetivos: ``,
-    estruturaInicialQuantidadeContadores: ``,
-    estruturaInicialNormaInternaGestaoOrcamentaria: ``,
-    estruturaInicialNormaInternaGestaoFinanceira: ``,
-    estruturaInicialNormaInternaGestaoPatrimonial: ``,
-    estruturaInicialNormaInternaGestaoFiscal: ``,
-    estruturaInicialNormaInternaDemContabeis: ``,
-    procedimentosIdNumRegistro: ``,
-    procedimentosNivelControleInterno: ``,
-    procedimentosCodigoUnidadeGestora: ``,
-    procedimentosCodigoProcedimento: ``,
-    procedimentosTipoPontoControle: ``,
-    procedimentosUniversoAnalisado: ``,
-    procedimentosAmostraSelecionada: ``,
-    procedimentosDescricaoAnalise: ``,
-    procedimentosTipoProcedimentoAnalisado: ``,
-    procedimentosSituacaoAnalise: ``,
-    unidadeGestoraIdNumRegistro: ``,
-    unidadeGestoraNivelControleInterno: ``,
-    unidadeGestoraCodigoUnidadeGestora: ``,
-    unidadeGestoraResponsavelUnidadeGestora: ``,
-    unidadeGestoraExercicioUltimaManifestacaoControleInterno: ``,
-    unidadeGestoraOpiniaoPrestacaoContasControleInterno: ``,
-    tomadaContasEspecialIdNumRegistro: ``,
-    tomadaContasEspecialCodigoUnidadeGestora: ``,
-    tomadaContasEspecialProcesso: ``,
-    tomadaContasEspecialAnoProcesso: ``,
-    tomadaContasEspecialFatoMotivo: ``,
-    tomadaContasEspecialDataCiencia: ``,
-    tomadaContasEspecialDataInstauracao: ``,
-    tomadaContasEspecialDataEnvioTribunalContas: ``,
-    tomadaContasEspecialValorDebito: ``,
-    tomadaContasEspecialSituacaoEm31do12: ``,
-    tomadaContasEspecialMotivoBaixaDebito: ``,
-    // ...validationEstruturaInicial.initialValues,
-    // ...validationUnidadeGestora.initialValues,
-    // ...validationProcedimentos.initialValues,
-    // ...validationTomadaContasEspecial.initialValues,
-  }
-
-  const validationSchema = validationEstruturaInicial.validationSchema
-    .concat(validationUnidadeGestora.validationSchema)
-    .concat(validationProcedimentos.validationSchema)
-    .concat(validationTomadaContasEspecial.validationSchema)
-
-  const formik = useFormik({
-    initialValues: initialValues,
-
-    validationSchema: validationSchema,
-    onSubmit: (values, { resetForm }) => {
-      const xml = createSchemaINFOCIXML(values)
-      const filename = 'INFOCI.XML'
-      download(filename, xml)
-      resetForm()
-    },
-  })
-
-  React.useEffect(() => {
-    if (!formik.isValid && formik.submitCount > 0) {
-      alert(
-        `Um ou mais campos dos formulários não foram preenchidos corretamente.`,
-      )
-    }
-  }, [formik.handleSubmit, formik.isValid, formik.submitCount, formik.errors])
-
-
+      // const xml = createSchemaINFOCIXML(values)
+      // const filename = 'INFOCI.XML'
+      // download(filename, xml)
+      // resetForm();
+ 
   return (
     <FormInfociStyle >
       <div data-form="description">
@@ -257,14 +187,6 @@ export const FormInfoci = (props: any) => {
           <GenerateXML />
         </TabPanel>
       </Box>
-
-      {value === 3 && (
-        <div data-button="submit">
-          <Button type="submit" variant="contained">
-            GERAR XML
-          </Button>
-        </div>
-      )}
     </FormInfociStyle>
   )
 }

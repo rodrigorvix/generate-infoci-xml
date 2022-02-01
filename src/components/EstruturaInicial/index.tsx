@@ -5,13 +5,43 @@ import { TextField, MenuItem} from "@mui/material";
 
 import { EstruturaInicialStyle } from "./style";
 import validationEstruturaInicial from '../../utils/validationEstruturaInicial';
-import { useContext } from 'react';
+import { useContext, useEffect } from 'react';
 import { GlobalContext } from '../../context/GlobalStorage';
+import axios from 'axios';
+import baseAPI from '../../utils/baseAPI';
+import { useNavigate } from 'react-router-dom';
 
 
 export const EstruturaInicial = (props: any) => {
-
   const context = useContext(GlobalContext);
+  const navigate = useNavigate();
+
+  useEffect(() => {
+
+    const token = localStorage.getItem('app-token');
+
+    if(!context.formInfo.id) {
+
+      navigate('/select_ug');
+      return;
+    }
+
+    requestAPI();
+
+    async function requestAPI () {
+      const responseGet = await axios.get(`${baseAPI.URL}/forms/${context.formInfo.id}/estruturas`, { headers: baseAPI.HEADERS(token)});
+      const  dataGet  = responseGet.data;
+
+      console.log(dataGet);
+     
+      if(!dataGet.length) {
+        console.log(token);
+        await axios.post(`${baseAPI.URL}/forms/${context.formInfo.id}/estruturas`,undefined,{ headers: baseAPI.HEADERS(token)});
+      }
+    }
+
+  },[])
+
   
   const initialValues = {
     estruturaInicialIdNumRegistro: '',

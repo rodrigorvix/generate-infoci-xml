@@ -8,9 +8,10 @@ import baseAPI from '../../utils/baseAPI';
 import { InputUGStyle } from './style'
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
+import { access } from "fs";
 
 interface ValuesProps {
-  formId :string,
+  formValue :string,
 }
 
 interface InputUGProps {
@@ -18,8 +19,6 @@ interface InputUGProps {
   codigoUnidadeGestora: string,
   descricaoUnidadeGestora: string,
 }
-
-
 
 export const InputUG = () => {
   const context = useContext(GlobalContext);
@@ -45,21 +44,24 @@ export const InputUG = () => {
       })
   },[])
 
- 
+  
   const validationSchema = yup.object({
-    formId: yup
+    formValue: yup
       .string()
       .required("Selecione uma UG")
   });
 
   const formik = useFormik({
     initialValues: {
-      formId:"",
+      formValue:"",
     },
     validationSchema: validationSchema,
     onSubmit: (values:ValuesProps) => {
-     
-     context.setFormId(values.formId);
+    
+    const form = inputUGInfo.filter(form => form.codigoUnidadeGestora === values.formValue).reduce((form) => ({...form}));
+    
+    context.setFormInfo(form);
+
      navigate('/form')
 
     },
@@ -74,14 +76,13 @@ export const InputUG = () => {
             fullWidth
             select
             inputProps={{ MenuProps: { disableScrollLock: true } }}
-            id="formId"
-            name="formId"
+            id="formValue"
+            name="formValue"
             label="Unidade(s) Gestora(s)"
-            value={formik.values.formId}
+            value={formik.values.formValue}
             onChange={formik.handleChange}
-            error={formik.touched.formId && Boolean(formik.errors.formId)}
-            helperText={formik.touched.formId && formik.errors.formId}
-            
+            error={formik.touched.formValue && Boolean(formik.errors.formValue)}
+            helperText={formik.touched.formValue && formik.errors.formValue}
           >
             {inputUGInfo.map((data:InputUGProps) => {
                return <MenuItem value={`${data.codigoUnidadeGestora}`} key={data.id}>{data.descricaoUnidadeGestora}</MenuItem>
