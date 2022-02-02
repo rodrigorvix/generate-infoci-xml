@@ -8,7 +8,7 @@ import baseAPI from '../../utils/baseAPI';
 import { InputUGStyle } from './style'
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
-import { access } from "fs";
+
 
 interface ValuesProps {
   formValue :string,
