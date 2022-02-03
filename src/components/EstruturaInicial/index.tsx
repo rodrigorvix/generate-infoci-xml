@@ -26,14 +26,15 @@ interface DataEstruturaProps {
 }
 
 export const EstruturaInicial = (props: any) => {
-  const context = useContext(GlobalContext)
-  const navigate = useNavigate()
+  const context = useContext(GlobalContext);
+  const navigate = useNavigate();
+  const token = localStorage.getItem('app-token');
   const [dataEstrutura, setDataEstrutura] = useState<DataEstruturaProps>(
     {} as DataEstruturaProps,
   )
 
   useEffect(() => {
-    const token = localStorage.getItem('app-token')
+    
 
     if (!context.formInfo.id) {
       navigate('/select_ug')
@@ -43,6 +44,31 @@ export const EstruturaInicial = (props: any) => {
     requestAPI();
 
     async function requestAPI() {
+      const listEstruturaInicial = await getEstruturaInicial();
+
+      if (!listEstruturaInicial) {
+        const valueDefault = {
+          estruturaInicialIdNumRegistro: '00001',
+          estruturaInicialNivelControleInterno: '',
+          estruturaInicialQuantidadeTotalServidores: '',
+          estruturaInicialQuantidadeServidoresEfetivos: '',
+          estruturaInicialQuantidadeContadores: '',
+          estruturaInicialNormaInternaGestaoOrcamentaria: '',
+          estruturaInicialNormaInternaGestaoFinanceira: '',
+          estruturaInicialNormaInternaGestaoPatrimonial: '',
+          estruturaInicialNormaInternaGestaoFiscal: '',
+          estruturaInicialNormaInternaDemContabeis: '',
+        }
+        await axios.post(
+          `${baseAPI.URL}/forms/${context.formInfo.id}/estruturas`,
+          valueDefault,
+          { headers: baseAPI.HEADERS(token) },
+        )
+
+        await getEstruturaInicial();
+      }
+    }
+    async function getEstruturaInicial() {
       const responseGet = await axios.get(
         `${baseAPI.URL}/forms/${context.formInfo.id}/estruturas`,
         { headers: baseAPI.HEADERS(token) },
@@ -76,45 +102,27 @@ export const EstruturaInicial = (props: any) => {
           }
         },
       )
-      
-      if (dataGet.length === 0) {
-        const valueDefault = {
-          estruturaInicialIdNumRegistro: '00001',
-          estruturaInicialNivelControleInterno: " ",
-          estruturaInicialQuantidadeTotalServidores: " ",
-          estruturaInicialQuantidadeServidoresEfetivos: " ",
-          estruturaInicialQuantidadeContadores: " ",
-          estruturaInicialNormaInternaGestaoOrcamentaria: " ",
-          estruturaInicialNormaInternaGestaoFinanceira: " ",
-          estruturaInicialNormaInternaGestaoPatrimonial: " ",
-          estruturaInicialNormaInternaGestaoFiscal: " ",
-          estruturaInicialNormaInternaDemContabeis: " ",
-        }
-        await axios.post(
-          `${baseAPI.URL}/forms/${context.formInfo.id}/estruturas`,
-          valueDefault,
-          { headers: baseAPI.HEADERS(token) },
+      if (dataGet.length > 0) {
+        setDataEstrutura(
+          dataGet.reduce((data: DataEstruturaProps) => ({ ...data })),
         )
-  
+        return true
       }
-
-      setDataEstrutura(
-        dataGet.reduce((data: DataEstruturaProps) => ({ ...data })),
-      )
+      return false
     }
   }, [])
 
   const initialValues = {
     estruturaInicialIdNumRegistro: `${dataEstrutura.estruturaInicialIdNumRegistro}`,
-    estruturaInicialNivelControleInterno: `${dataEstrutura.estruturaInicialNivelControleInterno}`,
+    estruturaInicialNivelControleInterno: `${dataEstrutura.estruturaInicialNivelControleInterno || ''}`,
     estruturaInicialQuantidadeTotalServidores: `${dataEstrutura.estruturaInicialQuantidadeTotalServidores}`,
-    estruturaInicialQuantidadeServidoresEfetivos: ` ${dataEstrutura.estruturaInicialQuantidadeServidoresEfetivos}`,
+    estruturaInicialQuantidadeServidoresEfetivos: `${dataEstrutura.estruturaInicialQuantidadeServidoresEfetivos}`,
     estruturaInicialQuantidadeContadores: `${dataEstrutura.estruturaInicialQuantidadeContadores}`,
-    estruturaInicialNormaInternaGestaoOrcamentaria: `${dataEstrutura.estruturaInicialNormaInternaGestaoOrcamentaria}`,
-    estruturaInicialNormaInternaGestaoFinanceira: `${dataEstrutura.estruturaInicialNormaInternaGestaoFinanceira}`,
-    estruturaInicialNormaInternaGestaoPatrimonial: `${dataEstrutura.estruturaInicialNormaInternaGestaoPatrimonial}`,
-    estruturaInicialNormaInternaGestaoFiscal: `${dataEstrutura.estruturaInicialNormaInternaGestaoFiscal}`,
-    estruturaInicialNormaInternaDemContabeis: `${dataEstrutura.estruturaInicialNormaInternaDemContabeis}`,
+    estruturaInicialNormaInternaGestaoOrcamentaria: `${dataEstrutura.estruturaInicialNormaInternaGestaoOrcamentaria || ''}`,
+    estruturaInicialNormaInternaGestaoFinanceira: `${dataEstrutura.estruturaInicialNormaInternaGestaoFinanceira || ''}`,
+    estruturaInicialNormaInternaGestaoPatrimonial: `${dataEstrutura.estruturaInicialNormaInternaGestaoPatrimonial || ''}`,
+    estruturaInicialNormaInternaGestaoFiscal: `${dataEstrutura.estruturaInicialNormaInternaGestaoFiscal || ''}`,
+    estruturaInicialNormaInternaDemContabeis: `${dataEstrutura.estruturaInicialNormaInternaDemContabeis || ''}`,
   }
 
   const validationSchema = validationEstruturaInicial.validationSchema
@@ -123,15 +131,23 @@ export const EstruturaInicial = (props: any) => {
     initialValues: initialValues,
     enableReinitialize: true,
     validationSchema: validationSchema,
-    onSubmit: (values, { resetForm }) => {
-      console.log('Estrutura inicial válida.')
-      console.log('Salvando...')
+
+    onSubmit: () => {
+     
+      saveEstruturaInicial();
       context.setValueTab(1)
     },
   })
 
-  function saveEstruturaInicial() {
-    console.log('Salvando...')
+  async function saveEstruturaInicial() {
+    alert("Os dados da Estrutura Inicial foram salvos.");
+  
+    await axios.put(
+    `${baseAPI.URL}/forms/${context.formInfo.id}/estruturas/${dataEstrutura.id}`,
+       formik.values,
+       { headers: baseAPI.HEADERS(token) },
+     )
+
   }
 
   return (
