@@ -10,7 +10,8 @@ export const UnidadeGestoraStyle = styled.form`
 
   div[data-header="headerForm"] {
     display: flex;
-    justify-content: space-between;
+    // justify-content: space-between;
+    justify-content: end;
     align-items: center;
 
     .MuiFormControl-root {

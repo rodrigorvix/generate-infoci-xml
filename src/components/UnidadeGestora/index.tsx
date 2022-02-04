@@ -4,66 +4,159 @@ import { TextField, MenuItem, Button } from '@mui/material'
 
 import { UnidadeGestoraStyle } from './style'
 import validationUnidadeGestora from '../../utils/validationUnidadeGestora'
-import { useContext, useState } from 'react'
+import { useContext, useEffect, useState } from 'react'
 import { GlobalContext } from '../../context/GlobalStorage'
+import { useNavigate } from 'react-router-dom'
+import axios from 'axios'
+import baseAPI from '../../utils/baseAPI'
+
+interface DataUnidadeGestoraProps {
+  id: number
+  unidadeGestoraIdNumRegistro: string
+  unidadeGestoraNivelControleInterno: string
+  unidadeGestoraCodigoUnidadeGestora: string
+  unidadeGestoraResponsavelUnidadeGestora: string
+  unidadeGestoraExercicioUltimaManifestacaoControleInterno: string
+  unidadeGestoraOpiniaoPrestacaoContasControleInterno: string
+}
 
 export const UnidadeGestora = (props: any) => {
   const context = useContext(GlobalContext)
+  const navigate = useNavigate()
+  const token = localStorage.getItem('app-token');
   const [buttonId, setButtonId] = useState('')
-  const [selectUnidadeGestora, setSelectUnidadeGestora] = useState(1)
+  const [dataUnidadeGestora, setDataUnidadeGestora] = useState<
+    DataUnidadeGestoraProps
+  >({} as DataUnidadeGestoraProps)
+  // const [selectUnidadeGestora, setSelectUnidadeGestora] = useState(1)
+
+  useEffect(() => {
+    if (!context.formInfo.id) {
+      navigate('/select_ug')
+      return
+    }
+
+    requestAPI()
+
+    async function requestAPI() {
+      const listUniadeGestora = await getUnidadeGestora()
+
+      if (!listUniadeGestora) {
+        const valueDefault = {
+          unidadeGestoraIdNumRegistro: `00001`,
+          unidadeGestoraNivelControleInterno: ``,
+          unidadeGestoraCodigoUnidadeGestora: ``,
+          unidadeGestoraResponsavelUnidadeGestora: ``,
+          unidadeGestoraExercicioUltimaManifestacaoControleInterno: ``,
+          unidadeGestoraOpiniaoPrestacaoContasControleInterno: ``,
+        }
+        await axios.post(
+          `${baseAPI.URL}/forms/${context.formInfo.id}/unidades`,
+          valueDefault,
+          { headers: baseAPI.HEADERS(token) },
+        )
+
+        await getUnidadeGestora()
+      }
+    }
+    async function getUnidadeGestora() {
+      const responseGet = await axios.get(
+        `${baseAPI.URL}/forms/${context.formInfo.id}/unidades`,
+        { headers: baseAPI.HEADERS(token) },
+      )
+      const dataGet = responseGet.data.map(
+        ({
+          id,
+          unidadeGestoraIdNumRegistro,
+          unidadeGestoraNivelControleInterno,
+          unidadeGestoraCodigoUnidadeGestora,
+          unidadeGestoraResponsavelUnidadeGestora,
+          unidadeGestoraExercicioUltimaManifestacaoControleInterno,
+          unidadeGestoraOpiniaoPrestacaoContasControleInterno,
+        }: any) => {
+          return {
+            id,
+            unidadeGestoraIdNumRegistro,
+          unidadeGestoraNivelControleInterno,
+          unidadeGestoraCodigoUnidadeGestora,
+          unidadeGestoraResponsavelUnidadeGestora,
+          unidadeGestoraExercicioUltimaManifestacaoControleInterno,
+          unidadeGestoraOpiniaoPrestacaoContasControleInterno,
+          }
+        },
+      )
+      if (dataGet.length > 0) {
+        setDataUnidadeGestora(
+          dataGet.reduce((data: DataUnidadeGestoraProps) => ({ ...data })),
+        )
+        return true
+      }
+      return false
+    }
+  }, [])
 
   const initialValues = {
-    unidadeGestoraIdNumRegistro: ``,
-    unidadeGestoraNivelControleInterno: ``,
-    unidadeGestoraCodigoUnidadeGestora: ``,
-    unidadeGestoraResponsavelUnidadeGestora: ``,
-    unidadeGestoraExercicioUltimaManifestacaoControleInterno: ``,
-    unidadeGestoraOpiniaoPrestacaoContasControleInterno: ``,
+    unidadeGestoraIdNumRegistro: `${dataUnidadeGestora.unidadeGestoraIdNumRegistro}`,
+    unidadeGestoraNivelControleInterno: `${dataUnidadeGestora.unidadeGestoraNivelControleInterno || ''}`,
+    unidadeGestoraCodigoUnidadeGestora: `${dataUnidadeGestora.unidadeGestoraCodigoUnidadeGestora}`,
+    unidadeGestoraResponsavelUnidadeGestora: `${dataUnidadeGestora.unidadeGestoraResponsavelUnidadeGestora}`,
+    unidadeGestoraExercicioUltimaManifestacaoControleInterno: `${dataUnidadeGestora.unidadeGestoraExercicioUltimaManifestacaoControleInterno}`,
+    unidadeGestoraOpiniaoPrestacaoContasControleInterno: `${dataUnidadeGestora.unidadeGestoraOpiniaoPrestacaoContasControleInterno || ''}`,
   }
 
   const validationSchema = validationUnidadeGestora.validationSchema
 
   const formik = useFormik({
     initialValues: initialValues,
-
+    enableReinitialize: true,
     validationSchema: validationSchema,
-    onSubmit: (values, { resetForm }) => {
+
+    onSubmit: () => {
       console.log('Unidade gestora válida.')
       console.log('Salvando...')
+
+      saveUnidadeGestora();
 
       const tab = buttonId === 'next' ? 2 : 0
       context.setValueTab(tab)
     },
-  });
+  })
 
-  async function handleSelectUnidadeGestora(e: any) {
-  
-    const validate = await formik.validateForm(formik.values);
+  // async function handleSelectUnidadeGestora(e: any) {
 
-    if(Object.entries(validate).length > 0) {
-      alert("Preencha todos os campos corretamente antes de alternar de registro.");
-      formik.handleSubmit();
-      context.setValueTab(1);
-      return;
-    }
-    
-    setSelectUnidadeGestora(e.target.value);
-    console.log('Executa chamada a API');
-    // console.log(e.target.value);
-  }
+  //   const validate = await formik.validateForm(formik.values);
+
+  //   if(Object.entries(validate).length > 0) {
+  //     alert("Preencha todos os campos corretamente antes de alternar de registro.");
+  //     formik.handleSubmit();
+  //     context.setValueTab(1);
+  //     return;
+  //   }
+
+  //   setSelectUnidadeGestora(e.target.value);
+  //   console.log('Executa chamada a API');
+  //   console.log(e.target.value);
+  // }
 
   function getIdButton(e: any) {
     setButtonId(e.target.id)
   }
 
-  function saveUnidadeGestora() {
-    console.log('Salvando...')
+  async function saveUnidadeGestora() {
+    alert("Os dados da Unidade Gestora foram salvos.");
+  
+    await axios.put(
+    `${baseAPI.URL}/forms/${context.formInfo.id}/unidades/${dataUnidadeGestora.id}`,
+       formik.values,
+       { headers: baseAPI.HEADERS(token) },
+     )
+
   }
 
   return (
     <UnidadeGestoraStyle onSubmit={formik.handleSubmit}>
       <div data-header="headerForm">
-        <TextField
+        {/* <TextField
           fullWidth
           select
           inputProps={{ MenuProps: { disableScrollLock: true } }}
@@ -75,7 +168,7 @@ export const UnidadeGestora = (props: any) => {
         >
           <MenuItem value={1}>Unidade Gestora-001</MenuItem>
           <MenuItem value={2}>Unidade Gestora-002</MenuItem>
-        </TextField>
+        </TextField> */}
 
         <div data-button="save">
           <Button variant="contained" onClick={saveUnidadeGestora}>

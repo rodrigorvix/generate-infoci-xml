@@ -11,7 +11,7 @@ import axios from 'axios'
 import baseAPI from '../../utils/baseAPI'
 import { useNavigate } from 'react-router-dom'
 
-interface DataEstruturaProps {
+interface DataEstruturaInicialProps {
   id: number
   estruturaInicialIdNumRegistro: string
   estruturaInicialNivelControleInterno: string
@@ -29,13 +29,12 @@ export const EstruturaInicial = (props: any) => {
   const context = useContext(GlobalContext);
   const navigate = useNavigate();
   const token = localStorage.getItem('app-token');
-  const [dataEstrutura, setDataEstrutura] = useState<DataEstruturaProps>(
-    {} as DataEstruturaProps,
+  const [dataEstruturaInicial, setDataEstruturaInicial] = useState<DataEstruturaInicialProps>(
+    {} as DataEstruturaInicialProps,
   )
 
   useEffect(() => {
     
-
     if (!context.formInfo.id) {
       navigate('/select_ug')
       return
@@ -103,8 +102,8 @@ export const EstruturaInicial = (props: any) => {
         },
       )
       if (dataGet.length > 0) {
-        setDataEstrutura(
-          dataGet.reduce((data: DataEstruturaProps) => ({ ...data })),
+        setDataEstruturaInicial(
+          dataGet.reduce((data: DataEstruturaInicialProps) => ({ ...data })),
         )
         return true
       }
@@ -113,16 +112,16 @@ export const EstruturaInicial = (props: any) => {
   }, [])
 
   const initialValues = {
-    estruturaInicialIdNumRegistro: `${dataEstrutura.estruturaInicialIdNumRegistro}`,
-    estruturaInicialNivelControleInterno: `${dataEstrutura.estruturaInicialNivelControleInterno || ''}`,
-    estruturaInicialQuantidadeTotalServidores: `${dataEstrutura.estruturaInicialQuantidadeTotalServidores}`,
-    estruturaInicialQuantidadeServidoresEfetivos: `${dataEstrutura.estruturaInicialQuantidadeServidoresEfetivos}`,
-    estruturaInicialQuantidadeContadores: `${dataEstrutura.estruturaInicialQuantidadeContadores}`,
-    estruturaInicialNormaInternaGestaoOrcamentaria: `${dataEstrutura.estruturaInicialNormaInternaGestaoOrcamentaria || ''}`,
-    estruturaInicialNormaInternaGestaoFinanceira: `${dataEstrutura.estruturaInicialNormaInternaGestaoFinanceira || ''}`,
-    estruturaInicialNormaInternaGestaoPatrimonial: `${dataEstrutura.estruturaInicialNormaInternaGestaoPatrimonial || ''}`,
-    estruturaInicialNormaInternaGestaoFiscal: `${dataEstrutura.estruturaInicialNormaInternaGestaoFiscal || ''}`,
-    estruturaInicialNormaInternaDemContabeis: `${dataEstrutura.estruturaInicialNormaInternaDemContabeis || ''}`,
+    estruturaInicialIdNumRegistro: `${dataEstruturaInicial.estruturaInicialIdNumRegistro}`,
+    estruturaInicialNivelControleInterno: `${dataEstruturaInicial.estruturaInicialNivelControleInterno || ''}`,
+    estruturaInicialQuantidadeTotalServidores: `${dataEstruturaInicial.estruturaInicialQuantidadeTotalServidores}`,
+    estruturaInicialQuantidadeServidoresEfetivos: `${dataEstruturaInicial.estruturaInicialQuantidadeServidoresEfetivos}`,
+    estruturaInicialQuantidadeContadores: `${dataEstruturaInicial.estruturaInicialQuantidadeContadores}`,
+    estruturaInicialNormaInternaGestaoOrcamentaria: `${dataEstruturaInicial.estruturaInicialNormaInternaGestaoOrcamentaria || ''}`,
+    estruturaInicialNormaInternaGestaoFinanceira: `${dataEstruturaInicial.estruturaInicialNormaInternaGestaoFinanceira || ''}`,
+    estruturaInicialNormaInternaGestaoPatrimonial: `${dataEstruturaInicial.estruturaInicialNormaInternaGestaoPatrimonial || ''}`,
+    estruturaInicialNormaInternaGestaoFiscal: `${dataEstruturaInicial.estruturaInicialNormaInternaGestaoFiscal || ''}`,
+    estruturaInicialNormaInternaDemContabeis: `${dataEstruturaInicial.estruturaInicialNormaInternaDemContabeis || ''}`,
   }
 
   const validationSchema = validationEstruturaInicial.validationSchema
@@ -143,7 +142,7 @@ export const EstruturaInicial = (props: any) => {
     alert("Os dados da Estrutura Inicial foram salvos.");
   
     await axios.put(
-    `${baseAPI.URL}/forms/${context.formInfo.id}/estruturas/${dataEstrutura.id}`,
+    `${baseAPI.URL}/forms/${context.formInfo.id}/estruturas/${dataEstruturaInicial.id}`,
        formik.values,
        { headers: baseAPI.HEADERS(token) },
      )
