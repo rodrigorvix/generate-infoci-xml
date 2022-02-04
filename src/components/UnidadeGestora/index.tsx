@@ -1,6 +1,8 @@
 import { useFormik } from 'formik'
 
-import { TextField, MenuItem, Button } from '@mui/material'
+import { TextField, MenuItem, Button, IconButton } from '@mui/material'
+import ArrowCircleRightIcon from '@mui/icons-material/ArrowCircleRight'
+import ArrowCircleLeftIcon from '@mui/icons-material/ArrowCircleLeft'
 
 import { UnidadeGestoraStyle } from './style'
 import validationUnidadeGestora from '../../utils/validationUnidadeGestora'
@@ -23,7 +25,7 @@ interface DataUnidadeGestoraProps {
 export const UnidadeGestora = (props: any) => {
   const context = useContext(GlobalContext)
   const navigate = useNavigate()
-  const token = localStorage.getItem('app-token');
+  const token = localStorage.getItem('app-token')
   const [buttonId, setButtonId] = useState('')
   const [dataUnidadeGestora, setDataUnidadeGestora] = useState<
     DataUnidadeGestoraProps
@@ -77,11 +79,11 @@ export const UnidadeGestora = (props: any) => {
           return {
             id,
             unidadeGestoraIdNumRegistro,
-          unidadeGestoraNivelControleInterno,
-          unidadeGestoraCodigoUnidadeGestora,
-          unidadeGestoraResponsavelUnidadeGestora,
-          unidadeGestoraExercicioUltimaManifestacaoControleInterno,
-          unidadeGestoraOpiniaoPrestacaoContasControleInterno,
+            unidadeGestoraNivelControleInterno,
+            unidadeGestoraCodigoUnidadeGestora,
+            unidadeGestoraResponsavelUnidadeGestora,
+            unidadeGestoraExercicioUltimaManifestacaoControleInterno,
+            unidadeGestoraOpiniaoPrestacaoContasControleInterno,
           }
         },
       )
@@ -97,11 +99,16 @@ export const UnidadeGestora = (props: any) => {
 
   const initialValues = {
     unidadeGestoraIdNumRegistro: `${dataUnidadeGestora.unidadeGestoraIdNumRegistro}`,
-    unidadeGestoraNivelControleInterno: `${dataUnidadeGestora.unidadeGestoraNivelControleInterno || ''}`,
+    unidadeGestoraNivelControleInterno: `${
+      dataUnidadeGestora.unidadeGestoraNivelControleInterno || ''
+    }`,
     unidadeGestoraCodigoUnidadeGestora: `${dataUnidadeGestora.unidadeGestoraCodigoUnidadeGestora}`,
     unidadeGestoraResponsavelUnidadeGestora: `${dataUnidadeGestora.unidadeGestoraResponsavelUnidadeGestora}`,
     unidadeGestoraExercicioUltimaManifestacaoControleInterno: `${dataUnidadeGestora.unidadeGestoraExercicioUltimaManifestacaoControleInterno}`,
-    unidadeGestoraOpiniaoPrestacaoContasControleInterno: `${dataUnidadeGestora.unidadeGestoraOpiniaoPrestacaoContasControleInterno || ''}`,
+    unidadeGestoraOpiniaoPrestacaoContasControleInterno: `${
+      dataUnidadeGestora.unidadeGestoraOpiniaoPrestacaoContasControleInterno ||
+      ''
+    }`,
   }
 
   const validationSchema = validationUnidadeGestora.validationSchema
@@ -112,11 +119,8 @@ export const UnidadeGestora = (props: any) => {
     validationSchema: validationSchema,
 
     onSubmit: () => {
-      console.log('Unidade gestora válida.')
-      console.log('Salvando...')
-
-      saveUnidadeGestora();
-
+      saveUnidadeGestora()
+      
       const tab = buttonId === 'next' ? 2 : 0
       context.setValueTab(tab)
     },
@@ -139,18 +143,18 @@ export const UnidadeGestora = (props: any) => {
   // }
 
   function getIdButton(e: any) {
-    setButtonId(e.target.id)
+  
+    setButtonId(e.target.parentNode.id)
   }
 
   async function saveUnidadeGestora() {
-    alert("Os dados da Unidade Gestora foram salvos.");
-  
-    await axios.put(
-    `${baseAPI.URL}/forms/${context.formInfo.id}/unidades/${dataUnidadeGestora.id}`,
-       formik.values,
-       { headers: baseAPI.HEADERS(token) },
-     )
+    alert('Os dados da Unidade Gestora foram salvos.')
 
+    await axios.put(
+      `${baseAPI.URL}/forms/${context.formInfo.id}/unidades/${dataUnidadeGestora.id}`,
+      formik.values,
+      { headers: baseAPI.HEADERS(token) },
+    )
   }
 
   return (
@@ -309,23 +313,25 @@ export const UnidadeGestora = (props: any) => {
       </TextField>
 
       <div data-button="next-previous">
-        <Button
-          variant="contained"
+        <IconButton
+          title="Anterior"
+          aria-label="Formulário anterior."
           type="submit"
           id="previous"
           onClick={getIdButton}
         >
-          Anterior
-        </Button>
+          <ArrowCircleLeftIcon  id="previous"/>
+        </IconButton>
 
-        <Button
-          variant="contained"
+        <IconButton
+          title="Próximo"
+          aria-label="Próximo formulário."
           type="submit"
           id="next"
           onClick={getIdButton}
         >
-          Próximo
-        </Button>
+          <ArrowCircleRightIcon id="next"/>
+        </IconButton>
       </div>
     </UnidadeGestoraStyle>
   )

@@ -8,13 +8,14 @@ export const ProcedimentosStyle = styled.form`
   flex-direction: column;
   gap: 1rem;
 
+
   div[data-header="headerForm"] {
     display: flex;
     justify-content: space-between;
     align-items: center;
 
     .MuiFormControl-root {
-      width: 250px;
+      width: 220px;
     }
 
     div[data-button="save"] {
@@ -28,7 +29,6 @@ export const ProcedimentosStyle = styled.form`
          filter:brightness(0.8);
        }
       }
-      
     }
   }
 
@@ -46,14 +46,20 @@ export const ProcedimentosStyle = styled.form`
    display: flex;
    justify-content: space-between;
   
-   .MuiButton-root {
-      background: var(--blue-500);
-      width: 100px;
-     
-     &:hover {
-       filter:brightness(0.8)
-     }
-    }
+   .MuiIconButton-root {
+    padding:0px;
+    svg {
+      font-size : 3.5rem;
+      color: var(--blue-500);
+
+      &:hover {
+        filter:brightness(0.8);
+      }
+    }  
+    
+  }
+
+    
   }
    
 `;

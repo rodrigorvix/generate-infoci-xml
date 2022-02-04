@@ -1,6 +1,10 @@
 import { useFormik } from 'formik';
 
-import { TextField, MenuItem, Button } from "@mui/material";
+import { TextField, MenuItem, Button, IconButton } from "@mui/material";
+import AddCircleIcon from '@mui/icons-material/AddCircle';
+import RemoveCircleIcon from '@mui/icons-material/RemoveCircle';
+import ArrowCircleRightIcon from '@mui/icons-material/ArrowCircleRight';
+import ArrowCircleLeftIcon from '@mui/icons-material/ArrowCircleLeft';
 
 import validationProcedimentos from '../../utils/validationProcedimentos';
 import { ProcedimentosStyle } from "./style";
@@ -114,12 +118,22 @@ export const Procedimentos = () => {
   function saveProcedimento() {
     console.log("Salvando...")
   }
+
+  function addNewProcedimento() {
+    console.log("Adicionando um novo procedimento.")
+  }
+
+  function removeProcedimento() {
+    console.log("Removendo o procedimento atual.")
+  }
+
   return (
     <ProcedimentosStyle onSubmit={formik.handleSubmit}>
 
 <div data-header="headerForm">
-       
-       <TextField
+
+     
+      <TextField
         fullWidth
         select
         inputProps={{ MenuProps: { disableScrollLock: true } }}
@@ -365,13 +379,27 @@ export const Procedimentos = () => {
       </TextField>  
       
       <div data-button="next-previous">
-          <Button variant="contained" type="submit" id="previous" onClick={getIdButton}>
-            Anterior
-          </Button>
+         
+          <IconButton
+            title='Anterior'
+            aria-label="Formulário anterior."
+            type="submit"
+            id="previous" 
+            onClick={getIdButton}
+          >
+            <ArrowCircleLeftIcon />
+          </IconButton>
 
-          <Button variant="contained" type="submit" id="next"  onClick={getIdButton} >
-            Próximo
-          </Button>
+          <IconButton
+            title='Próximo'
+            aria-label="Próximo formulário."
+            type="submit" 
+            id="next"  
+            onClick={getIdButton}
+          >
+            <ArrowCircleRightIcon/>
+          </IconButton>
+          
       </div>
 
       <ConfirmDialog 

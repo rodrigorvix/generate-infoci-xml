@@ -46,13 +46,17 @@ export const TomadaContasEspecialraStyle = styled.form`
     display: flex;
     justify-content: space-between;
    
-    .MuiButton-root {
-       background: var(--blue-500);
-       width: 100px;
+     .MuiIconButton-root {
+      padding:0px;
+      svg {
+        font-size : 3.5rem;
+        color: var(--blue-500);
+  
+        &:hover {
+          filter:brightness(0.8);
+        }
+      }  
       
-      &:hover {
-        filter:brightness(0.8)
-      }
-     }
+    }
    }
 `;

@@ -20,13 +20,26 @@ export const EstruturaInicialStyle = styled.form`
   div[data-button="right"] {
    text-align: end;
 
-    .MuiButton-root {
-      background: var(--blue-500);
-      width: 100px;
+     .MuiButton-root {
+       background: var(--blue-500);
+       width: 100px;
      
-     &:hover {
-       filter:brightness(0.8)
+      &:hover {
+        filter:brightness(0.8)
+      }
      }
+
+    .MuiIconButton-root {
+      padding:0px;
+      svg {
+        font-size : 3.5rem;
+        color: var(--blue-500);
+
+        &:hover {
+          filter:brightness(0.8);
+        }
+      }  
+      
     }
 
   }

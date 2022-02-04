@@ -1,7 +1,8 @@
 import { useFormik } from 'formik'
 
-import { Button } from '@mui/material'
+import { Button, IconButton } from '@mui/material'
 import { TextField, MenuItem } from '@mui/material'
+import ArrowCircleRightIcon from '@mui/icons-material/ArrowCircleRight'
 
 import { EstruturaInicialStyle } from './style'
 import validationEstruturaInicial from '../../utils/validationEstruturaInicial'
@@ -26,24 +27,23 @@ interface DataEstruturaInicialProps {
 }
 
 export const EstruturaInicial = (props: any) => {
-  const context = useContext(GlobalContext);
-  const navigate = useNavigate();
-  const token = localStorage.getItem('app-token');
-  const [dataEstruturaInicial, setDataEstruturaInicial] = useState<DataEstruturaInicialProps>(
-    {} as DataEstruturaInicialProps,
-  )
+  const context = useContext(GlobalContext)
+  const navigate = useNavigate()
+  const token = localStorage.getItem('app-token')
+  const [dataEstruturaInicial, setDataEstruturaInicial] = useState<
+    DataEstruturaInicialProps
+  >({} as DataEstruturaInicialProps)
 
   useEffect(() => {
-    
     if (!context.formInfo.id) {
       navigate('/select_ug')
       return
     }
 
-    requestAPI();
+    requestAPI()
 
     async function requestAPI() {
-      const listEstruturaInicial = await getEstruturaInicial();
+      const listEstruturaInicial = await getEstruturaInicial()
 
       if (!listEstruturaInicial) {
         const valueDefault = {
@@ -64,7 +64,7 @@ export const EstruturaInicial = (props: any) => {
           { headers: baseAPI.HEADERS(token) },
         )
 
-        await getEstruturaInicial();
+        await getEstruturaInicial()
       }
     }
     async function getEstruturaInicial() {
@@ -113,15 +113,27 @@ export const EstruturaInicial = (props: any) => {
 
   const initialValues = {
     estruturaInicialIdNumRegistro: `${dataEstruturaInicial.estruturaInicialIdNumRegistro}`,
-    estruturaInicialNivelControleInterno: `${dataEstruturaInicial.estruturaInicialNivelControleInterno || ''}`,
+    estruturaInicialNivelControleInterno: `${
+      dataEstruturaInicial.estruturaInicialNivelControleInterno || ''
+    }`,
     estruturaInicialQuantidadeTotalServidores: `${dataEstruturaInicial.estruturaInicialQuantidadeTotalServidores}`,
     estruturaInicialQuantidadeServidoresEfetivos: `${dataEstruturaInicial.estruturaInicialQuantidadeServidoresEfetivos}`,
     estruturaInicialQuantidadeContadores: `${dataEstruturaInicial.estruturaInicialQuantidadeContadores}`,
-    estruturaInicialNormaInternaGestaoOrcamentaria: `${dataEstruturaInicial.estruturaInicialNormaInternaGestaoOrcamentaria || ''}`,
-    estruturaInicialNormaInternaGestaoFinanceira: `${dataEstruturaInicial.estruturaInicialNormaInternaGestaoFinanceira || ''}`,
-    estruturaInicialNormaInternaGestaoPatrimonial: `${dataEstruturaInicial.estruturaInicialNormaInternaGestaoPatrimonial || ''}`,
-    estruturaInicialNormaInternaGestaoFiscal: `${dataEstruturaInicial.estruturaInicialNormaInternaGestaoFiscal || ''}`,
-    estruturaInicialNormaInternaDemContabeis: `${dataEstruturaInicial.estruturaInicialNormaInternaDemContabeis || ''}`,
+    estruturaInicialNormaInternaGestaoOrcamentaria: `${
+      dataEstruturaInicial.estruturaInicialNormaInternaGestaoOrcamentaria || ''
+    }`,
+    estruturaInicialNormaInternaGestaoFinanceira: `${
+      dataEstruturaInicial.estruturaInicialNormaInternaGestaoFinanceira || ''
+    }`,
+    estruturaInicialNormaInternaGestaoPatrimonial: `${
+      dataEstruturaInicial.estruturaInicialNormaInternaGestaoPatrimonial || ''
+    }`,
+    estruturaInicialNormaInternaGestaoFiscal: `${
+      dataEstruturaInicial.estruturaInicialNormaInternaGestaoFiscal || ''
+    }`,
+    estruturaInicialNormaInternaDemContabeis: `${
+      dataEstruturaInicial.estruturaInicialNormaInternaDemContabeis || ''
+    }`,
   }
 
   const validationSchema = validationEstruturaInicial.validationSchema
@@ -132,21 +144,19 @@ export const EstruturaInicial = (props: any) => {
     validationSchema: validationSchema,
 
     onSubmit: () => {
-     
-      saveEstruturaInicial();
+      saveEstruturaInicial()
       context.setValueTab(1)
     },
   })
 
   async function saveEstruturaInicial() {
-    alert("Os dados da Estrutura Inicial foram salvos.");
-  
-    await axios.put(
-    `${baseAPI.URL}/forms/${context.formInfo.id}/estruturas/${dataEstruturaInicial.id}`,
-       formik.values,
-       { headers: baseAPI.HEADERS(token) },
-     )
+    alert('Os dados da Estrutura Inicial foram salvos.')
 
+    await axios.put(
+      `${baseAPI.URL}/forms/${context.formInfo.id}/estruturas/${dataEstruturaInicial.id}`,
+      formik.values,
+      { headers: baseAPI.HEADERS(token) },
+    )
   }
 
   return (
@@ -413,9 +423,13 @@ export const EstruturaInicial = (props: any) => {
       </TextField>
 
       <div data-button="right">
-        <Button variant="contained" type="submit">
-          Próximo
-        </Button>
+        <IconButton
+          title="Próximo"
+          aria-label="Próximo formulário."
+          type="submit"
+        >
+          <ArrowCircleRightIcon />
+        </IconButton>
       </div>
     </EstruturaInicialStyle>
   )
