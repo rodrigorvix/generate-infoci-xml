@@ -38,7 +38,7 @@ export const Procedimentos = () => {
   
   const [buttonId, setButtonId] = useState('')
   const [selectProcedimento, setSelectProcedimento] = useState(0)
-  const [countProcedimento, setCountProcedimento] = useState(1);
+  const [countProcedimento, setCountProcedimento] = useState(0);
   const [openDialogProcedimento, setOpenDialogProcedimento] = useState(false)
   const [openDialogTomadaContas, setOpenDialogTomadaContas] = useState(false)
   const [openDialogUnidadeGestora, setOpenDialogUnidadeGestora] = useState(
@@ -102,23 +102,23 @@ export const Procedimentos = () => {
     if (dataGet.length > 0) {
       setDataProcedimentos(dataGet.map((data: DataProcedimentoProps) => data ));
 
-      setCountProcedimento(dataGet.length);
+      setCountProcedimento(dataProcedimentos.length);
       return true;
     }
     return false;
   }
 
   async function newProcedimento() {
-    
+
     const valuesProcedimento = {
-      procedimentosIdNumRegistro: `0000${countProcedimento}`,
+      procedimentosIdNumRegistro: `0000${countProcedimento + 1}`,
       procedimentosNivelControleInterno: ``,
       procedimentosCodigoUnidadeGestora: ``,
       procedimentosCodigoProcedimento: ``,
       procedimentosTipoPontoControle: ``,
       procedimentosUniversoAnalisado: ``,
       procedimentosAmostraSelecionada: ``,
-      procedimentosDescricaoAnalise: `Agora vai 2`,
+      procedimentosDescricaoAnalise: ``,
       procedimentosTipoProcedimentoAnalisado: ``,
       procedimentosSituacaoAnalise: ``,
     }
@@ -127,13 +127,12 @@ export const Procedimentos = () => {
       valuesProcedimento,
       { headers: baseAPI.HEADERS(token) },
     )
-    setCountProcedimento(countProcedimento + 1);
+    
   }
 
   async function responseDialogProcedimentoYes() {
     console.log('Gerando um novo procedimento...')
    
-
     await newProcedimento();
     await getProcedimento();
     setSelectProcedimento(selectProcedimento + 1)
@@ -170,15 +169,15 @@ export const Procedimentos = () => {
 
   const initialValues = {
     procedimentosIdNumRegistro: `${dataProcedimentos.length && dataProcedimentos[selectProcedimento].procedimentosIdNumRegistro}`,
-    procedimentosNivelControleInterno: `${dataProcedimentos.length && dataProcedimentos[selectProcedimento].procedimentosNivelControleInterno || ''}`,
+    procedimentosNivelControleInterno: `${dataProcedimentos.length && (dataProcedimentos[selectProcedimento].procedimentosNivelControleInterno || '')}`,
     procedimentosCodigoUnidadeGestora: `${dataProcedimentos.length && dataProcedimentos[selectProcedimento].procedimentosCodigoUnidadeGestora}`,
     procedimentosCodigoProcedimento: `${dataProcedimentos.length && dataProcedimentos[selectProcedimento].procedimentosCodigoProcedimento}`,
-    procedimentosTipoPontoControle: `${dataProcedimentos.length && dataProcedimentos[selectProcedimento].procedimentosTipoPontoControle || ''}`,
+    procedimentosTipoPontoControle: `${dataProcedimentos.length && (dataProcedimentos[selectProcedimento].procedimentosTipoPontoControle || '')}`,
     procedimentosUniversoAnalisado: `${dataProcedimentos.length && dataProcedimentos[selectProcedimento].procedimentosUniversoAnalisado}`,
     procedimentosAmostraSelecionada: `${dataProcedimentos.length && dataProcedimentos[selectProcedimento].procedimentosAmostraSelecionada}`,
     procedimentosDescricaoAnalise: `${dataProcedimentos.length && dataProcedimentos[selectProcedimento].procedimentosDescricaoAnalise}`,
-    procedimentosTipoProcedimentoAnalisado: `${dataProcedimentos.length && dataProcedimentos[selectProcedimento].procedimentosTipoProcedimentoAnalisado || ''}`,
-    procedimentosSituacaoAnalise: `${dataProcedimentos.length && dataProcedimentos[selectProcedimento].procedimentosSituacaoAnalise || ''}`,
+    procedimentosTipoProcedimentoAnalisado: `${dataProcedimentos.length && (dataProcedimentos[selectProcedimento].procedimentosTipoProcedimentoAnalisado || '')}`,
+    procedimentosSituacaoAnalise: `${dataProcedimentos.length && (dataProcedimentos[selectProcedimento].procedimentosSituacaoAnalise || '')}`,
   }
   const validationSchema = validationProcedimentos.validationSchema
 
