@@ -27,9 +27,7 @@ export const UnidadeGestora = (props: any) => {
   const navigate = useNavigate()
   const token = localStorage.getItem('app-token')
   const [buttonId, setButtonId] = useState('')
-  const [dataUnidadeGestora, setDataUnidadeGestora] = useState<
-    DataUnidadeGestoraProps
-  >({} as DataUnidadeGestoraProps)
+  const [dataUnidadeGestora, setDataUnidadeGestora] = useState<DataUnidadeGestoraProps>({} as DataUnidadeGestoraProps)
   // const [selectUnidadeGestora, setSelectUnidadeGestora] = useState(1)
 
   useEffect(() => {

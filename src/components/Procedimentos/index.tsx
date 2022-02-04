@@ -1,159 +1,265 @@
-import { useFormik } from 'formik';
+import { useFormik } from 'formik'
 
-import { TextField, MenuItem, Button, IconButton } from "@mui/material";
-import AddCircleIcon from '@mui/icons-material/AddCircle';
-import RemoveCircleIcon from '@mui/icons-material/RemoveCircle';
-import ArrowCircleRightIcon from '@mui/icons-material/ArrowCircleRight';
-import ArrowCircleLeftIcon from '@mui/icons-material/ArrowCircleLeft';
+import { TextField, MenuItem, Button, IconButton } from '@mui/material'
+import ArrowCircleRightIcon from '@mui/icons-material/ArrowCircleRight'
+import ArrowCircleLeftIcon from '@mui/icons-material/ArrowCircleLeft'
 
-import validationProcedimentos from '../../utils/validationProcedimentos';
-import { ProcedimentosStyle } from "./style";
-import { useContext, useState } from 'react';
-import { GlobalContext } from '../../context/GlobalStorage';
-import { useNavigate } from 'react-router-dom';
-import { ConfirmDialog } from '../ConfirmDialog';
+import validationProcedimentos from '../../utils/validationProcedimentos'
+import { ProcedimentosStyle } from './style'
+import { useContext, useEffect, useState } from 'react'
+import { GlobalContext } from '../../context/GlobalStorage'
+import { useNavigate } from 'react-router-dom'
+import { ConfirmDialog } from '../ConfirmDialog'
+import axios from 'axios'
+import baseAPI from '../../utils/baseAPI'
 
+interface DataProcedimentoProps {
+  id: number
+  procedimentosIdNumRegistro: string
+  procedimentosNivelControleInterno: string
+  procedimentosCodigoUnidadeGestora: string
+  procedimentosCodigoProcedimento: string
+  procedimentosTipoPontoControle: string
+  procedimentosUniversoAnalisado: string
+  procedimentosAmostraSelecionada: string
+  procedimentosDescricaoAnalise: string
+  procedimentosTipoProcedimentoAnalisado: string
+  procedimentosSituacaoAnalise: string
+}
 
 export const Procedimentos = () => {
+  const context = useContext(GlobalContext)
+  const navigate = useNavigate()
+  const token = localStorage.getItem('app-token')
 
-  const context = useContext(GlobalContext);
-  const navigate = useNavigate();
-
-  const [buttonId, setButtonId] = useState("");
-  const [selectProcedimento, setSelectProcedimento] = useState(1);
-  const [openDialogProcedimento, setOpenDialogProcedimento] = useState(false);
-  const [openDialogTomadaContas, setOpenDialogTomadaContas] = useState(false);
-  const [openDialogUnidadeGestora, setOpenDialogUnidadeGestora] = useState(false);
+  const [dataProcedimentos, setDataProcedimentos] = useState<
+    DataProcedimentoProps[]
+  >([] as DataProcedimentoProps[])
   
-  
-  function responseDialogProcedimentoYes(){
-    console.log("Gerando um novo procedimento...");
-    return;
+  const [buttonId, setButtonId] = useState('')
+  const [selectProcedimento, setSelectProcedimento] = useState(0)
+  const [countProcedimento, setCountProcedimento] = useState(1);
+  const [openDialogProcedimento, setOpenDialogProcedimento] = useState(false)
+  const [openDialogTomadaContas, setOpenDialogTomadaContas] = useState(false)
+  const [openDialogUnidadeGestora, setOpenDialogUnidadeGestora] = useState(
+    false,
+  )
+
+  useEffect(() => {
+    if (!context.formInfo.id) {
+      navigate('/select_ug')
+      return
+    }
+
+    requestAPI();
+
+    async function requestAPI() {
+      const listProcedimento = await getProcedimento()
+
+      if (!listProcedimento) {
+        await newProcedimento();
+
+        await getProcedimento();
+      }
+    }
+
+  }, [])
+
+  async function getProcedimento() {
+    const responseGet = await axios.get(
+      `${baseAPI.URL}/forms/${context.formInfo.id}/procedimentos`,
+      { headers: baseAPI.HEADERS(token) },
+    )
+    const dataGet = responseGet.data.map(
+      ({
+        id,
+        procedimentosIdNumRegistro,
+        procedimentosNivelControleInterno,
+        procedimentosCodigoUnidadeGestora,
+        procedimentosCodigoProcedimento,
+        procedimentosTipoPontoControle,
+        procedimentosUniversoAnalisado,
+        procedimentosAmostraSelecionada,
+        procedimentosDescricaoAnalise,
+        procedimentosTipoProcedimentoAnalisado,
+        procedimentosSituacaoAnalise,
+      }: any) => {
+        return {
+          id,
+          procedimentosIdNumRegistro,
+          procedimentosNivelControleInterno,
+          procedimentosCodigoUnidadeGestora,
+          procedimentosCodigoProcedimento,
+          procedimentosTipoPontoControle,
+          procedimentosUniversoAnalisado,
+          procedimentosAmostraSelecionada,
+          procedimentosDescricaoAnalise,
+          procedimentosTipoProcedimentoAnalisado,
+          procedimentosSituacaoAnalise,
+        }
+      },
+    )
+    if (dataGet.length > 0) {
+      setDataProcedimentos(dataGet.map((data: DataProcedimentoProps) => data ));
+
+      setCountProcedimento(dataGet.length);
+      return true;
+    }
+    return false;
   }
 
-  function responseDialogProcedimentoNo(){
-    setOpenDialogTomadaContas(true);
-    return;
+  async function newProcedimento() {
+    
+    const valuesProcedimento = {
+      procedimentosIdNumRegistro: `0000${countProcedimento}`,
+      procedimentosNivelControleInterno: ``,
+      procedimentosCodigoUnidadeGestora: ``,
+      procedimentosCodigoProcedimento: ``,
+      procedimentosTipoPontoControle: ``,
+      procedimentosUniversoAnalisado: ``,
+      procedimentosAmostraSelecionada: ``,
+      procedimentosDescricaoAnalise: `Agora vai 2`,
+      procedimentosTipoProcedimentoAnalisado: ``,
+      procedimentosSituacaoAnalise: ``,
+    }
+    await axios.post(
+      `${baseAPI.URL}/forms/${context.formInfo.id}/procedimentos`,
+      valuesProcedimento,
+      { headers: baseAPI.HEADERS(token) },
+    )
+    setCountProcedimento(countProcedimento + 1);
   }
 
-  function responseDialogTomadaContasYes(){
+  async function responseDialogProcedimentoYes() {
+    console.log('Gerando um novo procedimento...')
+   
 
-    context.setValueTab(3);
-    console.log("Gerando uma tomada de contas.");
-    return;
+    await newProcedimento();
+    await getProcedimento();
+    setSelectProcedimento(selectProcedimento + 1)
+    return
   }
 
-  function responseDialogTomadaContasNo(){
-    setOpenDialogUnidadeGestora(true);
-    return;
+  function responseDialogProcedimentoNo() {
+    setOpenDialogTomadaContas(true)
+    return
   }
 
-  function responseDialogUnidadeGestoraYes(){
-
-    navigate('/select_ug');
-    context.setValueTab(0);
-    return;
+  function responseDialogTomadaContasYes() {
+    context.setValueTab(3)
+    console.log('Gerando uma tomada de contas.')
+    return
   }
 
-  function responseDialogUnidadeGestoraNo(){
-    console.log("Ir para a geração de XML.")
-    context.setValueTab(4);
-    return;
+  function responseDialogTomadaContasNo() {
+    setOpenDialogUnidadeGestora(true)
+    return
+  }
+
+  function responseDialogUnidadeGestoraYes() {
+    navigate('/select_ug')
+    context.setValueTab(0)
+    return
+  }
+
+  function responseDialogUnidadeGestoraNo() {
+    console.log('Ir para a geração de XML.')
+    context.setValueTab(4)
+    return
   }
 
   const initialValues = {
-    
-    procedimentosIdNumRegistro: ``,
-    procedimentosNivelControleInterno: ``,
-    procedimentosCodigoUnidadeGestora: ``,
-    procedimentosCodigoProcedimento: ``,
-    procedimentosTipoPontoControle: ``,
-    procedimentosUniversoAnalisado: ``,
-    procedimentosAmostraSelecionada: ``,
-    procedimentosDescricaoAnalise: ``,
-    procedimentosTipoProcedimentoAnalisado: ``,
-    procedimentosSituacaoAnalise: ``,
-
+    procedimentosIdNumRegistro: `${dataProcedimentos.length && dataProcedimentos[selectProcedimento].procedimentosIdNumRegistro}`,
+    procedimentosNivelControleInterno: `${dataProcedimentos.length && dataProcedimentos[selectProcedimento].procedimentosNivelControleInterno || ''}`,
+    procedimentosCodigoUnidadeGestora: `${dataProcedimentos.length && dataProcedimentos[selectProcedimento].procedimentosCodigoUnidadeGestora}`,
+    procedimentosCodigoProcedimento: `${dataProcedimentos.length && dataProcedimentos[selectProcedimento].procedimentosCodigoProcedimento}`,
+    procedimentosTipoPontoControle: `${dataProcedimentos.length && dataProcedimentos[selectProcedimento].procedimentosTipoPontoControle || ''}`,
+    procedimentosUniversoAnalisado: `${dataProcedimentos.length && dataProcedimentos[selectProcedimento].procedimentosUniversoAnalisado}`,
+    procedimentosAmostraSelecionada: `${dataProcedimentos.length && dataProcedimentos[selectProcedimento].procedimentosAmostraSelecionada}`,
+    procedimentosDescricaoAnalise: `${dataProcedimentos.length && dataProcedimentos[selectProcedimento].procedimentosDescricaoAnalise}`,
+    procedimentosTipoProcedimentoAnalisado: `${dataProcedimentos.length && dataProcedimentos[selectProcedimento].procedimentosTipoProcedimentoAnalisado || ''}`,
+    procedimentosSituacaoAnalise: `${dataProcedimentos.length && dataProcedimentos[selectProcedimento].procedimentosSituacaoAnalise || ''}`,
   }
-  const validationSchema = validationProcedimentos.validationSchema;
+  const validationSchema = validationProcedimentos.validationSchema
 
   const formik = useFormik({
     initialValues: initialValues,
-
+    enableReinitialize: true,
     validationSchema: validationSchema,
 
-    onSubmit: (values, { resetForm }) => {
-     console.log("Procedimento válido.");
-     console.log("Salvando.");
+    onSubmit: () => {
+      
+      saveProcedimento();
 
-     if(buttonId === "previous") {
-      context.setValueTab(1) ;
-      return;
-     }
+      if (buttonId === 'previous') {
+        context.setValueTab(1)
+        return
+      }
 
-    setOpenDialogProcedimento(true);
-
+      setOpenDialogProcedimento(true)
     },
-  });
+  })
 
   async function handleSelectProcedimento(e: any) {
-    const validate = await formik.validateForm(formik.values);
+    const validate = await formik.validateForm(formik.values)
 
-    if(Object.entries(validate).length > 0) {
-      alert("Preencha todos os campos corretamente antes de alternar de registro.");
-      formik.handleSubmit();
-      context.setValueTab(2);
-      return;
+    if (Object.entries(validate).length > 0) {
+      alert(
+        'Preencha todos os campos corretamente antes de alternar de registro.',
+      )
+      formik.handleSubmit()
+      context.setValueTab(2)
+      return
     }
-    
+
+    saveProcedimento();
+    await getProcedimento();
+
     setSelectProcedimento(e.target.value);
-    console.log('Executa chamada a API');
-    // console.log(e.target.value);
+    
   }
 
   function getIdButton(e: any) {
-    setButtonId(e.target.id);
-   }
-
-  function saveProcedimento() {
-    console.log("Salvando...")
+    setButtonId(e.target.id)
   }
 
-  function addNewProcedimento() {
-    console.log("Adicionando um novo procedimento.")
-  }
+  
+  async function saveProcedimento() {
+    alert('Os dados do Procedimento foram salvos.')
 
-  function removeProcedimento() {
-    console.log("Removendo o procedimento atual.")
+    await axios.put(
+      `${baseAPI.URL}/forms/${context.formInfo.id}/procedimentos/${dataProcedimentos[selectProcedimento].id}`,
+      formik.values,
+      { headers: baseAPI.HEADERS(token) },
+    )
   }
 
   return (
     <ProcedimentosStyle onSubmit={formik.handleSubmit}>
+      <div data-header="headerForm">
+       {dataProcedimentos.length &&  <TextField
+          fullWidth
+          select
+          inputProps={{ MenuProps: { disableScrollLock: true } }}
+          id="procedimento"
+          name="procedimento"
+          value={selectProcedimento}
+          label="Procedimento(s)"
+          onChange={handleSelectProcedimento}
+        >
+          {dataProcedimentos.map((data: DataProcedimentoProps, index) => {
+            return <MenuItem value={index} key={dataProcedimentos[index].id}>Procedimento - {dataProcedimentos[index].procedimentosIdNumRegistro}</MenuItem>
+          })}
+          {/* <MenuItem value={0}>Procedimento - 00001</MenuItem>
+          <MenuItem value={1}>Procedimento - 00002</MenuItem> */}
+        </TextField>}
 
-<div data-header="headerForm">
-
-     
-      <TextField
-        fullWidth
-        select
-        inputProps={{ MenuProps: { disableScrollLock: true } }}
-        id="procedimento"
-        name="procedimento"
-        value={selectProcedimento}
-        label="Procedimento(s)"
-        onChange={handleSelectProcedimento}
-      >
-        <MenuItem value={1}>Procedimento-001 </MenuItem>
-        <MenuItem value={2}>Procedimento-002</MenuItem>
-      </TextField>
-
-       <div data-button="save">
-        <Button variant="contained" onClick={saveProcedimento}>
+        <div data-button="save">
+          <Button variant="contained" onClick={saveProcedimento}>
             Salvar
           </Button>
         </div>
-
-       </div>
+      </div>
 
       <legend>Informações de Controle Interno - Procedimentos</legend>
 
@@ -233,8 +339,6 @@ export const Procedimentos = () => {
         }
       />
 
-      
-
       <TextField
         fullWidth
         select
@@ -253,11 +357,12 @@ export const Procedimentos = () => {
           formik.errors.procedimentosTipoPontoControle
         }
       >
-        <MenuItem value={1}>1 - Quantitativo (se mensurável quantitativamente)</MenuItem>
-        <MenuItem value={2}>
-        2 - Qualitativo (se não mensurável quantitativamente)
+        <MenuItem value={1}>
+          1 - Quantitativo (se mensurável quantitativamente)
         </MenuItem>
-        
+        <MenuItem value={2}>
+          2 - Qualitativo (se não mensurável quantitativamente)
+        </MenuItem>
       </TextField>
 
       <TextField
@@ -278,7 +383,7 @@ export const Procedimentos = () => {
         }
       />
 
-<TextField
+      <TextField
         variant="outlined"
         fullWidth
         id="procedimentosAmostraSelecionada"
@@ -313,7 +418,7 @@ export const Procedimentos = () => {
         }
       />
 
-<TextField
+      <TextField
         fullWidth
         select
         inputProps={{ MenuProps: { disableScrollLock: true } }}
@@ -349,7 +454,6 @@ export const Procedimentos = () => {
         <MenuItem value={16}>16 – Outros</MenuItem>
       </TextField>
 
-         
       <TextField
         fullWidth
         select
@@ -368,63 +472,64 @@ export const Procedimentos = () => {
           formik.errors.procedimentosSituacaoAnalise
         }
       >
-        <MenuItem value={1}>1 - Procedimento aplicado sem detecção de distorções</MenuItem>
+        <MenuItem value={1}>
+          1 - Procedimento aplicado sem detecção de distorções
+        </MenuItem>
         <MenuItem value={2}>
-        2 - Procedimento aplicado sem detecção de distorções relevantes, constatando oportunidades de melhorias do controle
+          2 - Procedimento aplicado sem detecção de distorções relevantes,
+          constatando oportunidades de melhorias do controle
         </MenuItem>
         <MenuItem value={3}>
-        3 - Procedimento aplicado com constatação de distorções que ensejam risco grave e necessidade de correções.
+          3 - Procedimento aplicado com constatação de distorções que ensejam
+          risco grave e necessidade de correções.
         </MenuItem>
-        
-      </TextField>  
-      
-      <div data-button="next-previous">
-         
-          <IconButton
-            title='Anterior'
-            aria-label="Formulário anterior."
-            type="submit"
-            id="previous" 
-            onClick={getIdButton}
-          >
-            <ArrowCircleLeftIcon />
-          </IconButton>
+      </TextField>
 
-          <IconButton
-            title='Próximo'
-            aria-label="Próximo formulário."
-            type="submit" 
-            id="next"  
-            onClick={getIdButton}
-          >
-            <ArrowCircleRightIcon/>
-          </IconButton>
-          
+      <div data-button="next-previous">
+        <IconButton
+          title="Anterior"
+          aria-label="Formulário anterior."
+          type="submit"
+          id="previous"
+          onClick={getIdButton}
+        >
+          <ArrowCircleLeftIcon />
+        </IconButton>
+
+        <IconButton
+          title="Próximo"
+          aria-label="Próximo formulário."
+          type="submit"
+          id="next"
+          onClick={getIdButton}
+        >
+          <ArrowCircleRightIcon />
+        </IconButton>
       </div>
 
-      <ConfirmDialog 
-        open={openDialogProcedimento} 
-        setOpen={setOpenDialogProcedimento} 
-        titleMessage={"Deseja incluir outro Procedimento ?"}
+      <ConfirmDialog
+        open={openDialogProcedimento}
+        setOpen={setOpenDialogProcedimento}
+        titleMessage={'Deseja incluir outro Procedimento ?'}
         responseYes={responseDialogProcedimentoYes}
-        responseNo ={responseDialogProcedimentoNo}
-        />
+        responseNo={responseDialogProcedimentoNo}
+      />
 
-<ConfirmDialog 
-        open={openDialogTomadaContas} 
-        setOpen={setOpenDialogTomadaContas} 
-        titleMessage={"Deseja incluir alguma Tomada de Contas Especial ?"}
+      <ConfirmDialog
+        open={openDialogTomadaContas}
+        setOpen={setOpenDialogTomadaContas}
+        titleMessage={'Deseja incluir alguma Tomada de Contas Especial ?'}
         responseYes={responseDialogTomadaContasYes}
-        responseNo ={responseDialogTomadaContasNo}
-        />
+        responseNo={responseDialogTomadaContasNo}
+      />
 
-<ConfirmDialog 
-        open={openDialogUnidadeGestora} 
-        setOpen={setOpenDialogUnidadeGestora} 
-        titleMessage={"Deseja incluir informações de outra Unidade Gestora ?"}
+      <ConfirmDialog
+        open={openDialogUnidadeGestora}
+        setOpen={setOpenDialogUnidadeGestora}
+        titleMessage={'Deseja incluir informações de outra Unidade Gestora ?'}
         responseYes={responseDialogUnidadeGestoraYes}
-        responseNo ={responseDialogUnidadeGestoraNo}
-        />
+        responseNo={responseDialogUnidadeGestoraNo}
+      />
     </ProcedimentosStyle>
-  );
-};
+  )
+}
