@@ -9,15 +9,33 @@ export const ProcedimentosStyle = styled.form`
   gap: 1rem;
 
 
-  div[data-header="headerForm"] {
+  div[data-header="header-form"] {
     display: flex;
     justify-content: space-between;
     align-items: center;
 
-    .MuiFormControl-root {
-      width: 220px;
-    }
+    div[data-input="input-options"] {
+      display: flex;
+      align-items: center;
+      gap: 2rem;
+      
+      .MuiFormControl-root {
+        width: 220px;
+      }
 
+      .MuiIconButton-root {
+        padding:0px;
+        svg {
+          font-size : 1.75rem;
+          color: var(--blue-500);
+    
+          &:hover {
+            filter:brightness(0.8);
+          }
+        }  
+    }
+  }
+    
     div[data-button="save"] {
       text-align: right;
   

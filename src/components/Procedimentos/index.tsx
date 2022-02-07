@@ -3,6 +3,7 @@ import { useFormik } from 'formik'
 import { TextField, MenuItem, Button, IconButton } from '@mui/material'
 import ArrowCircleRightIcon from '@mui/icons-material/ArrowCircleRight'
 import ArrowCircleLeftIcon from '@mui/icons-material/ArrowCircleLeft'
+import RemoveCircleIcon from '@mui/icons-material/RemoveCircle'
 
 import validationProcedimentos from '../../utils/validationProcedimentos'
 import { ProcedimentosStyle } from './style'
@@ -35,83 +36,89 @@ export const Procedimentos = () => {
   const [dataProcedimentos, setDataProcedimentos] = useState<
     DataProcedimentoProps[]
   >([] as DataProcedimentoProps[])
-  
+
   const [buttonId, setButtonId] = useState('')
   const [selectProcedimento, setSelectProcedimento] = useState(0)
-  const [countProcedimento, setCountProcedimento] = useState(0);
+  const [countProcedimento, setCountProcedimento] = useState(1)
   const [openDialogProcedimento, setOpenDialogProcedimento] = useState(false)
   const [openDialogTomadaContas, setOpenDialogTomadaContas] = useState(false)
   const [openDialogUnidadeGestora, setOpenDialogUnidadeGestora] = useState(
     false,
   )
+  const [
+    openDialogRemoveProcedimento,
+    setOpenDialogRemoveProcedimento,
+  ] = useState(false)
 
   useEffect(() => {
     if (!context.formInfo.id) {
       navigate('/select_ug')
       return
     }
-
-    requestAPI();
-
-    async function requestAPI() {
-      const listProcedimento = await getProcedimento()
-
-      if (!listProcedimento) {
-        await newProcedimento();
-
-        await getProcedimento();
-      }
-    }
-
+    requestAPI()
   }, [])
 
-  async function getProcedimento() {
-    const responseGet = await axios.get(
+  async function requestAPI() {
+    const listProcedimento = await procedimentosList()
+
+    if (!listProcedimento) {
+      await newProcedimento()
+      await procedimentosList()
+    }
+  }
+
+  async function procedimentosList() {
+    const dataGetProcedimento = await getProcedimentos()
+   
+
+    if (dataGetProcedimento.length > 0) {
+      setDataProcedimentos(
+        dataGetProcedimento.map((data: DataProcedimentoProps) => data),
+      )
+
+      setSelectProcedimento(dataGetProcedimento.length - 1)
+
+      setCountProcedimento(dataGetProcedimento.length + 1)
+
+      console.log('executou o get')
+      return true
+    }
+    return false
+  }
+
+  async function getProcedimentos() {
+    const response = await axios.get(
       `${baseAPI.URL}/forms/${context.formInfo.id}/procedimentos`,
       { headers: baseAPI.HEADERS(token) },
     )
-    const dataGet = responseGet.data.map(
-      ({
-        id,
-        procedimentosIdNumRegistro,
-        procedimentosNivelControleInterno,
-        procedimentosCodigoUnidadeGestora,
-        procedimentosCodigoProcedimento,
-        procedimentosTipoPontoControle,
-        procedimentosUniversoAnalisado,
-        procedimentosAmostraSelecionada,
-        procedimentosDescricaoAnalise,
-        procedimentosTipoProcedimentoAnalisado,
-        procedimentosSituacaoAnalise,
-      }: any) => {
+
+    const dataGet: Array<DataProcedimentoProps> = await response.data.map(
+      (data: DataProcedimentoProps) => {
         return {
-          id,
-          procedimentosIdNumRegistro,
-          procedimentosNivelControleInterno,
-          procedimentosCodigoUnidadeGestora,
-          procedimentosCodigoProcedimento,
-          procedimentosTipoPontoControle,
-          procedimentosUniversoAnalisado,
-          procedimentosAmostraSelecionada,
-          procedimentosDescricaoAnalise,
-          procedimentosTipoProcedimentoAnalisado,
-          procedimentosSituacaoAnalise,
+          id: data.id,
+          procedimentosIdNumRegistro: data.procedimentosIdNumRegistro,
+          procedimentosNivelControleInterno:
+            data.procedimentosNivelControleInterno,
+          procedimentosCodigoUnidadeGestora:
+            data.procedimentosCodigoUnidadeGestora,
+          procedimentosCodigoProcedimento: data.procedimentosCodigoProcedimento,
+          procedimentosTipoPontoControle: data.procedimentosTipoPontoControle,
+          procedimentosUniversoAnalisado: data.procedimentosUniversoAnalisado,
+          procedimentosAmostraSelecionada: data.procedimentosAmostraSelecionada,
+          procedimentosDescricaoAnalise: data.procedimentosDescricaoAnalise,
+          procedimentosTipoProcedimentoAnalisado:
+            data.procedimentosTipoProcedimentoAnalisado,
+          procedimentosSituacaoAnalise: data.procedimentosSituacaoAnalise,
         }
       },
     )
-    if (dataGet.length > 0) {
-      setDataProcedimentos(dataGet.map((data: DataProcedimentoProps) => data ));
-
-      setCountProcedimento(dataProcedimentos.length);
-      return true;
-    }
-    return false;
+   
+    return dataGet
   }
 
   async function newProcedimento() {
-
     const valuesProcedimento = {
-      procedimentosIdNumRegistro: `0000${countProcedimento + 1}`,
+      procedimentosIdNumRegistro: `0000${countProcedimento}`,
       procedimentosNivelControleInterno: ``,
       procedimentosCodigoUnidadeGestora: ``,
       procedimentosCodigoProcedimento: ``,
@@ -127,14 +134,12 @@ export const Procedimentos = () => {
       valuesProcedimento,
       { headers: baseAPI.HEADERS(token) },
     )
-    
   }
 
   async function responseDialogProcedimentoYes() {
-    console.log('Gerando um novo procedimento...')
-   
-    await newProcedimento();
-    await getProcedimento();
+    await newProcedimento()
+    await procedimentosList()
+
     setSelectProcedimento(selectProcedimento + 1)
     return
   }
@@ -168,16 +173,52 @@ export const Procedimentos = () => {
   }
 
   const initialValues = {
-    procedimentosIdNumRegistro: `${dataProcedimentos.length && dataProcedimentos[selectProcedimento].procedimentosIdNumRegistro}`,
-    procedimentosNivelControleInterno: `${dataProcedimentos.length && (dataProcedimentos[selectProcedimento].procedimentosNivelControleInterno || '')}`,
-    procedimentosCodigoUnidadeGestora: `${dataProcedimentos.length && dataProcedimentos[selectProcedimento].procedimentosCodigoUnidadeGestora}`,
-    procedimentosCodigoProcedimento: `${dataProcedimentos.length && dataProcedimentos[selectProcedimento].procedimentosCodigoProcedimento}`,
-    procedimentosTipoPontoControle: `${dataProcedimentos.length && (dataProcedimentos[selectProcedimento].procedimentosTipoPontoControle || '')}`,
-    procedimentosUniversoAnalisado: `${dataProcedimentos.length && dataProcedimentos[selectProcedimento].procedimentosUniversoAnalisado}`,
-    procedimentosAmostraSelecionada: `${dataProcedimentos.length && dataProcedimentos[selectProcedimento].procedimentosAmostraSelecionada}`,
-    procedimentosDescricaoAnalise: `${dataProcedimentos.length && dataProcedimentos[selectProcedimento].procedimentosDescricaoAnalise}`,
-    procedimentosTipoProcedimentoAnalisado: `${dataProcedimentos.length && (dataProcedimentos[selectProcedimento].procedimentosTipoProcedimentoAnalisado || '')}`,
-    procedimentosSituacaoAnalise: `${dataProcedimentos.length && (dataProcedimentos[selectProcedimento].procedimentosSituacaoAnalise || '')}`,
+    procedimentosIdNumRegistro: `${
+      dataProcedimentos.length &&
+      dataProcedimentos[selectProcedimento].procedimentosIdNumRegistro
+    }`,
+    procedimentosNivelControleInterno: `${
+      dataProcedimentos.length
+        ? dataProcedimentos[selectProcedimento]
+            .procedimentosNivelControleInterno
+        : ''
+    }`,
+    procedimentosCodigoUnidadeGestora: `${
+      dataProcedimentos.length &&
+      dataProcedimentos[selectProcedimento].procedimentosCodigoUnidadeGestora
+    }`,
+    procedimentosCodigoProcedimento: `${
+      dataProcedimentos.length &&
+      dataProcedimentos[selectProcedimento].procedimentosCodigoProcedimento
+    }`,
+    procedimentosTipoPontoControle: `${
+      dataProcedimentos.length
+        ? dataProcedimentos[selectProcedimento].procedimentosTipoPontoControle
+        : ''
+    }`,
+    procedimentosUniversoAnalisado: `${
+      dataProcedimentos.length &&
+      dataProcedimentos[selectProcedimento].procedimentosUniversoAnalisado
+    }`,
+    procedimentosAmostraSelecionada: `${
+      dataProcedimentos.length &&
+      dataProcedimentos[selectProcedimento].procedimentosAmostraSelecionada
+    }`,
+    procedimentosDescricaoAnalise: `${
+      dataProcedimentos.length &&
+      dataProcedimentos[selectProcedimento].procedimentosDescricaoAnalise
+    }`,
+    procedimentosTipoProcedimentoAnalisado: `${
+      dataProcedimentos.length
+        ? dataProcedimentos[selectProcedimento]
+            .procedimentosTipoProcedimentoAnalisado
+        : ''
+    }`,
+    procedimentosSituacaoAnalise: `${
+      dataProcedimentos.length
+        ? dataProcedimentos[selectProcedimento].procedimentosSituacaoAnalise
+        : ''
+    }`,
   }
   const validationSchema = validationProcedimentos.validationSchema
 
@@ -187,8 +228,7 @@ export const Procedimentos = () => {
     validationSchema: validationSchema,
 
     onSubmit: () => {
-      
-      saveProcedimento();
+      saveProcedimento()
 
       if (buttonId === 'previous') {
         context.setValueTab(1)
@@ -211,18 +251,15 @@ export const Procedimentos = () => {
       return
     }
 
-    saveProcedimento();
-    await getProcedimento();
-
-    setSelectProcedimento(e.target.value);
-    
+    saveProcedimento()
+    await procedimentosList()
+    setSelectProcedimento(e.target.value)
   }
 
   function getIdButton(e: any) {
     setButtonId(e.target.id)
   }
 
-  
   async function saveProcedimento() {
     alert('Os dados do Procedimento foram salvos.')
 
@@ -233,25 +270,78 @@ export const Procedimentos = () => {
     )
   }
 
+  async function deleteProcedimento() {
+    await axios.delete(
+      `${baseAPI.URL}/forms/${context.formInfo.id}/procedimentos/${dataProcedimentos[selectProcedimento].id}`,
+      { headers: baseAPI.HEADERS(token) },
+    )
+
+    const idProcedimentoRemove = dataProcedimentos[selectProcedimento].id;
+
+    setDataProcedimentos(dataProcedimentos.filter((data: DataProcedimentoProps) => data.id !== idProcedimentoRemove))
+
+    alert('Procedimento deletado com sucesso.')
+
+    setSelectProcedimento(dataProcedimentos.length - 2)
+
+    await reorderIdNumRegistro()
+  }
+
+  async function reorderIdNumRegistro() {
+    
+    
+    dataProcedimentos.forEach(
+      async (data: DataProcedimentoProps, index: number) => {
+        await axios.put(
+          `${baseAPI.URL}/forms/${context.formInfo.id}/procedimentos/${data.id}`,
+          { procedimentosIdNumRegistro: `0000${index + 1}` },
+          { headers: baseAPI.HEADERS(token) },
+        )
+      },
+    )
+
+    await procedimentosList(); 
+  }
+
   return (
     <ProcedimentosStyle onSubmit={formik.handleSubmit}>
-      <div data-header="headerForm">
-       {dataProcedimentos.length &&  <TextField
-          fullWidth
-          select
-          inputProps={{ MenuProps: { disableScrollLock: true } }}
-          id="procedimento"
-          name="procedimento"
-          value={selectProcedimento}
-          label="Procedimento(s)"
-          onChange={handleSelectProcedimento}
-        >
-          {dataProcedimentos.map((data: DataProcedimentoProps, index) => {
-            return <MenuItem value={index} key={dataProcedimentos[index].id}>Procedimento - {dataProcedimentos[index].procedimentosIdNumRegistro}</MenuItem>
-          })}
-          {/* <MenuItem value={0}>Procedimento - 00001</MenuItem>
+      <div data-header="header-form">
+        <div data-input="input-options">
+          {dataProcedimentos.length && (
+            <TextField
+              fullWidth
+              select
+              inputProps={{ MenuProps: { disableScrollLock: true } }}
+              id="procedimento"
+              name="procedimento"
+              value={selectProcedimento}
+              label="Procedimento(s)"
+              onChange={handleSelectProcedimento}
+            >
+              {dataProcedimentos.map((data: DataProcedimentoProps, index) => {
+                return (
+                  <MenuItem value={index} key={dataProcedimentos[index].id}>
+                    Procedimento -{' '}
+                    {dataProcedimentos[index].procedimentosIdNumRegistro}
+                  </MenuItem>
+                )
+              })}
+              {/* <MenuItem value={0}>Procedimento - 00001</MenuItem>
           <MenuItem value={1}>Procedimento - 00002</MenuItem> */}
-        </TextField>}
+            </TextField>
+          )}
+
+          {dataProcedimentos.length > 1 && (
+            <IconButton
+              title="Remover Procedimento"
+              aria-label="Remover Procedimento"
+              id="removeProcedimento"
+              onClick={() => setOpenDialogRemoveProcedimento(true)}
+            >
+              <RemoveCircleIcon />
+            </IconButton>
+          )}
+        </div>
 
         <div data-button="save">
           <Button variant="contained" onClick={saveProcedimento}>
@@ -505,6 +595,14 @@ export const Procedimentos = () => {
           <ArrowCircleRightIcon />
         </IconButton>
       </div>
+
+      <ConfirmDialog
+        open={openDialogRemoveProcedimento}
+        setOpen={setOpenDialogRemoveProcedimento}
+        titleMessage={'Tem certeza que deseja remover esse Procedimento ?'}
+        responseYes={deleteProcedimento}
+        responseNo={() => null}
+      />
 
       <ConfirmDialog
         open={openDialogProcedimento}
