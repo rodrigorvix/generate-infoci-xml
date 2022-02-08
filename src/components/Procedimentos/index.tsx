@@ -7,7 +7,7 @@ import RemoveCircleIcon from '@mui/icons-material/RemoveCircle'
 
 import validationProcedimentos from '../../utils/validationProcedimentos'
 import { ProcedimentosStyle } from './style'
-import { useContext, useEffect, useState } from 'react'
+import { useCallback, useContext, useEffect, useState } from 'react'
 import { GlobalContext } from '../../context/GlobalStorage'
 import { useNavigate } from 'react-router-dom'
 import { ConfirmDialog } from '../ConfirmDialog'
@@ -39,7 +39,6 @@ export const Procedimentos = () => {
 
   const [buttonId, setButtonId] = useState('')
   const [selectProcedimento, setSelectProcedimento] = useState(0)
-  const [countProcedimento, setCountProcedimento] = useState(1)
   const [openDialogProcedimento, setOpenDialogProcedimento] = useState(false)
   const [openDialogTomadaContas, setOpenDialogTomadaContas] = useState(false)
   const [openDialogUnidadeGestora, setOpenDialogUnidadeGestora] = useState(
@@ -62,25 +61,23 @@ export const Procedimentos = () => {
     const listProcedimento = await procedimentosList()
 
     if (!listProcedimento) {
-      await newProcedimento()
-      await procedimentosList()
+      await newProcedimento();
+      await procedimentosList();
     }
   }
 
   async function procedimentosList() {
-    const dataGetProcedimento = await getProcedimentos()
-   
+    const dataGetProcedimento = await getProcedimentos();
 
     if (dataGetProcedimento.length > 0) {
-      setDataProcedimentos(
-        dataGetProcedimento.map((data: DataProcedimentoProps) => data),
-      )
+
+    const dataGetProcedimentosReorderId: DataProcedimentoProps[] = await reorderIdNumRegistro(dataGetProcedimento);
+   
+  setDataProcedimentos([...dataGetProcedimentosReorderId]);
 
       setSelectProcedimento(dataGetProcedimento.length - 1)
 
-      setCountProcedimento(dataGetProcedimento.length + 1)
 
-      console.log('executou o get')
       return true
     }
     return false
@@ -113,12 +110,13 @@ export const Procedimentos = () => {
       },
     )
    
-    return dataGet
+    return dataGet;
   }
+  
 
   async function newProcedimento() {
     const valuesProcedimento = {
-      procedimentosIdNumRegistro: `0000${countProcedimento}`,
+      procedimentosIdNumRegistro: ``,
       procedimentosNivelControleInterno: ``,
       procedimentosCodigoUnidadeGestora: ``,
       procedimentosCodigoProcedimento: ``,
@@ -171,7 +169,7 @@ export const Procedimentos = () => {
     context.setValueTab(4)
     return
   }
-
+  
   const initialValues = {
     procedimentosIdNumRegistro: `${
       dataProcedimentos.length &&
@@ -251,7 +249,7 @@ export const Procedimentos = () => {
       return
     }
 
-    saveProcedimento()
+    saveProcedimento();
     await procedimentosList()
     setSelectProcedimento(e.target.value)
   }
@@ -276,31 +274,30 @@ export const Procedimentos = () => {
       { headers: baseAPI.HEADERS(token) },
     )
 
-    const idProcedimentoRemove = dataProcedimentos[selectProcedimento].id;
-
-    setDataProcedimentos((dataProcedimento: DataProcedimentoProps[]) => dataProcedimento.filter((data: DataProcedimentoProps) => data.id !== idProcedimentoRemove))
-
     alert('Procedimento deletado com sucesso.')
 
-    setSelectProcedimento(dataProcedimentos.length - 2)
+    setSelectProcedimento(dataProcedimentos.length - 2);
 
-    await reorderIdNumRegistro()
+    await procedimentosList();
+
   }
 
-  async function reorderIdNumRegistro() {
-    
 
-    dataProcedimentos.forEach(
+  async function reorderIdNumRegistro(dataGetProcedimentos: DataProcedimentoProps[]) {
+   
+    const dataGetProcedimentosReorderId = dataGetProcedimentos.map(
       async (data: DataProcedimentoProps, index: number) => {
-        await axios.put(
+       const response =  await axios.put(
           `${baseAPI.URL}/forms/${context.formInfo.id}/procedimentos/${data.id}`,
-          { procedimentosIdNumRegistro: `0000${index + 1}` },
+          {procedimentosIdNumRegistro: `${("0000" + (index + 1)).slice(-5)}`,},
           { headers: baseAPI.HEADERS(token) },
         )
-      },
+       return response.data;
+      }
     )
 
-    await procedimentosList(); 
+    return await Promise.all(dataGetProcedimentosReorderId);
+
   }
 
   return (
