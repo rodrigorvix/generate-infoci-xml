@@ -7,7 +7,7 @@ import RemoveCircleIcon from '@mui/icons-material/RemoveCircle'
 
 import validationProcedimentos from '../../utils/validationProcedimentos'
 import { ProcedimentosStyle } from './style'
-import { useCallback, useContext, useEffect, useState } from 'react'
+import { useContext, useEffect, useState } from 'react'
 import { GlobalContext } from '../../context/GlobalStorage'
 import { useNavigate } from 'react-router-dom'
 import { ConfirmDialog } from '../ConfirmDialog'
@@ -58,25 +58,25 @@ export const Procedimentos = () => {
   }, [])
 
   async function requestAPI() {
-    const listProcedimento = await procedimentosList()
+    const procedimentoExists = await procedimentosList()
 
-    if (!listProcedimento) {
-      await newProcedimento();
-      await procedimentosList();
+    if (!procedimentoExists) {
+      await newProcedimento()
+      await procedimentosList()
     }
   }
 
   async function procedimentosList() {
-    const dataGetProcedimento = await getProcedimentos();
+    const dataGetProcedimento = await getProcedimentos()
 
     if (dataGetProcedimento.length > 0) {
+      const dataGetProcedimentosReorderId: DataProcedimentoProps[] = await reorderIdNumRegistro(
+        dataGetProcedimento,
+      )
 
-    const dataGetProcedimentosReorderId: DataProcedimentoProps[] = await reorderIdNumRegistro(dataGetProcedimento);
-   
-  setDataProcedimentos([...dataGetProcedimentosReorderId]);
+      setDataProcedimentos([...dataGetProcedimentosReorderId])
 
       setSelectProcedimento(dataGetProcedimento.length - 1)
-
 
       return true
     }
@@ -109,10 +109,26 @@ export const Procedimentos = () => {
         }
       },
     )
-   
-    return dataGet;
+
+    return dataGet
   }
-  
+
+  async function reorderIdNumRegistro(
+    dataGetProcedimentos: DataProcedimentoProps[],
+  ) {
+    const dataGetProcedimentosReorderId = dataGetProcedimentos.map(
+      async (data: DataProcedimentoProps, index: number) => {
+        const response = await axios.put(
+          `${baseAPI.URL}/forms/${context.formInfo.id}/procedimentos/${data.id}`,
+          { procedimentosIdNumRegistro: `${('0000' + (index + 1)).slice(-5)}` },
+          { headers: baseAPI.HEADERS(token) },
+        )
+        return response.data
+      },
+    )
+
+    return await Promise.all(dataGetProcedimentosReorderId)
+  }
 
   async function newProcedimento() {
     const valuesProcedimento = {
@@ -134,6 +150,51 @@ export const Procedimentos = () => {
     )
   }
 
+  async function deleteProcedimento() {
+    await axios.delete(
+      `${baseAPI.URL}/forms/${context.formInfo.id}/procedimentos/${dataProcedimentos[selectProcedimento].id}`,
+      { headers: baseAPI.HEADERS(token) },
+    )
+
+    alert('Procedimento deletado com sucesso.')
+
+    setSelectProcedimento(dataProcedimentos.length - 2)
+
+    await procedimentosList()
+  }
+
+  async function saveProcedimento() {
+    alert('Os dados do Procedimento foram salvos.')
+
+    await axios.put(
+      `${baseAPI.URL}/forms/${context.formInfo.id}/procedimentos/${dataProcedimentos[selectProcedimento].id}`,
+      formik.values,
+      { headers: baseAPI.HEADERS(token) },
+    )
+  }
+
+
+  async function handleSelectProcedimento(e: any) {
+    const validate = await formik.validateForm(formik.values)
+
+    if (Object.entries(validate).length > 0) {
+      alert(
+        'Preencha todos os campos corretamente antes de alternar de registro.',
+      )
+      formik.handleSubmit()
+      context.setValueTab(2)
+      return
+    }
+
+    saveProcedimento()
+    await procedimentosList()
+    setSelectProcedimento(e.target.value)
+  }
+
+  function getIdButton(e: any) {
+    setButtonId(e.target.id)
+  }
+
   async function responseDialogProcedimentoYes() {
     await newProcedimento()
     await procedimentosList()
@@ -142,14 +203,25 @@ export const Procedimentos = () => {
     return
   }
 
-  function responseDialogProcedimentoNo() {
+  async function responseDialogProcedimentoNo() {
+
+    const response = await axios.get(
+      `${baseAPI.URL}/forms/${context.formInfo.id}/tomada_contas`,
+      { headers: baseAPI.HEADERS(token) },
+    )
+   const dataGetTomadaContasEspecial = await response.data;
+   
+   if(dataGetTomadaContasEspecial.length > 0) {
+    context.setValueTab(3);
+    return;
+   }
     setOpenDialogTomadaContas(true)
     return
   }
 
   function responseDialogTomadaContasYes() {
     context.setValueTab(3)
-    console.log('Gerando uma tomada de contas.')
+   
     return
   }
 
@@ -169,7 +241,7 @@ export const Procedimentos = () => {
     context.setValueTab(4)
     return
   }
-  
+
   const initialValues = {
     procedimentosIdNumRegistro: `${
       dataProcedimentos.length &&
@@ -236,69 +308,6 @@ export const Procedimentos = () => {
       setOpenDialogProcedimento(true)
     },
   })
-
-  async function handleSelectProcedimento(e: any) {
-    const validate = await formik.validateForm(formik.values)
-
-    if (Object.entries(validate).length > 0) {
-      alert(
-        'Preencha todos os campos corretamente antes de alternar de registro.',
-      )
-      formik.handleSubmit()
-      context.setValueTab(2)
-      return
-    }
-
-    saveProcedimento();
-    await procedimentosList()
-    setSelectProcedimento(e.target.value)
-  }
-
-  function getIdButton(e: any) {
-    setButtonId(e.target.id)
-  }
-
-  async function saveProcedimento() {
-    alert('Os dados do Procedimento foram salvos.')
-
-    await axios.put(
-      `${baseAPI.URL}/forms/${context.formInfo.id}/procedimentos/${dataProcedimentos[selectProcedimento].id}`,
-      formik.values,
-      { headers: baseAPI.HEADERS(token) },
-    )
-  }
-
-  async function deleteProcedimento() {
-    await axios.delete(
-      `${baseAPI.URL}/forms/${context.formInfo.id}/procedimentos/${dataProcedimentos[selectProcedimento].id}`,
-      { headers: baseAPI.HEADERS(token) },
-    )
-
-    alert('Procedimento deletado com sucesso.')
-
-    setSelectProcedimento(dataProcedimentos.length - 2);
-
-    await procedimentosList();
-
-  }
-
-
-  async function reorderIdNumRegistro(dataGetProcedimentos: DataProcedimentoProps[]) {
-   
-    const dataGetProcedimentosReorderId = dataGetProcedimentos.map(
-      async (data: DataProcedimentoProps, index: number) => {
-       const response =  await axios.put(
-          `${baseAPI.URL}/forms/${context.formInfo.id}/procedimentos/${data.id}`,
-          {procedimentosIdNumRegistro: `${("0000" + (index + 1)).slice(-5)}`,},
-          { headers: baseAPI.HEADERS(token) },
-        )
-       return response.data;
-      }
-    )
-
-    return await Promise.all(dataGetProcedimentosReorderId);
-
-  }
 
   return (
     <ProcedimentosStyle onSubmit={formik.handleSubmit}>

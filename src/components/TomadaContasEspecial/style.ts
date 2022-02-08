@@ -13,9 +13,27 @@ export const TomadaContasEspecialraStyle = styled.form`
     justify-content: space-between;
     align-items: center;
 
-    .MuiFormControl-root {
-      width: 250px;
+    div[data-input="input-options"] {
+      display: flex;
+      align-items: center;
+      gap: 2rem;
+      
+      .MuiFormControl-root {
+        width: 220px;
+      }
+
+      .MuiIconButton-root {
+        padding:0px;
+        svg {
+          font-size : 1.75rem;
+          color: var(--blue-500);
+    
+          &:hover {
+            filter:brightness(0.8);
+          }
+        }  
     }
+  }
 
     div[data-button="save"] {
       text-align: right;

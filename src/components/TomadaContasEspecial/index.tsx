@@ -2,23 +2,225 @@ import { useFormik } from 'formik'
 import { TextField, MenuItem, Button, IconButton } from '@mui/material'
 import { useContext, useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
+
 import ArrowCircleRightIcon from '@mui/icons-material/ArrowCircleRight'
 import ArrowCircleLeftIcon from '@mui/icons-material/ArrowCircleLeft'
+import RemoveCircleIcon from '@mui/icons-material/RemoveCircle'
+
+import axios from 'axios'
+import baseAPI from '../../utils/baseAPI'
 
 import validationTomadaContasEspecial from '../../utils/validationTomadaContasEspecial'
 import { TomadaContasEspecialraStyle } from './style'
 import { GlobalContext } from '../../context/GlobalStorage'
 import { ConfirmDialog } from '../ConfirmDialog'
 
+interface DataTomadaContasEspecialProps {
+  id: number
+  tomadaContasEspecialIdNumRegistro: string
+  tomadaContasEspecialCodigoUnidadeGestora: string
+  tomadaContasEspecialProcesso: string
+  tomadaContasEspecialAnoProcesso: string
+  tomadaContasEspecialFatoMotivo: string
+  tomadaContasEspecialDataCiencia: string
+  tomadaContasEspecialDataInstauracao: string
+  tomadaContasEspecialDataEnvioTribunalContas: string
+  tomadaContasEspecialValorDebito: string
+  tomadaContasEspecialSituacaoEm31do12: string
+  tomadaContasEspecialMotivoBaixaDebito: string
+}
+
 export const TomadaContasEspecial = () => {
   const context = useContext(GlobalContext)
   const navigate = useNavigate()
+  const token = localStorage.getItem('app-token')
+
+  const [dataTomadaContasEspecial, setDataTomadaContasEspecial] = useState<
+    DataTomadaContasEspecialProps[]
+  >([] as DataTomadaContasEspecialProps[])
 
   const [buttonId, setButtonId] = useState('')
-  const [selectTomadaContas, setSelectTomadaContas] = useState(1)
+  const [selectTomadaContasEspecial, setSelectTomadaContasEspecial] = useState(
+    0,
+  )
+  const [
+    openDialogTomadaContasEspecial,
+    setOpenDialogTomadaContasEspecial,
+  ] = useState(false)
   const [openDialogUnidadeGestora, setOpenDialogUnidadeGestora] = useState(
     false,
   )
+  const [
+    openDialogRemoveTomadaContasEspecial,
+    setOpenDialogRemoveTomadaContasEspecial,
+  ] = useState(false)
+
+  useEffect(() => {
+    if (!context.formInfo.id) {
+      navigate('/select_ug')
+      return
+    }
+    requestAPI()
+  }, [])
+
+  async function requestAPI() {
+    const tomadaContasEspecialExists = await tomadaContasEspecialList()
+
+    if (!tomadaContasEspecialExists) {
+      await newTomadaContasEspecial()
+      await tomadaContasEspecialList()
+    }
+  }
+
+  async function tomadaContasEspecialList() {
+    const dataGetTCE = await getTomadaContasEspecial()
+
+    if (dataGetTCE.length > 0) {
+      const dataGetTCEReorderId: DataTomadaContasEspecialProps[] = await reorderIdNumRegistro(
+        dataGetTCE,
+      )
+
+      setDataTomadaContasEspecial([...dataGetTCEReorderId])
+
+      setSelectTomadaContasEspecial(dataGetTCE.length - 1)
+
+      return true
+    }
+    return false
+  }
+
+  async function getTomadaContasEspecial() {
+    const response = await axios.get(
+      `${baseAPI.URL}/forms/${context.formInfo.id}/tomada_contas`,
+      { headers: baseAPI.HEADERS(token) },
+    )
+
+    const dataGet: Array<DataTomadaContasEspecialProps> = await response.data.map(
+      (data: DataTomadaContasEspecialProps) => {
+        return {
+          id: data.id,
+          tomadaContasEspecialIdNumRegistro:
+            data.tomadaContasEspecialIdNumRegistro,
+          tomadaContasEspecialCodigoUnidadeGestora:
+            data.tomadaContasEspecialCodigoUnidadeGestora,
+          tomadaContasEspecialProcesso: data.tomadaContasEspecialProcesso,
+          tomadaContasEspecialAnoProcesso: data.tomadaContasEspecialAnoProcesso,
+          tomadaContasEspecialFatoMotivo: data.tomadaContasEspecialFatoMotivo,
+          tomadaContasEspecialDataCiencia: data.tomadaContasEspecialDataCiencia,
+          tomadaContasEspecialDataInstauracao:
+            data.tomadaContasEspecialDataInstauracao,
+          tomadaContasEspecialDataEnvioTribunalContas:
+            data.tomadaContasEspecialDataEnvioTribunalContas,
+          tomadaContasEspecialValorDebito: data.tomadaContasEspecialValorDebito,
+          tomadaContasEspecialSituacaoEm31do12:
+            data.tomadaContasEspecialSituacaoEm31do12,
+          tomadaContasEspecialMotivoBaixaDebito:
+            data.tomadaContasEspecialMotivoBaixaDebito,
+        }
+      },
+    )
+
+    return dataGet
+  }
+
+  async function reorderIdNumRegistro(
+    dataGetTCE: DataTomadaContasEspecialProps[],
+  ) {
+    const dataGetTCEReorderId = dataGetTCE.map(
+      async (data: DataTomadaContasEspecialProps, index: number) => {
+        const response = await axios.put(
+          `${baseAPI.URL}/forms/${context.formInfo.id}/tomada_contas/${data.id}`,
+          {
+            tomadaContasEspecialIdNumRegistro: `${('0000' + (index + 1)).slice(
+              -5,
+            )}`,
+          },
+          { headers: baseAPI.HEADERS(token) },
+        )
+        return response.data
+      },
+    )
+
+    return await Promise.all(dataGetTCEReorderId)
+  }
+
+  async function newTomadaContasEspecial() {
+    const valuesTCE = {
+      tomadaContasEspecialIdNumRegistro: ``,
+      tomadaContasEspecialCodigoUnidadeGestora: ``,
+      tomadaContasEspecialProcesso: ``,
+      tomadaContasEspecialAnoProcesso: ``,
+      tomadaContasEspecialFatoMotivo: ``,
+      tomadaContasEspecialDataCiencia: ``,
+      tomadaContasEspecialDataInstauracao: ``,
+      tomadaContasEspecialDataEnvioTribunalContas: ``,
+      tomadaContasEspecialValorDebito: ``,
+      tomadaContasEspecialSituacaoEm31do12: ``,
+      tomadaContasEspecialMotivoBaixaDebito: ``,
+    }
+    await axios.post(
+      `${baseAPI.URL}/forms/${context.formInfo.id}/tomada_contas`,
+      valuesTCE,
+      { headers: baseAPI.HEADERS(token) },
+    )
+  }
+
+  async function deleteTomadaContasEspecial() {
+    await axios.delete(
+      `${baseAPI.URL}/forms/${context.formInfo.id}/tomada_contas/${dataTomadaContasEspecial[selectTomadaContasEspecial].id}`,
+      { headers: baseAPI.HEADERS(token) },
+    )
+
+    alert('TCE deletada com sucesso.')
+
+    setSelectTomadaContasEspecial(dataTomadaContasEspecial.length - 2)
+
+    await tomadaContasEspecialList()
+  }
+
+  async function saveTomadaContasEspecial() {
+    alert('Os dados da TCE foram salvos.')
+
+    await axios.put(
+      `${baseAPI.URL}/forms/${context.formInfo.id}/tomada_contas/${dataTomadaContasEspecial[selectTomadaContasEspecial].id}`,
+      formik.values,
+      { headers: baseAPI.HEADERS(token) },
+    )
+  }
+
+  async function handleSelectTomadaContasEspecial(e: any) {
+    const validate = await formik.validateForm(formik.values)
+
+    if (Object.entries(validate).length > 0) {
+      alert(
+        'Preencha todos os campos corretamente antes de alternar de registro.',
+      )
+      formik.handleSubmit()
+      context.setValueTab(3)
+      return
+    }
+
+    saveTomadaContasEspecial()
+    await tomadaContasEspecialList()
+    setSelectTomadaContasEspecial(e.target.value)
+  }
+
+  function getIdButton(e: any) {
+    setButtonId(e.target.parentNode.id)
+  }
+
+  async function responseDialogTomadaContasEspecialYes() {
+    await newTomadaContasEspecial()
+    await tomadaContasEspecialList()
+
+    setSelectTomadaContasEspecial(selectTomadaContasEspecial + 1)
+    return
+  }
+
+  function responseDialogTomadaContasEspecialNo() {
+    setOpenDialogUnidadeGestora(true)
+    return
+  }
 
   function responseDialogUnidadeGestoraYes() {
     navigate('/select_ug')
@@ -33,78 +235,134 @@ export const TomadaContasEspecial = () => {
   }
 
   const initialValues = {
-    tomadaContasEspecialIdNumRegistro: ``,
-    tomadaContasEspecialCodigoUnidadeGestora: ``,
-    tomadaContasEspecialProcesso: ``,
-    tomadaContasEspecialAnoProcesso: ``,
-    tomadaContasEspecialFatoMotivo: ``,
-    tomadaContasEspecialDataCiencia: ``,
-    tomadaContasEspecialDataInstauracao: ``,
-    tomadaContasEspecialDataEnvioTribunalContas: ``,
-    tomadaContasEspecialValorDebito: ``,
-    tomadaContasEspecialSituacaoEm31do12: ``,
-    tomadaContasEspecialMotivoBaixaDebito: ``,
+    tomadaContasEspecialIdNumRegistro: `${
+      dataTomadaContasEspecial.length &&
+      dataTomadaContasEspecial[selectTomadaContasEspecial]
+        .tomadaContasEspecialIdNumRegistro
+    }`,
+    tomadaContasEspecialCodigoUnidadeGestora: `${
+      dataTomadaContasEspecial.length &&
+      dataTomadaContasEspecial[selectTomadaContasEspecial]
+        .tomadaContasEspecialCodigoUnidadeGestora
+    }`,
+    tomadaContasEspecialProcesso: `${
+      dataTomadaContasEspecial.length &&
+      dataTomadaContasEspecial[selectTomadaContasEspecial]
+        .tomadaContasEspecialProcesso
+    }`,
+    tomadaContasEspecialAnoProcesso: `${
+      dataTomadaContasEspecial.length &&
+      dataTomadaContasEspecial[selectTomadaContasEspecial]
+        .tomadaContasEspecialAnoProcesso
+    }`,
+    tomadaContasEspecialFatoMotivo: `${
+      dataTomadaContasEspecial.length
+        ? dataTomadaContasEspecial[selectTomadaContasEspecial]
+            .tomadaContasEspecialFatoMotivo
+        : ''
+    }`,
+    tomadaContasEspecialDataCiencia: `${
+      dataTomadaContasEspecial.length &&
+      dataTomadaContasEspecial[selectTomadaContasEspecial]
+        .tomadaContasEspecialDataCiencia
+    }`,
+    tomadaContasEspecialDataInstauracao: `${
+      dataTomadaContasEspecial.length &&
+      dataTomadaContasEspecial[selectTomadaContasEspecial]
+        .tomadaContasEspecialDataInstauracao
+    }`,
+    tomadaContasEspecialDataEnvioTribunalContas: `${
+      dataTomadaContasEspecial.length &&
+      dataTomadaContasEspecial[selectTomadaContasEspecial]
+        .tomadaContasEspecialDataEnvioTribunalContas
+    }`,
+    tomadaContasEspecialValorDebito: `${
+      dataTomadaContasEspecial.length &&
+      dataTomadaContasEspecial[selectTomadaContasEspecial]
+        .tomadaContasEspecialValorDebito
+    }`,
+    tomadaContasEspecialSituacaoEm31do12: `${
+      dataTomadaContasEspecial.length
+        ? dataTomadaContasEspecial[selectTomadaContasEspecial]
+            .tomadaContasEspecialSituacaoEm31do12
+        : ''
+    }`,
+    tomadaContasEspecialMotivoBaixaDebito: `${
+      dataTomadaContasEspecial.length
+        ? dataTomadaContasEspecial[selectTomadaContasEspecial]
+            .tomadaContasEspecialMotivoBaixaDebito
+        : ''
+    }`,
   }
   const validationSchema = validationTomadaContasEspecial.validationSchema
 
   const formik = useFormik({
     initialValues: initialValues,
-
+    enableReinitialize: true,
     validationSchema: validationSchema,
-    onSubmit: (values, { resetForm }) => {
+
+    onSubmit: () => {
+      saveTomadaContasEspecial()
+
       if (buttonId === 'previous') {
         context.setValueTab(2)
         return
       }
 
-      setOpenDialogUnidadeGestora(true)
+      setOpenDialogTomadaContasEspecial(true)
     },
   })
-
-  async function handleSelectTomadaContas(e: any) {
-    const validate = await formik.validateForm(formik.values)
-
-    if (Object.entries(validate).length > 0) {
-      alert(
-        'Preencha todos os campos corretamente antes de alternar de registro.',
-      )
-      formik.handleSubmit()
-      context.setValueTab(3)
-      return
-    }
-
-    setSelectTomadaContas(e.target.value)
-    console.log('Executa chamada a API')
-    // console.log(e.target.value);
-  }
-
-  function getIdButton(e: any) {
-    setButtonId(e.target.parentNode.id)
-  }
-
-  function saveTomadaContas() {
-    console.log('Salvando...')
-  }
 
   return (
     <TomadaContasEspecialraStyle onSubmit={formik.handleSubmit}>
       <div data-header="headerForm">
-        <TextField
-          fullWidth
-          select
-          inputProps={{ MenuProps: { disableScrollLock: true } }}
-          id="tomadaContas"
-          name="tomadaContas"
-          value={selectTomadaContas}
-          label="Tomada de Contas"
-          onChange={handleSelectTomadaContas}
-        >
-          <MenuItem value={1}>Tomada de Contas-001 </MenuItem>
-          <MenuItem value={2}>Tomada de Contas-002</MenuItem>
-        </TextField>
+        <div data-input="input-options">
+          {dataTomadaContasEspecial.length && (
+            <TextField
+              fullWidth
+              select
+              inputProps={{ MenuProps: { disableScrollLock: true } }}
+              id="tomada_contas_especial"
+              name="tomada_contas_especial"
+              value={selectTomadaContasEspecial}
+              label="TCE(s)"
+              onChange={handleSelectTomadaContasEspecial}
+            >
+              {dataTomadaContasEspecial.map(
+                (data: DataTomadaContasEspecialProps, index) => {
+                  return (
+                    <MenuItem
+                      value={index}
+                      key={dataTomadaContasEspecial[index].id}
+                    >
+                      TCE -{' '}
+                      {
+                        dataTomadaContasEspecial[index]
+                          .tomadaContasEspecialIdNumRegistro
+                      }
+                    </MenuItem>
+                  )
+                },
+              )}
+              {/* <MenuItem value={0}>Procedimento - 00001</MenuItem>
+          <MenuItem value={1}>Procedimento - 00002</MenuItem> */}
+            </TextField>
+          )}
+
+          {dataTomadaContasEspecial.length > 1 && (
+            <IconButton
+              title="Remover Tomada de Contas Especial"
+              aria-label="Remover Tomada de Contas Especial"
+              id="removeTCE"
+              onClick={() => setOpenDialogRemoveTomadaContasEspecial(true)}
+            >
+              <RemoveCircleIcon />
+            </IconButton>
+          )}
+        </div>
 
         <div data-button="save">
-          <Button variant="contained" onClick={saveTomadaContas}>
+          <Button variant="contained" onClick={saveTomadaContasEspecial}>
             Salvar
           </Button>
         </div>
@@ -374,7 +632,6 @@ export const TomadaContasEspecial = () => {
       </TextField>
 
       <div data-button="next-previous">
-       
         <IconButton
           title="Anterior"
           aria-label="Formulário anterior."
@@ -395,6 +652,22 @@ export const TomadaContasEspecial = () => {
           <ArrowCircleRightIcon />
         </IconButton>
       </div>
+
+      <ConfirmDialog
+        open={openDialogRemoveTomadaContasEspecial}
+        setOpen={setOpenDialogRemoveTomadaContasEspecial}
+        titleMessage={'Tem certeza que deseja remover essa TCE ?'}
+        responseYes={deleteTomadaContasEspecial}
+        responseNo={() => null}
+      />
+
+      <ConfirmDialog
+        open={openDialogTomadaContasEspecial}
+        setOpen={setOpenDialogTomadaContasEspecial}
+        titleMessage={'Deseja incluir informações de outra TCE ?'}
+        responseYes={responseDialogTomadaContasEspecialYes}
+        responseNo={responseDialogTomadaContasEspecialNo}
+      />
 
       <ConfirmDialog
         open={openDialogUnidadeGestora}
