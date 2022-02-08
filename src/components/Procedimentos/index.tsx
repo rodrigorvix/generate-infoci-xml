@@ -278,7 +278,7 @@ export const Procedimentos = () => {
 
     const idProcedimentoRemove = dataProcedimentos[selectProcedimento].id;
 
-    setDataProcedimentos(dataProcedimentos.filter((data: DataProcedimentoProps) => data.id !== idProcedimentoRemove))
+    setDataProcedimentos((dataProcedimento: DataProcedimentoProps[]) => dataProcedimento.filter((data: DataProcedimentoProps) => data.id !== idProcedimentoRemove))
 
     alert('Procedimento deletado com sucesso.')
 
@@ -289,7 +289,7 @@ export const Procedimentos = () => {
 
   async function reorderIdNumRegistro() {
     
-    
+
     dataProcedimentos.forEach(
       async (data: DataProcedimentoProps, index: number) => {
         await axios.put(
