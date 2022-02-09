@@ -126,8 +126,8 @@ export const UnidadeGestora = (props: any) => {
   async function newUnidadeGestora() {
     const valuesUnidadeGestora = {
       unidadeGestoraIdNumRegistro: ``,
-      unidadeGestoraNivelControleInterno: ``,
-      unidadeGestoraCodigoUnidadeGestora: ``,
+      unidadeGestoraNivelControleInterno: `${context.formInfo.codigoUnidadeGestoraCidades !== "001" ? 2 : ''}`,
+      unidadeGestoraCodigoUnidadeGestora: `${context.formInfo.codigoUnidadeGestoraCidades}`,
       unidadeGestoraResponsavelUnidadeGestora: ``,
       unidadeGestoraExercicioUltimaManifestacaoControleInterno: ``,
       unidadeGestoraOpiniaoPrestacaoContasControleInterno: ``,
@@ -236,14 +236,17 @@ export const UnidadeGestora = (props: any) => {
     onSubmit: () => {
       saveUnidadeGestora()
 
-      // const tab = buttonId === 'next' ? 2 : 0
-
       if (buttonId === 'previous') {
         context.setValueTab(0)
         return
       }
 
-      setOpenDialogUnidadeGestora(true)
+      if(context.formInfo.nomeUnidadeGestora === 'SECONT') {
+        setOpenDialogUnidadeGestora(true)
+        return;
+      }
+
+      context.setValueTab(2);
     },
   })
 
@@ -318,6 +321,7 @@ export const UnidadeGestora = (props: any) => {
           formik.touched.unidadeGestoraIdNumRegistro &&
           formik.errors.unidadeGestoraIdNumRegistro
         }
+        disabled
       />
 
       <TextField
@@ -337,6 +341,7 @@ export const UnidadeGestora = (props: any) => {
           formik.touched.unidadeGestoraNivelControleInterno &&
           formik.errors.unidadeGestoraNivelControleInterno
         }
+        disabled={context.formInfo.codigoUnidadeGestoraCidades !== "001" ? true : false}
       >
         <MenuItem value={1}>1 – Unidade Central </MenuItem>
         <MenuItem value={2}>2 – Unidade Setorial</MenuItem>

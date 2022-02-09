@@ -133,7 +133,7 @@ export const Procedimentos = () => {
   async function newProcedimento() {
     const valuesProcedimento = {
       procedimentosIdNumRegistro: ``,
-      procedimentosNivelControleInterno: ``,
+      procedimentosNivelControleInterno: `${context.formInfo.codigoUnidadeGestoraCidades !== "001" ? 2 : ''}`,
       procedimentosCodigoUnidadeGestora: ``,
       procedimentosCodigoProcedimento: ``,
       procedimentosTipoPontoControle: ``,
@@ -375,6 +375,7 @@ export const Procedimentos = () => {
           formik.touched.procedimentosIdNumRegistro &&
           formik.errors.procedimentosIdNumRegistro
         }
+        disabled
       />
 
       <TextField
@@ -394,6 +395,7 @@ export const Procedimentos = () => {
           formik.touched.procedimentosNivelControleInterno &&
           formik.errors.procedimentosNivelControleInterno
         }
+        disabled={context.formInfo.codigoUnidadeGestoraCidades !== "001" ? true : false}
       >
         <MenuItem value={1}>1 – Unidade Central </MenuItem>
         <MenuItem value={2}>2 – Unidade Setorial</MenuItem>

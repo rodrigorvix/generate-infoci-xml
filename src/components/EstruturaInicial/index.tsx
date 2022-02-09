@@ -140,7 +140,7 @@ export const EstruturaInicial = (props: any) => {
   async function newEstruturaInicial() {
     const valuesEstruturaInicial = {
       estruturaInicialIdNumRegistro: ``,
-      estruturaInicialNivelControleInterno: ``,
+      estruturaInicialNivelControleInterno: `${context.formInfo.codigoUnidadeGestoraCidades !== "001" ? 2 : ''}`,
       estruturaInicialQuantidadeTotalServidores: ``,
       estruturaInicialQuantidadeServidoresEfetivos: ``,
       estruturaInicialQuantidadeContadores: ``,
@@ -277,7 +277,14 @@ export const EstruturaInicial = (props: any) => {
 
     onSubmit: () => {
       saveEstruturaInicial()
-      setOpenDialogEstruturaInicial(true)
+
+      if(context.formInfo.nomeUnidadeGestora === 'SECONT') {
+        setOpenDialogEstruturaInicial(true)
+        return;
+      }
+
+      context.setValueTab(1);
+      
     },
   })
 
@@ -355,6 +362,7 @@ export const EstruturaInicial = (props: any) => {
           formik.touched.estruturaInicialIdNumRegistro &&
           formik.errors.estruturaInicialIdNumRegistro
         }
+        disabled
       />
 
       <TextField
@@ -374,6 +382,7 @@ export const EstruturaInicial = (props: any) => {
           formik.touched.estruturaInicialNivelControleInterno &&
           formik.errors.estruturaInicialNivelControleInterno
         }
+        disabled={context.formInfo.codigoUnidadeGestoraCidades !== "001" ? true : false}
       >
         <MenuItem value={1}>1 – Unidade Central </MenuItem>
         <MenuItem value={2}>2 – Unidade Setorial</MenuItem>

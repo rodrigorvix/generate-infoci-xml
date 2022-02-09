@@ -387,6 +387,7 @@ export const TomadaContasEspecial = () => {
           formik.touched.tomadaContasEspecialIdNumRegistro &&
           formik.errors.tomadaContasEspecialIdNumRegistro
         }
+        disabled
       />
 
       <TextField
