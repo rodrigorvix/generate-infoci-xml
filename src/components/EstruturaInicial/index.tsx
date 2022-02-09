@@ -3,6 +3,7 @@ import { useFormik } from 'formik'
 import { Button, IconButton } from '@mui/material'
 import { TextField, MenuItem } from '@mui/material'
 import ArrowCircleRightIcon from '@mui/icons-material/ArrowCircleRight'
+import RemoveCircleIcon from '@mui/icons-material/RemoveCircle'
 
 import { EstruturaInicialStyle } from './style'
 import validationEstruturaInicial from '../../utils/validationEstruturaInicial'
@@ -11,6 +12,7 @@ import { GlobalContext } from '../../context/GlobalStorage'
 import axios from 'axios'
 import baseAPI from '../../utils/baseAPI'
 import { useNavigate } from 'react-router-dom'
+import { ConfirmDialog } from '../ConfirmDialog'
 
 interface DataEstruturaInicialProps {
   id: number
@@ -30,9 +32,19 @@ export const EstruturaInicial = (props: any) => {
   const context = useContext(GlobalContext)
   const navigate = useNavigate()
   const token = localStorage.getItem('app-token')
+
+  const [selectEstruturaInicial, setSelectEstruturaInicial] = useState(0)
+  const [openDialogEstruturaInicial, setOpenDialogEstruturaInicial] = useState(
+    false,
+  )
   const [dataEstruturaInicial, setDataEstruturaInicial] = useState<
-    DataEstruturaInicialProps
-  >({} as DataEstruturaInicialProps)
+    DataEstruturaInicialProps[]
+  >([] as DataEstruturaInicialProps[])
+
+  const [
+    openDialogRemoveEstruturaIncial,
+    setOpenDialogRemoveEstruturaIncial,
+  ] = useState(false)
 
   useEffect(() => {
     if (!context.formInfo.id) {
@@ -41,97 +53,218 @@ export const EstruturaInicial = (props: any) => {
     }
 
     requestAPI()
-
-    async function requestAPI() {
-      const listEstruturaInicial = await getEstruturaInicial()
-
-      if (!listEstruturaInicial) {
-        const valueDefault = {
-          estruturaInicialIdNumRegistro: '00001',
-          estruturaInicialNivelControleInterno: '',
-          estruturaInicialQuantidadeTotalServidores: '',
-          estruturaInicialQuantidadeServidoresEfetivos: '',
-          estruturaInicialQuantidadeContadores: '',
-          estruturaInicialNormaInternaGestaoOrcamentaria: '',
-          estruturaInicialNormaInternaGestaoFinanceira: '',
-          estruturaInicialNormaInternaGestaoPatrimonial: '',
-          estruturaInicialNormaInternaGestaoFiscal: '',
-          estruturaInicialNormaInternaDemContabeis: '',
-        }
-        await axios.post(
-          `${baseAPI.URL}/forms/${context.formInfo.id}/estruturas`,
-          valueDefault,
-          { headers: baseAPI.HEADERS(token) },
-        )
-
-        await getEstruturaInicial()
-      }
-    }
-    async function getEstruturaInicial() {
-      const responseGet = await axios.get(
-        `${baseAPI.URL}/forms/${context.formInfo.id}/estruturas`,
-        { headers: baseAPI.HEADERS(token) },
-      )
-      const dataGet = responseGet.data.map(
-        ({
-          id,
-          estruturaInicialIdNumRegistro,
-          estruturaInicialNivelControleInterno,
-          estruturaInicialQuantidadeTotalServidores,
-          estruturaInicialQuantidadeServidoresEfetivos,
-          estruturaInicialQuantidadeContadores,
-          estruturaInicialNormaInternaGestaoOrcamentaria,
-          estruturaInicialNormaInternaGestaoFinanceira,
-          estruturaInicialNormaInternaGestaoPatrimonial,
-          estruturaInicialNormaInternaGestaoFiscal,
-          estruturaInicialNormaInternaDemContabeis,
-        }: any) => {
-          return {
-            id,
-            estruturaInicialIdNumRegistro,
-            estruturaInicialNivelControleInterno,
-            estruturaInicialQuantidadeTotalServidores,
-            estruturaInicialQuantidadeServidoresEfetivos,
-            estruturaInicialQuantidadeContadores,
-            estruturaInicialNormaInternaGestaoOrcamentaria,
-            estruturaInicialNormaInternaGestaoFinanceira,
-            estruturaInicialNormaInternaGestaoPatrimonial,
-            estruturaInicialNormaInternaGestaoFiscal,
-            estruturaInicialNormaInternaDemContabeis,
-          }
-        },
-      )
-      if (dataGet.length > 0) {
-        setDataEstruturaInicial(
-          dataGet.reduce((data: DataEstruturaInicialProps) => ({ ...data })),
-        )
-        return true
-      }
-      return false
-    }
   }, [])
 
+  async function requestAPI() {
+    const estruturaInicialExists = await estruturaInicialList()
+
+    if (!estruturaInicialExists) {
+      await newEstruturaInicial()
+      await estruturaInicialList()
+    }
+  }
+
+  async function estruturaInicialList() {
+    const dataGetEstruturaInicial = await getEstruturaInicial()
+
+    if (dataGetEstruturaInicial.length > 0) {
+      const dataGetEstruturaInicialReorderId: DataEstruturaInicialProps[] = await reorderIdNumRegistro(
+        dataGetEstruturaInicial,
+      )
+
+      setDataEstruturaInicial([...dataGetEstruturaInicialReorderId])
+
+      setSelectEstruturaInicial(dataGetEstruturaInicial.length - 1)
+
+      return true
+    }
+    return false
+  }
+
+  async function getEstruturaInicial() {
+    const response = await axios.get(
+      `${baseAPI.URL}/forms/${context.formInfo.id}/estruturas`,
+      { headers: baseAPI.HEADERS(token) },
+    )
+
+    const dataGet: Array<DataEstruturaInicialProps> = await response.data.map(
+      (data: DataEstruturaInicialProps) => {
+        return {
+          id: data.id,
+          estruturaInicialIdNumRegistro: data.estruturaInicialIdNumRegistro,
+          estruturaInicialNivelControleInterno:
+            data.estruturaInicialNivelControleInterno,
+          estruturaInicialQuantidadeTotalServidores:
+            data.estruturaInicialQuantidadeTotalServidores,
+          estruturaInicialQuantidadeServidoresEfetivos:
+            data.estruturaInicialQuantidadeServidoresEfetivos,
+          estruturaInicialQuantidadeContadores:
+            data.estruturaInicialQuantidadeContadores,
+          estruturaInicialNormaInternaGestaoOrcamentaria:
+            data.estruturaInicialNormaInternaGestaoOrcamentaria,
+          estruturaInicialNormaInternaGestaoFinanceira:
+            data.estruturaInicialNormaInternaGestaoFinanceira,
+          estruturaInicialNormaInternaGestaoPatrimonial:
+            data.estruturaInicialNormaInternaGestaoPatrimonial,
+          estruturaInicialNormaInternaGestaoFiscal:
+            data.estruturaInicialNormaInternaGestaoFiscal,
+          estruturaInicialNormaInternaDemContabeis:
+            data.estruturaInicialNormaInternaDemContabeis,
+        }
+      },
+    )
+    return dataGet
+  }
+
+  async function reorderIdNumRegistro(
+    dataGetEstruturaInicial: DataEstruturaInicialProps[],
+  ) {
+    const dataGetEstruturaInicialReorderId = dataGetEstruturaInicial.map(
+      async (data: DataEstruturaInicialProps, index: number) => {
+        const response = await axios.put(
+          `${baseAPI.URL}/forms/${context.formInfo.id}/estruturas/${data.id}`,
+          {
+            estruturaInicialIdNumRegistro: `${('0000' + (index + 1)).slice(
+              -5,
+            )}`,
+          },
+          { headers: baseAPI.HEADERS(token) },
+        )
+        return response.data
+      },
+    )
+
+    return await Promise.all(dataGetEstruturaInicialReorderId)
+  }
+
+  async function newEstruturaInicial() {
+    const valuesEstruturaInicial = {
+      estruturaInicialIdNumRegistro: ``,
+      estruturaInicialNivelControleInterno: ``,
+      estruturaInicialQuantidadeTotalServidores: ``,
+      estruturaInicialQuantidadeServidoresEfetivos: ``,
+      estruturaInicialQuantidadeContadores: ``,
+      estruturaInicialNormaInternaGestaoOrcamentaria: ``,
+      estruturaInicialNormaInternaGestaoFinanceira: ``,
+      estruturaInicialNormaInternaGestaoPatrimonial: ``,
+      estruturaInicialNormaInternaGestaoFiscal: ``,
+      estruturaInicialNormaInternaDemContabeis: ``,
+    }
+    await axios.post(
+      `${baseAPI.URL}/forms/${context.formInfo.id}/estruturas`,
+      valuesEstruturaInicial,
+      { headers: baseAPI.HEADERS(token) },
+    )
+  }
+
+  async function deleteEstruturaInicial() {
+    await axios.delete(
+      `${baseAPI.URL}/forms/${context.formInfo.id}/estruturas/${dataEstruturaInicial[selectEstruturaInicial].id}`,
+      { headers: baseAPI.HEADERS(token) },
+    )
+
+    alert('Estrutura Inicial deletada com sucesso.')
+
+    setSelectEstruturaInicial(dataEstruturaInicial.length - 2)
+
+    await estruturaInicialList()
+  }
+
+  async function saveEstruturaInicial() {
+    alert('Os dados da Estrutura Inicial foram salvos.')
+
+    await axios.put(
+      `${baseAPI.URL}/forms/${context.formInfo.id}/estruturas/${dataEstruturaInicial[selectEstruturaInicial].id}`,
+      formik.values,
+      { headers: baseAPI.HEADERS(token) },
+    )
+  }
+
+  async function handleSelectEstruturaInicial(e: any) {
+    const validate = await formik.validateForm(formik.values)
+
+    if (Object.entries(validate).length > 0) {
+      alert(
+        'Preencha todos os campos corretamente antes de alternar de registro.',
+      )
+      formik.handleSubmit()
+      context.setValueTab(0)
+      return
+    }
+
+    saveEstruturaInicial()
+    await estruturaInicialList()
+    setSelectEstruturaInicial(e.target.value)
+  }
+
+  async function responseDialogEstruturaInicialYes() {
+    await newEstruturaInicial()
+    await estruturaInicialList()
+
+    setSelectEstruturaInicial(selectEstruturaInicial + 1)
+    return
+  }
+
+  async function responseDialogEstruturaInicialNo() {
+    context.setValueTab(1)
+    return
+  }
+
   const initialValues = {
-    estruturaInicialIdNumRegistro:`${dataEstruturaInicial.estruturaInicialIdNumRegistro}`,
-    estruturaInicialNivelControleInterno:`${
-      dataEstruturaInicial.estruturaInicialNivelControleInterno || ''
+    estruturaInicialIdNumRegistro: `${
+      dataEstruturaInicial.length > 0 &&
+      dataEstruturaInicial[selectEstruturaInicial].estruturaInicialIdNumRegistro
     }`,
-    estruturaInicialQuantidadeTotalServidores:`${dataEstruturaInicial.estruturaInicialQuantidadeTotalServidores}`,
-    estruturaInicialQuantidadeServidoresEfetivos:`${dataEstruturaInicial.estruturaInicialQuantidadeServidoresEfetivos}`,
-    estruturaInicialQuantidadeContadores:`${dataEstruturaInicial.estruturaInicialQuantidadeContadores}`,
-    estruturaInicialNormaInternaGestaoOrcamentaria:`${
-      dataEstruturaInicial.estruturaInicialNormaInternaGestaoOrcamentaria || ''
+    estruturaInicialNivelControleInterno: `${
+      dataEstruturaInicial.length
+        ? dataEstruturaInicial[selectEstruturaInicial]
+            .estruturaInicialNivelControleInterno
+        : ''
     }`,
-    estruturaInicialNormaInternaGestaoFinanceira:`${
-      dataEstruturaInicial.estruturaInicialNormaInternaGestaoFinanceira || ''
+    estruturaInicialQuantidadeTotalServidores: `${
+      dataEstruturaInicial.length &&
+      dataEstruturaInicial[selectEstruturaInicial]
+        .estruturaInicialQuantidadeTotalServidores
     }`,
-    estruturaInicialNormaInternaGestaoPatrimonial:`${dataEstruturaInicial.estruturaInicialNormaInternaGestaoPatrimonial || ''
+    estruturaInicialQuantidadeServidoresEfetivos: `${
+      dataEstruturaInicial.length &&
+      dataEstruturaInicial[selectEstruturaInicial]
+        .estruturaInicialQuantidadeServidoresEfetivos
     }`,
-    estruturaInicialNormaInternaGestaoFiscal:`${
-      dataEstruturaInicial.estruturaInicialNormaInternaGestaoFiscal || ''
+    estruturaInicialQuantidadeContadores: `${
+      dataEstruturaInicial.length &&
+      dataEstruturaInicial[selectEstruturaInicial]
+        .estruturaInicialQuantidadeContadores
     }`,
-    estruturaInicialNormaInternaDemContabeis:`${
-      dataEstruturaInicial.estruturaInicialNormaInternaDemContabeis || ''
+    estruturaInicialNormaInternaGestaoOrcamentaria: `${
+      dataEstruturaInicial.length > 0
+        ? dataEstruturaInicial[selectEstruturaInicial]
+            .estruturaInicialNormaInternaGestaoOrcamentaria
+        : ''
+    }`,
+    estruturaInicialNormaInternaGestaoFinanceira: `${
+      dataEstruturaInicial.length
+        ? dataEstruturaInicial[selectEstruturaInicial]
+            .estruturaInicialNormaInternaGestaoFinanceira
+        : ''
+    }`,
+    estruturaInicialNormaInternaGestaoPatrimonial: `${
+      dataEstruturaInicial.length
+        ? dataEstruturaInicial[selectEstruturaInicial]
+            .estruturaInicialNormaInternaGestaoPatrimonial
+        : ''
+    }`,
+    estruturaInicialNormaInternaGestaoFiscal: `${
+      dataEstruturaInicial.length
+        ? dataEstruturaInicial[selectEstruturaInicial]
+            .estruturaInicialNormaInternaGestaoFiscal
+        : ''
+    }`,
+    estruturaInicialNormaInternaDemContabeis: `${
+      dataEstruturaInicial.length
+        ? dataEstruturaInicial[selectEstruturaInicial]
+            .estruturaInicialNormaInternaDemContabeis
+        : ''
     }`,
   }
 
@@ -144,26 +277,64 @@ export const EstruturaInicial = (props: any) => {
 
     onSubmit: () => {
       saveEstruturaInicial()
-      context.setValueTab(1)
+      setOpenDialogEstruturaInicial(true)
     },
   })
 
-  async function saveEstruturaInicial() {
-    alert('Os dados da Estrutura Inicial foram salvos.')
-
-    await axios.put(
-      `${baseAPI.URL}/forms/${context.formInfo.id}/estruturas/${dataEstruturaInicial.id}`,
-      formik.values,
-      { headers: baseAPI.HEADERS(token) },
-    )
-  }
-
   return (
     <EstruturaInicialStyle onSubmit={formik.handleSubmit}>
-      <div data-button="right">
-        <Button variant="contained" onClick={saveEstruturaInicial}>
-          Salvar
-        </Button>
+      
+      <div data-header="header-form">
+        <div data-input="input-options">
+          {dataEstruturaInicial.length && (
+            <TextField
+              fullWidth
+              select
+              inputProps={{ MenuProps: { disableScrollLock: true } }}
+              id="estruturaInicial"
+              name="estruturaInicial"
+              value={selectEstruturaInicial}
+              label="Estrutura(s)"
+              onChange={handleSelectEstruturaInicial}
+            >
+              {dataEstruturaInicial.map(
+                (data: DataEstruturaInicialProps, index) => {
+                  return (
+                    <MenuItem
+                      value={index}
+                      key={dataEstruturaInicial[index].id}
+                    >
+                      Estrutura -{' '}
+                      {
+                        dataEstruturaInicial[index]
+                          .estruturaInicialIdNumRegistro
+                      }
+                    </MenuItem>
+                  )
+                },
+              )}
+              {/* <MenuItem value={0}>Procedimento - 00001</MenuItem>
+          <MenuItem value={1}>Procedimento - 00002</MenuItem> */}
+            </TextField>
+          )}
+
+          {dataEstruturaInicial.length > 1 && (
+            <IconButton
+              title="Remover Estrutura Inicial"
+              aria-label="Remover Estrutura Inicial"
+              id="removeEstruturaInicial"
+              onClick={() => setOpenDialogRemoveEstruturaIncial(true)}
+            >
+              <RemoveCircleIcon />
+            </IconButton>
+          )}
+        </div>
+
+        <div data-button="save">
+          <Button variant="contained" onClick={saveEstruturaInicial}>
+            Salvar
+          </Button>
+        </div>
       </div>
 
       <legend>Informações de Controle Interno - Estrutura Inicial</legend>
@@ -430,6 +601,22 @@ export const EstruturaInicial = (props: any) => {
           <ArrowCircleRightIcon />
         </IconButton>
       </div>
+
+      <ConfirmDialog
+        open={openDialogRemoveEstruturaIncial}
+        setOpen={setOpenDialogRemoveEstruturaIncial}
+        titleMessage={'Tem certeza que deseja remover essa Estrutura Inicial ?'}
+        responseYes={deleteEstruturaInicial}
+        responseNo={() => null}
+      />
+
+      <ConfirmDialog
+        open={openDialogEstruturaInicial}
+        setOpen={setOpenDialogEstruturaInicial}
+        titleMessage={'Deseja incluir outra Estrutura Inicial ?'}
+        responseYes={responseDialogEstruturaInicialYes}
+        responseNo={responseDialogEstruturaInicialNo}
+      />
     </EstruturaInicialStyle>
   )
 }
