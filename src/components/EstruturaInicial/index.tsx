@@ -42,8 +42,8 @@ export const EstruturaInicial = (props: any) => {
   >([] as DataEstruturaInicialProps[])
 
   const [
-    openDialogRemoveEstruturaIncial,
-    setOpenDialogRemoveEstruturaIncial,
+    openDialogRemoveEstruturaInicial,
+    setOpenDialogRemoveEstruturaInicial,
   ] = useState(false)
 
   useEffect(() => {
@@ -323,7 +323,7 @@ export const EstruturaInicial = (props: any) => {
               title="Remover Estrutura Inicial"
               aria-label="Remover Estrutura Inicial"
               id="removeEstruturaInicial"
-              onClick={() => setOpenDialogRemoveEstruturaIncial(true)}
+              onClick={() => setOpenDialogRemoveEstruturaInicial(true)}
             >
               <RemoveCircleIcon />
             </IconButton>
@@ -603,8 +603,8 @@ export const EstruturaInicial = (props: any) => {
       </div>
 
       <ConfirmDialog
-        open={openDialogRemoveEstruturaIncial}
-        setOpen={setOpenDialogRemoveEstruturaIncial}
+        open={openDialogRemoveEstruturaInicial}
+        setOpen={setOpenDialogRemoveEstruturaInicial}
         titleMessage={'Tem certeza que deseja remover essa Estrutura Inicial ?'}
         responseYes={deleteEstruturaInicial}
         responseNo={() => null}

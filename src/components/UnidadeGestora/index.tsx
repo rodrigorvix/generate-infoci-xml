@@ -3,6 +3,7 @@ import { useFormik } from 'formik'
 import { TextField, MenuItem, Button, IconButton } from '@mui/material'
 import ArrowCircleRightIcon from '@mui/icons-material/ArrowCircleRight'
 import ArrowCircleLeftIcon from '@mui/icons-material/ArrowCircleLeft'
+import RemoveCircleIcon from '@mui/icons-material/RemoveCircle'
 
 import { UnidadeGestoraStyle } from './style'
 import validationUnidadeGestora from '../../utils/validationUnidadeGestora'
@@ -11,6 +12,7 @@ import { GlobalContext } from '../../context/GlobalStorage'
 import { useNavigate } from 'react-router-dom'
 import axios from 'axios'
 import baseAPI from '../../utils/baseAPI'
+import { ConfirmDialog } from '../ConfirmDialog'
 
 interface DataUnidadeGestoraProps {
   id: number
@@ -27,8 +29,18 @@ export const UnidadeGestora = (props: any) => {
   const navigate = useNavigate()
   const token = localStorage.getItem('app-token')
   const [buttonId, setButtonId] = useState('')
-  const [dataUnidadeGestora, setDataUnidadeGestora] = useState<DataUnidadeGestoraProps>({} as DataUnidadeGestoraProps)
-  // const [selectUnidadeGestora, setSelectUnidadeGestora] = useState(1)
+  const [dataUnidadeGestora, setDataUnidadeGestora] = useState<
+    DataUnidadeGestoraProps[]
+  >([] as DataUnidadeGestoraProps[])
+  const [selectUnidadeGestora, setSelectUnidadeGestora] = useState(0)
+
+  const [openDialogUnidadeGestora, setOpenDialogUnidadeGestora] = useState(
+    false,
+  )
+  const [
+    openDialogRemoveUnidadeGestora,
+    setOpenDialogRemoveUnidadeGestora,
+  ] = useState(false)
 
   useEffect(() => {
     if (!context.formInfo.id) {
@@ -37,75 +49,180 @@ export const UnidadeGestora = (props: any) => {
     }
 
     requestAPI()
-
-    async function requestAPI() {
-      const listUniadeGestora = await getUnidadeGestora()
-
-      if (!listUniadeGestora) {
-        const valueDefault = {
-          unidadeGestoraIdNumRegistro: `00001`,
-          unidadeGestoraNivelControleInterno: ``,
-          unidadeGestoraCodigoUnidadeGestora: ``,
-          unidadeGestoraResponsavelUnidadeGestora: ``,
-          unidadeGestoraExercicioUltimaManifestacaoControleInterno: ``,
-          unidadeGestoraOpiniaoPrestacaoContasControleInterno: ``,
-        }
-        await axios.post(
-          `${baseAPI.URL}/forms/${context.formInfo.id}/unidades`,
-          valueDefault,
-          { headers: baseAPI.HEADERS(token) },
-        )
-
-        await getUnidadeGestora()
-      }
-    }
-    async function getUnidadeGestora() {
-      const responseGet = await axios.get(
-        `${baseAPI.URL}/forms/${context.formInfo.id}/unidades`,
-        { headers: baseAPI.HEADERS(token) },
-      )
-      const dataGet = responseGet.data.map(
-        ({
-          id,
-          unidadeGestoraIdNumRegistro,
-          unidadeGestoraNivelControleInterno,
-          unidadeGestoraCodigoUnidadeGestora,
-          unidadeGestoraResponsavelUnidadeGestora,
-          unidadeGestoraExercicioUltimaManifestacaoControleInterno,
-          unidadeGestoraOpiniaoPrestacaoContasControleInterno,
-        }: any) => {
-          return {
-            id,
-            unidadeGestoraIdNumRegistro,
-            unidadeGestoraNivelControleInterno,
-            unidadeGestoraCodigoUnidadeGestora,
-            unidadeGestoraResponsavelUnidadeGestora,
-            unidadeGestoraExercicioUltimaManifestacaoControleInterno,
-            unidadeGestoraOpiniaoPrestacaoContasControleInterno,
-          }
-        },
-      )
-      if (dataGet.length > 0) {
-        setDataUnidadeGestora(
-          dataGet.reduce((data: DataUnidadeGestoraProps) => ({ ...data })),
-        )
-        return true
-      }
-      return false
-    }
   }, [])
 
+  async function requestAPI() {
+    const unidadeGestoraExists = await unidadeGestoraList()
+
+    if (!unidadeGestoraExists) {
+      await newUnidadeGestora()
+      await unidadeGestoraList()
+    }
+  }
+
+  async function unidadeGestoraList() {
+    const dataGetUnidadeGestora = await getUnidadeGestora()
+
+    if (dataGetUnidadeGestora.length > 0) {
+      const dataGetUnidadeGestoraReorderId: DataUnidadeGestoraProps[] = await reorderIdNumRegistro(
+        dataGetUnidadeGestora,
+      )
+
+      setDataUnidadeGestora([...dataGetUnidadeGestoraReorderId])
+
+      setSelectUnidadeGestora(dataGetUnidadeGestora.length - 1)
+
+      return true
+    }
+    return false
+  }
+
+  async function getUnidadeGestora() {
+    const response = await axios.get(
+      `${baseAPI.URL}/forms/${context.formInfo.id}/unidades`,
+      { headers: baseAPI.HEADERS(token) },
+    )
+
+    const dataGet: Array<DataUnidadeGestoraProps> = await response.data.map(
+      (data: DataUnidadeGestoraProps) => {
+        return {
+          id: data.id,
+          unidadeGestoraIdNumRegistro: data.unidadeGestoraIdNumRegistro,
+          unidadeGestoraNivelControleInterno:
+            data.unidadeGestoraNivelControleInterno,
+          unidadeGestoraCodigoUnidadeGestora:
+            data.unidadeGestoraCodigoUnidadeGestora,
+          unidadeGestoraResponsavelUnidadeGestora:
+            data.unidadeGestoraResponsavelUnidadeGestora,
+          unidadeGestoraExercicioUltimaManifestacaoControleInterno:
+            data.unidadeGestoraExercicioUltimaManifestacaoControleInterno,
+          unidadeGestoraOpiniaoPrestacaoContasControleInterno:
+            data.unidadeGestoraOpiniaoPrestacaoContasControleInterno,
+        }
+      },
+    )
+    return dataGet
+  }
+
+  async function reorderIdNumRegistro(
+    dataGetUnidadeGestora: DataUnidadeGestoraProps[],
+  ) {
+    const dataGetUnidadeGestoraReorderId = dataGetUnidadeGestora.map(
+      async (data: DataUnidadeGestoraProps, index: number) => {
+        const response = await axios.put(
+          `${baseAPI.URL}/forms/${context.formInfo.id}/unidades/${data.id}`,
+          {
+            unidadeGestoraIdNumRegistro: `${('0000' + (index + 1)).slice(-5)}`,
+          },
+          { headers: baseAPI.HEADERS(token) },
+        )
+        return response.data
+      },
+    )
+
+    return await Promise.all(dataGetUnidadeGestoraReorderId)
+  }
+
+  async function newUnidadeGestora() {
+    const valuesUnidadeGestora = {
+      unidadeGestoraIdNumRegistro: ``,
+      unidadeGestoraNivelControleInterno: ``,
+      unidadeGestoraCodigoUnidadeGestora: ``,
+      unidadeGestoraResponsavelUnidadeGestora: ``,
+      unidadeGestoraExercicioUltimaManifestacaoControleInterno: ``,
+      unidadeGestoraOpiniaoPrestacaoContasControleInterno: ``,
+    }
+    await axios.post(
+      `${baseAPI.URL}/forms/${context.formInfo.id}/unidades`,
+      valuesUnidadeGestora,
+      { headers: baseAPI.HEADERS(token) },
+    )
+  }
+
+  async function deleteUnidadeGestora() {
+    await axios.delete(
+      `${baseAPI.URL}/forms/${context.formInfo.id}/unidades/${dataUnidadeGestora[selectUnidadeGestora].id}`,
+      { headers: baseAPI.HEADERS(token) },
+    )
+
+    alert('Unidade Gestora deletada com sucesso.')
+
+    setSelectUnidadeGestora(dataUnidadeGestora.length - 2)
+
+    await unidadeGestoraList()
+  }
+
+  async function saveUnidadeGestora() {
+    alert('Os dados da Unidade Gestora foram salvos.')
+
+    await axios.put(
+      `${baseAPI.URL}/forms/${context.formInfo.id}/unidades/${dataUnidadeGestora[selectUnidadeGestora].id}`,
+      formik.values,
+      { headers: baseAPI.HEADERS(token) },
+    )
+  }
+
+  async function handleSelectUnidadeGestora(e: any) {
+    const validate = await formik.validateForm(formik.values)
+
+    if (Object.entries(validate).length > 0) {
+      alert(
+        'Preencha todos os campos corretamente antes de alternar de registro.',
+      )
+      formik.handleSubmit()
+      context.setValueTab(1)
+      return
+    }
+
+    saveUnidadeGestora()
+    await unidadeGestoraList()
+    setSelectUnidadeGestora(e.target.value)
+  }
+
+  async function responseDialogUnidadeGestoraYes() {
+    await newUnidadeGestora()
+    await unidadeGestoraList()
+
+    setSelectUnidadeGestora(selectUnidadeGestora + 1)
+    return
+  }
+
+  async function responseDialogUnidadeGestoraNo() {
+    context.setValueTab(2)
+    return
+  }
+
   const initialValues = {
-    unidadeGestoraIdNumRegistro: `${dataUnidadeGestora.unidadeGestoraIdNumRegistro}`,
-    unidadeGestoraNivelControleInterno: `${
-      dataUnidadeGestora.unidadeGestoraNivelControleInterno || ''
+    unidadeGestoraIdNumRegistro: `${
+      dataUnidadeGestora.length > 0 &&
+      dataUnidadeGestora[selectUnidadeGestora].unidadeGestoraIdNumRegistro
     }`,
-    unidadeGestoraCodigoUnidadeGestora: `${dataUnidadeGestora.unidadeGestoraCodigoUnidadeGestora}`,
-    unidadeGestoraResponsavelUnidadeGestora: `${dataUnidadeGestora.unidadeGestoraResponsavelUnidadeGestora}`,
-    unidadeGestoraExercicioUltimaManifestacaoControleInterno: `${dataUnidadeGestora.unidadeGestoraExercicioUltimaManifestacaoControleInterno}`,
+    unidadeGestoraNivelControleInterno: `${
+      dataUnidadeGestora.length > 0
+        ? dataUnidadeGestora[selectUnidadeGestora]
+            .unidadeGestoraNivelControleInterno
+        : ''
+    }`,
+    unidadeGestoraCodigoUnidadeGestora: `${
+      dataUnidadeGestora.length > 0 &&
+      dataUnidadeGestora[selectUnidadeGestora]
+        .unidadeGestoraCodigoUnidadeGestora
+    }`,
+    unidadeGestoraResponsavelUnidadeGestora: `${
+      dataUnidadeGestora.length > 0 &&
+      dataUnidadeGestora[selectUnidadeGestora]
+        .unidadeGestoraResponsavelUnidadeGestora
+    }`,
+    unidadeGestoraExercicioUltimaManifestacaoControleInterno: `${
+      dataUnidadeGestora.length > 0 &&
+      dataUnidadeGestora[selectUnidadeGestora]
+        .unidadeGestoraExercicioUltimaManifestacaoControleInterno
+    }`,
     unidadeGestoraOpiniaoPrestacaoContasControleInterno: `${
-      dataUnidadeGestora.unidadeGestoraOpiniaoPrestacaoContasControleInterno ||
-      ''
+      dataUnidadeGestora.length > 0
+        ? dataUnidadeGestora[selectUnidadeGestora]
+            .unidadeGestoraOpiniaoPrestacaoContasControleInterno
+        : ''
     }`,
   }
 
@@ -118,59 +235,63 @@ export const UnidadeGestora = (props: any) => {
 
     onSubmit: () => {
       saveUnidadeGestora()
-      
-      const tab = buttonId === 'next' ? 2 : 0
-      context.setValueTab(tab)
+
+      // const tab = buttonId === 'next' ? 2 : 0
+
+      if (buttonId === 'previous') {
+        context.setValueTab(0)
+        return
+      }
+
+      setOpenDialogUnidadeGestora(true)
     },
   })
 
-  // async function handleSelectUnidadeGestora(e: any) {
-
-  //   const validate = await formik.validateForm(formik.values);
-
-  //   if(Object.entries(validate).length > 0) {
-  //     alert("Preencha todos os campos corretamente antes de alternar de registro.");
-  //     formik.handleSubmit();
-  //     context.setValueTab(1);
-  //     return;
-  //   }
-
-  //   setSelectUnidadeGestora(e.target.value);
-  //   console.log('Executa chamada a API');
-  //   console.log(e.target.value);
-  // }
-
   function getIdButton(e: any) {
-  
     setButtonId(e.target.parentNode.id)
-  }
-
-  async function saveUnidadeGestora() {
-    alert('Os dados da Unidade Gestora foram salvos.')
-
-    await axios.put(
-      `${baseAPI.URL}/forms/${context.formInfo.id}/unidades/${dataUnidadeGestora.id}`,
-      formik.values,
-      { headers: baseAPI.HEADERS(token) },
-    )
   }
 
   return (
     <UnidadeGestoraStyle onSubmit={formik.handleSubmit}>
-      <div data-header="headerForm">
-        {/* <TextField
-          fullWidth
-          select
-          inputProps={{ MenuProps: { disableScrollLock: true } }}
-          id="unidadeGestora"
-          name="unidadeGestora"
-          value={selectUnidadeGestora}
-          label="Unidade Gestora"
-          onChange={handleSelectUnidadeGestora}
-        >
-          <MenuItem value={1}>Unidade Gestora-001</MenuItem>
-          <MenuItem value={2}>Unidade Gestora-002</MenuItem>
-        </TextField> */}
+      <div data-header="header-form">
+        <div data-input="input-options">
+          {dataUnidadeGestora.length && (
+            <TextField
+              fullWidth
+              select
+              inputProps={{ MenuProps: { disableScrollLock: true } }}
+              id="unidadeGestora"
+              name="unidadeGestora"
+              value={selectUnidadeGestora}
+              label="Unidade(s)"
+              onChange={handleSelectUnidadeGestora}
+            >
+              {dataUnidadeGestora.map(
+                (data: DataUnidadeGestoraProps, index) => {
+                  return (
+                    <MenuItem value={index} key={dataUnidadeGestora[index].id}>
+                      Unidade -{' '}
+                      {dataUnidadeGestora[index].unidadeGestoraIdNumRegistro}
+                    </MenuItem>
+                  )
+                },
+              )}
+              {/* <MenuItem value={0}>Procedimento - 00001</MenuItem>
+          <MenuItem value={1}>Procedimento - 00002</MenuItem> */}
+            </TextField>
+          )}
+
+          {dataUnidadeGestora.length > 1 && (
+            <IconButton
+              title="Remover Unidade Gestora"
+              aria-label="Remover Unidade Gestora"
+              id="removeUnidadeGestora"
+              onClick={() => setOpenDialogRemoveUnidadeGestora(true)}
+            >
+              <RemoveCircleIcon />
+            </IconButton>
+          )}
+        </div>
 
         <div data-button="save">
           <Button variant="contained" onClick={saveUnidadeGestora}>
@@ -318,7 +439,7 @@ export const UnidadeGestora = (props: any) => {
           id="previous"
           onClick={getIdButton}
         >
-          <ArrowCircleLeftIcon  id="previous"/>
+          <ArrowCircleLeftIcon id="previous" />
         </IconButton>
 
         <IconButton
@@ -328,9 +449,25 @@ export const UnidadeGestora = (props: any) => {
           id="next"
           onClick={getIdButton}
         >
-          <ArrowCircleRightIcon id="next"/>
+          <ArrowCircleRightIcon id="next" />
         </IconButton>
       </div>
+
+      <ConfirmDialog
+        open={openDialogRemoveUnidadeGestora}
+        setOpen={setOpenDialogRemoveUnidadeGestora}
+        titleMessage={'Tem certeza que deseja remover essa Unidade Gestora ?'}
+        responseYes={deleteUnidadeGestora}
+        responseNo={() => null}
+      />
+
+      <ConfirmDialog
+        open={openDialogUnidadeGestora}
+        setOpen={setOpenDialogUnidadeGestora}
+        titleMessage={'Deseja incluir outra Unidade Gestora ?'}
+        responseYes={responseDialogUnidadeGestoraYes}
+        responseNo={responseDialogUnidadeGestoraNo}
+      />
     </UnidadeGestoraStyle>
   )
 }
