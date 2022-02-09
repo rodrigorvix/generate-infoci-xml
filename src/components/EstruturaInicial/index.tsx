@@ -125,8 +125,7 @@ export const EstruturaInicial = (props: any) => {
     estruturaInicialNormaInternaGestaoFinanceira: `${
       dataEstruturaInicial.estruturaInicialNormaInternaGestaoFinanceira || ''
     }`,
-    estruturaInicialNormaInternaGestaoPatrimonial: `${
-      dataEstruturaInicial.estruturaInicialNormaInternaGestaoPatrimonial || ''
+    estruturaInicialNormaInternaGestaoPatrimonial: `${dataEstruturaInicial.estruturaInicialNormaInternaGestaoPatrimonial || ''
     }`,
     estruturaInicialNormaInternaGestaoFiscal: `${
       dataEstruturaInicial.estruturaInicialNormaInternaGestaoFiscal || ''
