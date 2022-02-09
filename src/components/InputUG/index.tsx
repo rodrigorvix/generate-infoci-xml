@@ -16,8 +16,9 @@ interface ValuesProps {
 
 interface InputUGProps {
   id: number,
-  codigoUnidadeGestora: string,
-  descricaoUnidadeGestora: string,
+  codigoUnidadeGestoraSigefes: string,
+  codigoUnidadeGestoraCidades: string,
+  nomeUnidadeGestora: string,
 }
 
 export const InputUG = () => {
@@ -32,11 +33,12 @@ export const InputUG = () => {
       .then((response: any) => {
         const { data } = response;
 
-        const newInputUGInfo = data.map(({id, codigoUnidadeGestora, descricaoUnidadeGestora}: any) => {
+        const newInputUGInfo = data.map(({id, codigoUnidadeGestoraSigefes,codigoUnidadeGestoraCidades, nomeUnidadeGestora}: InputUGProps) => {
           return {
             id, 
-            codigoUnidadeGestora, 
-            descricaoUnidadeGestora
+            codigoUnidadeGestoraSigefes, 
+            codigoUnidadeGestoraCidades, 
+            nomeUnidadeGestora,
           }
         })
 
@@ -58,7 +60,7 @@ export const InputUG = () => {
     validationSchema: validationSchema,
     onSubmit: (values:ValuesProps) => {
     
-    const form = inputUGInfo.filter(form => form.codigoUnidadeGestora === values.formValue).reduce((form) => ({...form}));
+    const form = inputUGInfo.filter(form => form.codigoUnidadeGestoraCidades === values.formValue).reduce((form) => ({...form}));
     
     context.setFormInfo(form);
 
@@ -85,7 +87,7 @@ export const InputUG = () => {
             helperText={formik.touched.formValue && formik.errors.formValue}
           >
             {inputUGInfo.map((data:InputUGProps) => {
-               return <MenuItem value={`${data.codigoUnidadeGestora}`} key={data.id}>{data.descricaoUnidadeGestora}</MenuItem>
+               return <MenuItem value={`${data.codigoUnidadeGestoraCidades}`} key={data.id}>{data.nomeUnidadeGestora}</MenuItem>
             })}
 
             {/* <MenuItem value={"1"}>SECONT</MenuItem>

@@ -112,25 +112,25 @@ export const EstruturaInicial = (props: any) => {
   }, [])
 
   const initialValues = {
-    estruturaInicialIdNumRegistro: `${dataEstruturaInicial.estruturaInicialIdNumRegistro}`,
-    estruturaInicialNivelControleInterno: `${
+    estruturaInicialIdNumRegistro:`${dataEstruturaInicial.estruturaInicialIdNumRegistro}`,
+    estruturaInicialNivelControleInterno:`${
       dataEstruturaInicial.estruturaInicialNivelControleInterno || ''
     }`,
-    estruturaInicialQuantidadeTotalServidores: `${dataEstruturaInicial.estruturaInicialQuantidadeTotalServidores}`,
-    estruturaInicialQuantidadeServidoresEfetivos: `${dataEstruturaInicial.estruturaInicialQuantidadeServidoresEfetivos}`,
-    estruturaInicialQuantidadeContadores: `${dataEstruturaInicial.estruturaInicialQuantidadeContadores}`,
-    estruturaInicialNormaInternaGestaoOrcamentaria: `${
+    estruturaInicialQuantidadeTotalServidores:`${dataEstruturaInicial.estruturaInicialQuantidadeTotalServidores}`,
+    estruturaInicialQuantidadeServidoresEfetivos:`${dataEstruturaInicial.estruturaInicialQuantidadeServidoresEfetivos}`,
+    estruturaInicialQuantidadeContadores:`${dataEstruturaInicial.estruturaInicialQuantidadeContadores}`,
+    estruturaInicialNormaInternaGestaoOrcamentaria:`${
       dataEstruturaInicial.estruturaInicialNormaInternaGestaoOrcamentaria || ''
     }`,
-    estruturaInicialNormaInternaGestaoFinanceira: `${
+    estruturaInicialNormaInternaGestaoFinanceira:`${
       dataEstruturaInicial.estruturaInicialNormaInternaGestaoFinanceira || ''
     }`,
-    estruturaInicialNormaInternaGestaoPatrimonial: `${dataEstruturaInicial.estruturaInicialNormaInternaGestaoPatrimonial || ''
+    estruturaInicialNormaInternaGestaoPatrimonial:`${dataEstruturaInicial.estruturaInicialNormaInternaGestaoPatrimonial || ''
     }`,
-    estruturaInicialNormaInternaGestaoFiscal: `${
+    estruturaInicialNormaInternaGestaoFiscal:`${
       dataEstruturaInicial.estruturaInicialNormaInternaGestaoFiscal || ''
     }`,
-    estruturaInicialNormaInternaDemContabeis: `${
+    estruturaInicialNormaInternaDemContabeis:`${
       dataEstruturaInicial.estruturaInicialNormaInternaDemContabeis || ''
     }`,
   }

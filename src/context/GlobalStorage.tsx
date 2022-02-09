@@ -8,8 +8,9 @@ interface UserAuthProps {
 
 interface FormInfoProps {
   id?:number,
-  codigoUnidadeGestora?: string,
-  descricaoUnidadeGestora?: string,
+  codigoUnidadeGestoraSigefes?: string,
+  codigoUnidadeGestoraCidades?: string,
+  nomeUnidadeGestora?: string,
 }
 
 interface ResultContext {
