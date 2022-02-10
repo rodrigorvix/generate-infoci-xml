@@ -80,7 +80,7 @@ export const FormSignIn = () => {
         variant="outlined"
         fullWidth
         id="email"
-        label="Email"
+        label="E-mail"
         name="email"
         autoComplete="email"
         autoFocus
@@ -94,7 +94,7 @@ export const FormSignIn = () => {
        
         variant="outlined"
         id="password"
-        label="Password"
+        label="Senha"
         type={showPassword ? "text" : "password"}
         value={formik.values.password}
         onChange={formik.handleChange}

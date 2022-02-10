@@ -1,8 +1,12 @@
+import { Button } from '@mui/material'
 import axios from 'axios'
 import { useContext, useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { GlobalContext } from '../../context/GlobalStorage'
 import baseAPI from '../../utils/baseAPI'
+import { createSchemaINFOCIXML } from '../../utils/functions/createSchemaINFOCIXML'
+import { download } from '../../utils/functions/downloadXML'
+import { GenerateXMLStyle } from './style'
 
 interface DataEstruturaInicialProps {
   id: number
@@ -58,11 +62,11 @@ interface DataTomadaContasEspecialProps {
 
 export const GenerateXML = () => {
   const [dataEstruturaInicial, setDataEstruturaInicial] = useState<
-    DataEstruturaInicialProps
-  >({} as DataEstruturaInicialProps)
+    DataEstruturaInicialProps[]
+  >([] as DataEstruturaInicialProps[])
   const [dataUnidadeGestora, setDataUnidadeGestora] = useState<
-    DataUnidadeGestoraProps
-  >({} as DataUnidadeGestoraProps)
+    DataUnidadeGestoraProps[]
+  >([] as DataUnidadeGestoraProps[])
   const [dataProcedimentos, setDataProcedimentos] = useState<
     DataProcedimentoProps[]
   >([] as DataProcedimentoProps[])
@@ -87,79 +91,78 @@ export const GenerateXML = () => {
       await getUnidadeGestora()
       await getProcedimentos()
       await getTomadaContasEspecial()
+
+      if (
+        dataEstruturaInicial.length > 0 &&
+        dataUnidadeGestora.length > 0 &&
+        dataProcedimentos.length > 0
+      ) {
+      }
     }
 
     async function getEstruturaInicial() {
-      const responseGet = await axios.get(
+      const response = await axios.get(
         `${baseAPI.URL}/forms/${context.formInfo.id}/estruturas`,
         { headers: baseAPI.HEADERS(token) },
       )
-      const dataGet = responseGet.data.map(
-        ({
-          id,
-          estruturaInicialIdNumRegistro,
-          estruturaInicialNivelControleInterno,
-          estruturaInicialQuantidadeTotalServidores,
-          estruturaInicialQuantidadeServidoresEfetivos,
-          estruturaInicialQuantidadeContadores,
-          estruturaInicialNormaInternaGestaoOrcamentaria,
-          estruturaInicialNormaInternaGestaoFinanceira,
-          estruturaInicialNormaInternaGestaoPatrimonial,
-          estruturaInicialNormaInternaGestaoFiscal,
-          estruturaInicialNormaInternaDemContabeis,
-        }: any) => {
+
+      const dataGet: Array<DataEstruturaInicialProps> = await response.data.map(
+        (data: DataEstruturaInicialProps) => {
           return {
-            id,
-            estruturaInicialIdNumRegistro,
-            estruturaInicialNivelControleInterno,
-            estruturaInicialQuantidadeTotalServidores,
-            estruturaInicialQuantidadeServidoresEfetivos,
-            estruturaInicialQuantidadeContadores,
-            estruturaInicialNormaInternaGestaoOrcamentaria,
-            estruturaInicialNormaInternaGestaoFinanceira,
-            estruturaInicialNormaInternaGestaoPatrimonial,
-            estruturaInicialNormaInternaGestaoFiscal,
-            estruturaInicialNormaInternaDemContabeis,
+            id: data.id,
+            estruturaInicialIdNumRegistro: data.estruturaInicialIdNumRegistro,
+            estruturaInicialNivelControleInterno:
+              data.estruturaInicialNivelControleInterno,
+            estruturaInicialQuantidadeTotalServidores:
+              data.estruturaInicialQuantidadeTotalServidores,
+            estruturaInicialQuantidadeServidoresEfetivos:
+              data.estruturaInicialQuantidadeServidoresEfetivos,
+            estruturaInicialQuantidadeContadores:
+              data.estruturaInicialQuantidadeContadores,
+            estruturaInicialNormaInternaGestaoOrcamentaria:
+              data.estruturaInicialNormaInternaGestaoOrcamentaria,
+            estruturaInicialNormaInternaGestaoFinanceira:
+              data.estruturaInicialNormaInternaGestaoFinanceira,
+            estruturaInicialNormaInternaGestaoPatrimonial:
+              data.estruturaInicialNormaInternaGestaoPatrimonial,
+            estruturaInicialNormaInternaGestaoFiscal:
+              data.estruturaInicialNormaInternaGestaoFiscal,
+            estruturaInicialNormaInternaDemContabeis:
+              data.estruturaInicialNormaInternaDemContabeis,
           }
         },
       )
       if (dataGet.length > 0) {
-        setDataEstruturaInicial(
-          dataGet.reduce((data: DataEstruturaInicialProps) => ({ ...data })),
-        )
+        setDataEstruturaInicial([...dataGet])
       }
     }
 
     async function getUnidadeGestora() {
-      const responseGet = await axios.get(
+      const response = await axios.get(
         `${baseAPI.URL}/forms/${context.formInfo.id}/unidades`,
         { headers: baseAPI.HEADERS(token) },
       )
-      const dataGet = responseGet.data.map(
-        ({
-          id,
-          unidadeGestoraIdNumRegistro,
-          unidadeGestoraNivelControleInterno,
-          unidadeGestoraCodigoUnidadeGestora,
-          unidadeGestoraResponsavelUnidadeGestora,
-          unidadeGestoraExercicioUltimaManifestacaoControleInterno,
-          unidadeGestoraOpiniaoPrestacaoContasControleInterno,
-        }: any) => {
+
+      const dataGet: Array<DataUnidadeGestoraProps> = await response.data.map(
+        (data: DataUnidadeGestoraProps) => {
           return {
-            id,
-            unidadeGestoraIdNumRegistro,
-            unidadeGestoraNivelControleInterno,
-            unidadeGestoraCodigoUnidadeGestora,
-            unidadeGestoraResponsavelUnidadeGestora,
-            unidadeGestoraExercicioUltimaManifestacaoControleInterno,
-            unidadeGestoraOpiniaoPrestacaoContasControleInterno,
+            id: data.id,
+            unidadeGestoraIdNumRegistro: data.unidadeGestoraIdNumRegistro,
+            unidadeGestoraNivelControleInterno:
+              data.unidadeGestoraNivelControleInterno,
+            unidadeGestoraCodigoUnidadeGestora:
+              data.unidadeGestoraCodigoUnidadeGestora,
+            unidadeGestoraResponsavelUnidadeGestora:
+              data.unidadeGestoraResponsavelUnidadeGestora,
+            unidadeGestoraExercicioUltimaManifestacaoControleInterno:
+              data.unidadeGestoraExercicioUltimaManifestacaoControleInterno,
+            unidadeGestoraOpiniaoPrestacaoContasControleInterno:
+              data.unidadeGestoraOpiniaoPrestacaoContasControleInterno,
           }
         },
       )
       if (dataGet.length > 0) {
-        setDataUnidadeGestora(
-          dataGet.reduce((data: DataUnidadeGestoraProps) => ({ ...data })),
-        )
+        setDataUnidadeGestora([...dataGet])
       }
     }
 
@@ -235,12 +238,42 @@ export const GenerateXML = () => {
     }
   }, [])
 
-  if(dataEstruturaInicial && dataUnidadeGestora && dataProcedimentos.length > 0 && dataTomadaContasEspecial.length > 0 ) {
+  if (
+    dataEstruturaInicial.length > 0 &&
+    dataUnidadeGestora.length > 0 &&
+    dataProcedimentos.length > 0
+  ) {
     console.log(dataEstruturaInicial)
-  console.log(dataUnidadeGestora)
-  console.log(dataProcedimentos)
-  console.log(dataTomadaContasEspecial)
+    console.log(dataUnidadeGestora)
+    console.log(dataProcedimentos)
+    console.log(dataTomadaContasEspecial)
   }
 
-  return <h1>Gerando um XML...</h1>
+  const xml = createSchemaINFOCIXML(
+    dataEstruturaInicial,
+    dataUnidadeGestora,
+    dataProcedimentos,
+    dataTomadaContasEspecial,
+  )
+
+  function downloadXML() {
+    const filename = 'INFOCI.XML'
+    download(filename, xml)
+  }
+  // let parser = new DOMParser();
+  // let xmlFormat = parser.parseFromString( xml, "application/xml");
+
+  return (
+    <GenerateXMLStyle>
+      <h2>
+        Clique no botão abaixo para realizar o download do arquivo INFOCI.XML
+      </h2>
+
+      <div>
+        <Button onClick={downloadXML} variant="contained">
+          Download
+        </Button>
+      </div>
+    </GenerateXMLStyle>
+  )
 }

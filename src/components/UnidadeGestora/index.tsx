@@ -363,6 +363,7 @@ export const UnidadeGestora = (props: any) => {
           formik.touched.unidadeGestoraCodigoUnidadeGestora &&
           formik.errors.unidadeGestoraCodigoUnidadeGestora
         }
+        disabled
       />
 
       <TextField
