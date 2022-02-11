@@ -1,6 +1,6 @@
 import { useFormik } from 'formik'
 
-import { Button, IconButton } from '@mui/material'
+import {Button, IconButton } from '@mui/material'
 import { TextField, MenuItem } from '@mui/material'
 import ArrowCircleRightIcon from '@mui/icons-material/ArrowCircleRight'
 import RemoveCircleIcon from '@mui/icons-material/RemoveCircle'
@@ -13,6 +13,7 @@ import axios from 'axios'
 import baseAPI from '../../utils/baseAPI'
 import { useNavigate } from 'react-router-dom'
 import { ConfirmDialog } from '../ConfirmDialog'
+import { AlertSucess } from '../AlertSucess'
 
 interface DataEstruturaInicialProps {
   id: number
@@ -45,6 +46,8 @@ export const EstruturaInicial = (props: any) => {
     openDialogRemoveEstruturaInicial,
     setOpenDialogRemoveEstruturaInicial,
   ] = useState(false)
+
+  const [openAlertSave, setOpenAlertSave] = useState(false)
 
   useEffect(() => {
     if (!context.formInfo.id) {
@@ -140,7 +143,9 @@ export const EstruturaInicial = (props: any) => {
   async function newEstruturaInicial() {
     const valuesEstruturaInicial = {
       estruturaInicialIdNumRegistro: ``,
-      estruturaInicialNivelControleInterno: `${context.formInfo.codigoUnidadeGestoraCidades !== "001" ? 2 : ''}`,
+      estruturaInicialNivelControleInterno: `${
+        context.formInfo.codigoUnidadeGestoraCidades !== '001' ? 2 : ''
+      }`,
       estruturaInicialQuantidadeTotalServidores: ``,
       estruturaInicialQuantidadeServidoresEfetivos: ``,
       estruturaInicialQuantidadeContadores: ``,
@@ -163,7 +168,7 @@ export const EstruturaInicial = (props: any) => {
       { headers: baseAPI.HEADERS(token) },
     )
 
-    alert('Estrutura Inicial deletada com sucesso.')
+    // alert('Estrutura Inicial deletada com sucesso.')
 
     setSelectEstruturaInicial(dataEstruturaInicial.length - 2)
 
@@ -171,7 +176,8 @@ export const EstruturaInicial = (props: any) => {
   }
 
   async function saveEstruturaInicial() {
-    alert('Os dados da Estrutura Inicial foram salvos.')
+    // alert('Os dados da Estrutura Inicial foram salvos.')
+    setOpenAlertSave(true)
 
     await axios.put(
       `${baseAPI.URL}/forms/${context.formInfo.id}/estruturas/${dataEstruturaInicial[selectEstruturaInicial].id}`,
@@ -278,22 +284,21 @@ export const EstruturaInicial = (props: any) => {
     onSubmit: () => {
       saveEstruturaInicial()
 
-      if(context.formInfo.nomeUnidadeGestora === 'SECONT') {
+      if (context.formInfo.nomeUnidadeGestora === 'SECONT') {
         setOpenDialogEstruturaInicial(true)
-        return;
+        return
       }
 
-      context.setValueTab(1);
-      
+      context.setValueTab(1)
     },
   })
 
   return (
     <EstruturaInicialStyle onSubmit={formik.handleSubmit}>
-      
       <div data-header="header-form">
+
         <div data-input="input-options">
-          {dataEstruturaInicial.length && (
+          {dataEstruturaInicial.length > 1 && (
             <TextField
               fullWidth
               select
@@ -382,7 +387,9 @@ export const EstruturaInicial = (props: any) => {
           formik.touched.estruturaInicialNivelControleInterno &&
           formik.errors.estruturaInicialNivelControleInterno
         }
-        disabled={context.formInfo.codigoUnidadeGestoraCidades !== "001" ? true : false}
+        disabled={
+          context.formInfo.codigoUnidadeGestoraCidades !== '001' ? true : false
+        }
       >
         <MenuItem value={1}>1 – Unidade Central </MenuItem>
         <MenuItem value={2}>2 – Unidade Setorial</MenuItem>
@@ -625,6 +632,12 @@ export const EstruturaInicial = (props: any) => {
         titleMessage={'Deseja incluir outra Estrutura Inicial ?'}
         responseYes={responseDialogEstruturaInicialYes}
         responseNo={responseDialogEstruturaInicialNo}
+      />
+
+      <AlertSucess
+        open={openAlertSave}
+        setOpen={setOpenAlertSave}
+        message={'Os dados da Estrutura Inicial foram salvos.'}
       />
     </EstruturaInicialStyle>
   )

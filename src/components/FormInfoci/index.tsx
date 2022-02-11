@@ -4,7 +4,14 @@ import * as React from 'react'
 import Tabs from '@mui/material/Tabs'
 import Tab from '@mui/material/Tab'
 import Box from '@mui/material/Box'
+
+import { useTheme } from '@mui/material/styles';
 import { Button } from '@mui/material'
+import LooksOneIcon from '@mui/icons-material/LooksOne';
+import LooksTwoIcon from '@mui/icons-material/LooksTwo';
+import Looks3Icon from '@mui/icons-material/Looks3';
+import Looks4Icon from '@mui/icons-material/Looks4';
+import Looks5Icon from '@mui/icons-material/Looks5';
 
 import { useFormik } from 'formik'
 
@@ -106,7 +113,7 @@ function a11yProps(index: number) {
 export const FormInfoci = (props: any) => {
   
   const context = React.useContext(GlobalContext);
-
+  const theme = useTheme();
   const handleChange = (event: React.SyntheticEvent, newValue: number) => {
     context.setValueTab(newValue)
   }
@@ -135,42 +142,44 @@ export const FormInfoci = (props: any) => {
             // value={value}
             value={context.valueTab}
             onChange={handleChange}
-            aria-label="basic tabs example"
+            aria-label="selecione os formularios"
             centered
             variant="fullWidth"
             TabIndicatorProps={{ style: { background: '#FFF' } }}
           >
             <Tab
-              style={{ color: 'white', fontWeight: 'bold' }}
-              label="Estrutura Inicial"
+              style={{ color: 'white', flexDirection:'row'}}
+              label={<><LooksOneIcon style={{verticalAlign:'middle', marginRight:'0.25rem'}}/> <span style={{fontWeight: 'bold',fontSize:'0.88rem'}}>Estrutura Inicial</span></>}
               {...a11yProps(0)}
             />
             <Tab
-              style={{ color: 'white', fontWeight: 'bold' }}
-              label="Unidade Gestora"
+              style={{ color: 'white',  flexDirection:'row' }}
+              label={<><LooksTwoIcon style={{verticalAlign:'middle', marginRight:'0.25rem'}}/> <span style={{fontWeight: 'bold',fontSize:'0.88rem'}}>Unidade Gestora</span></>}
               disabled
               {...a11yProps(1)}
             />
             <Tab
-              style={{ color: 'white', fontWeight: 'bold' }}
-              label="Procedimentos"
+              style={{ color: 'white',  flexDirection:'row' }}
+              label={<><Looks3Icon style={{verticalAlign:'middle', marginRight:'0.25rem'}}/> <span style={{fontWeight: 'bold',fontSize:'0.88rem'}}>Procedimentos</span></>}
               disabled
               {...a11yProps(2)}
             />
             <Tab
-              style={{ color: 'white', fontWeight: 'bold' }}
-              label="Tomada Contas Especial"
+              style={{ color: 'white',  flexDirection:'row' }}
+              label={<><Looks4Icon style={{verticalAlign:'middle', marginRight:'0.25rem'}}/> <span style={{fontWeight: 'bold',fontSize:'0.88rem'}}>Tomada de Contas</span></>}
               disabled
               {...a11yProps(3)}
             />
             <Tab
-              style={{ color: 'white', fontWeight: 'bold' }}
-              label="Gerar XML"
+              style={{ color: 'white',  flexDirection:'row'}}
+              label={<><Looks5Icon style={{verticalAlign:'middle', marginRight:'0.25rem'}}/> <span style={{fontWeight: 'bold',fontSize:'0.88rem'}}>Gerar XML</span></>}
               disabled
               {...a11yProps(4)}
             />
           </Tabs>
         </Box>
+
+      
         <TabPanel value={context.valueTab} index={0}>
           <EstruturaInicial/>
         </TabPanel>
@@ -186,6 +195,7 @@ export const FormInfoci = (props: any) => {
         <TabPanel value={context.valueTab} index={4}>
           <GenerateXML />
         </TabPanel>
+
       </Box>
     </FormInfociStyle>
   )

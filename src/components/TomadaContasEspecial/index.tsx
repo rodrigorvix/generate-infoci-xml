@@ -14,6 +14,7 @@ import validationTomadaContasEspecial from '../../utils/validationTomadaContasEs
 import { TomadaContasEspecialraStyle } from './style'
 import { GlobalContext } from '../../context/GlobalStorage'
 import { ConfirmDialog } from '../ConfirmDialog'
+import { AlertSucess } from '../AlertSucess'
 
 interface DataTomadaContasEspecialProps {
   id: number
@@ -53,6 +54,11 @@ export const TomadaContasEspecial = () => {
   const [
     openDialogRemoveTomadaContasEspecial,
     setOpenDialogRemoveTomadaContasEspecial,
+  ] = useState(false)
+
+  const [
+    openAlertSave,
+    setOpenAlertSave,
   ] = useState(false)
 
   useEffect(() => {
@@ -171,7 +177,7 @@ export const TomadaContasEspecial = () => {
       { headers: baseAPI.HEADERS(token) },
     )
 
-    alert('TCE deletada com sucesso.')
+    // alert('TCE deletada com sucesso.')
 
     setSelectTomadaContasEspecial(dataTomadaContasEspecial.length - 2)
 
@@ -179,7 +185,8 @@ export const TomadaContasEspecial = () => {
   }
 
   async function saveTomadaContasEspecial() {
-    alert('Os dados da TCE foram salvos.')
+    // alert('Os dados da TCE foram salvos.')
+    setOpenAlertSave(true);
 
     await axios.put(
       `${baseAPI.URL}/forms/${context.formInfo.id}/tomada_contas/${dataTomadaContasEspecial[selectTomadaContasEspecial].id}`,
@@ -317,7 +324,7 @@ export const TomadaContasEspecial = () => {
     <TomadaContasEspecialraStyle onSubmit={formik.handleSubmit}>
       <div data-header="headerForm">
         <div data-input="input-options">
-          {dataTomadaContasEspecial.length && (
+          {dataTomadaContasEspecial.length > 1 && (
             <TextField
               fullWidth
               select
@@ -640,7 +647,7 @@ export const TomadaContasEspecial = () => {
           id="previous"
           onClick={getIdButton}
         >
-          <ArrowCircleLeftIcon />
+          <ArrowCircleLeftIcon id="previous"/>
         </IconButton>
 
         <IconButton
@@ -657,7 +664,7 @@ export const TomadaContasEspecial = () => {
       <ConfirmDialog
         open={openDialogRemoveTomadaContasEspecial}
         setOpen={setOpenDialogRemoveTomadaContasEspecial}
-        titleMessage={'Tem certeza que deseja remover essa TCE ?'}
+        titleMessage={'Tem certeza que deseja remover essa Tomada de Contas ?'}
         responseYes={deleteTomadaContasEspecial}
         responseNo={() => null}
       />
@@ -665,7 +672,7 @@ export const TomadaContasEspecial = () => {
       <ConfirmDialog
         open={openDialogTomadaContasEspecial}
         setOpen={setOpenDialogTomadaContasEspecial}
-        titleMessage={'Deseja incluir informações de outra TCE ?'}
+        titleMessage={'Deseja incluir informações de outra Tomada de Contas ?'}
         responseYes={responseDialogTomadaContasEspecialYes}
         responseNo={responseDialogTomadaContasEspecialNo}
       />
@@ -676,6 +683,12 @@ export const TomadaContasEspecial = () => {
         titleMessage={'Deseja incluir informações de outra Unidade Gestora ?'}
         responseYes={responseDialogUnidadeGestoraYes}
         responseNo={responseDialogUnidadeGestoraNo}
+      />
+
+<AlertSucess
+        open={openAlertSave}
+        setOpen={setOpenAlertSave}
+        message={'Os dados da Tomada de Contas Especial foram salvos.'}
       />
     </TomadaContasEspecialraStyle>
   )

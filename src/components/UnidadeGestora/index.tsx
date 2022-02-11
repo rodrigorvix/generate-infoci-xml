@@ -13,6 +13,7 @@ import { useNavigate } from 'react-router-dom'
 import axios from 'axios'
 import baseAPI from '../../utils/baseAPI'
 import { ConfirmDialog } from '../ConfirmDialog'
+import { AlertSucess } from '../AlertSucess'
 
 interface DataUnidadeGestoraProps {
   id: number
@@ -41,6 +42,8 @@ export const UnidadeGestora = (props: any) => {
     openDialogRemoveUnidadeGestora,
     setOpenDialogRemoveUnidadeGestora,
   ] = useState(false)
+
+  const [openAlertSave, setOpenAlertSave] = useState(false);
 
   useEffect(() => {
     if (!context.formInfo.id) {
@@ -126,7 +129,9 @@ export const UnidadeGestora = (props: any) => {
   async function newUnidadeGestora() {
     const valuesUnidadeGestora = {
       unidadeGestoraIdNumRegistro: ``,
-      unidadeGestoraNivelControleInterno: `${context.formInfo.codigoUnidadeGestoraCidades !== "001" ? 2 : ''}`,
+      unidadeGestoraNivelControleInterno: `${
+        context.formInfo.codigoUnidadeGestoraCidades !== '001' ? 2 : ''
+      }`,
       unidadeGestoraCodigoUnidadeGestora: `${context.formInfo.codigoUnidadeGestoraCidades}`,
       unidadeGestoraResponsavelUnidadeGestora: ``,
       unidadeGestoraExercicioUltimaManifestacaoControleInterno: ``,
@@ -153,7 +158,9 @@ export const UnidadeGestora = (props: any) => {
   }
 
   async function saveUnidadeGestora() {
-    alert('Os dados da Unidade Gestora foram salvos.')
+    // alert('Os dados da Unidade Gestora foram salvos.')
+
+    setOpenAlertSave(true);
 
     await axios.put(
       `${baseAPI.URL}/forms/${context.formInfo.id}/unidades/${dataUnidadeGestora[selectUnidadeGestora].id}`,
@@ -241,12 +248,12 @@ export const UnidadeGestora = (props: any) => {
         return
       }
 
-      if(context.formInfo.nomeUnidadeGestora === 'SECONT') {
+      if (context.formInfo.nomeUnidadeGestora === 'SECONT') {
         setOpenDialogUnidadeGestora(true)
-        return;
+        return
       }
 
-      context.setValueTab(2);
+      context.setValueTab(2)
     },
   })
 
@@ -258,7 +265,7 @@ export const UnidadeGestora = (props: any) => {
     <UnidadeGestoraStyle onSubmit={formik.handleSubmit}>
       <div data-header="header-form">
         <div data-input="input-options">
-          {dataUnidadeGestora.length && (
+          {dataUnidadeGestora.length > 1 && (
             <TextField
               fullWidth
               select
@@ -341,7 +348,9 @@ export const UnidadeGestora = (props: any) => {
           formik.touched.unidadeGestoraNivelControleInterno &&
           formik.errors.unidadeGestoraNivelControleInterno
         }
-        disabled={context.formInfo.codigoUnidadeGestoraCidades !== "001" ? true : false}
+        disabled={
+          context.formInfo.codigoUnidadeGestoraCidades !== '001' ? true : false
+        }
       >
         <MenuItem value={1}>1 – Unidade Central </MenuItem>
         <MenuItem value={2}>2 – Unidade Setorial</MenuItem>
@@ -473,6 +482,12 @@ export const UnidadeGestora = (props: any) => {
         titleMessage={'Deseja incluir outra Unidade Gestora ?'}
         responseYes={responseDialogUnidadeGestoraYes}
         responseNo={responseDialogUnidadeGestoraNo}
+      />
+
+      <AlertSucess
+        open={openAlertSave}
+        setOpen={setOpenAlertSave}
+        message={'Os dados da Unidade Gestora foram salvos.'}
       />
     </UnidadeGestoraStyle>
   )

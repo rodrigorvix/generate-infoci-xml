@@ -4,7 +4,7 @@ export const FormInfociStyle = styled.main`
   
   margin: 1rem 0;
  
-  div[data-form="description"] {
+  /* div[data-form="description"] {
     margin-bottom: 1rem;
     p {
       text-align: center;
@@ -24,9 +24,9 @@ export const FormInfociStyle = styled.main`
         cursor: pointer;
       }
     }
-  }
+  } */
 
-  div[data-button="submit"] {
+  /* div[data-button="submit"] {
     display:flex;
     justify-content: center;
     align-items: center;
@@ -40,6 +40,6 @@ export const FormInfociStyle = styled.main`
      }
     }
 
-  }
+  } */
 `;
  

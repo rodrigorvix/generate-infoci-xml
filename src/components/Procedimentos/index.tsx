@@ -13,6 +13,7 @@ import { useNavigate } from 'react-router-dom'
 import { ConfirmDialog } from '../ConfirmDialog'
 import axios from 'axios'
 import baseAPI from '../../utils/baseAPI'
+import { AlertSucess } from '../AlertSucess'
 
 interface DataProcedimentoProps {
   id: number
@@ -47,6 +48,11 @@ export const Procedimentos = () => {
   const [
     openDialogRemoveProcedimento,
     setOpenDialogRemoveProcedimento,
+  ] = useState(false)
+
+  const [
+    openAlertSave,
+    setOpenAlertSave
   ] = useState(false)
 
   useEffect(() => {
@@ -134,7 +140,7 @@ export const Procedimentos = () => {
     const valuesProcedimento = {
       procedimentosIdNumRegistro: ``,
       procedimentosNivelControleInterno: `${context.formInfo.codigoUnidadeGestoraCidades !== "001" ? 2 : ''}`,
-      procedimentosCodigoUnidadeGestora: ``,
+      procedimentosCodigoUnidadeGestora: `${context.formInfo.codigoUnidadeGestoraCidades}`,
       procedimentosCodigoProcedimento: ``,
       procedimentosTipoPontoControle: ``,
       procedimentosUniversoAnalisado: ``,
@@ -156,7 +162,7 @@ export const Procedimentos = () => {
       { headers: baseAPI.HEADERS(token) },
     )
 
-    alert('Procedimento deletado com sucesso.')
+    // alert('Procedimento deletado com sucesso.')
 
     setSelectProcedimento(dataProcedimentos.length - 2)
 
@@ -164,7 +170,8 @@ export const Procedimentos = () => {
   }
 
   async function saveProcedimento() {
-    alert('Os dados do Procedimento foram salvos.')
+    // alert('Os dados do Procedimento foram salvos.')
+    setOpenAlertSave(true);
 
     await axios.put(
       `${baseAPI.URL}/forms/${context.formInfo.id}/procedimentos/${dataProcedimentos[selectProcedimento].id}`,
@@ -192,7 +199,7 @@ export const Procedimentos = () => {
   }
 
   function getIdButton(e: any) {
-    setButtonId(e.target.id)
+    setButtonId(e.target.parentNode.id)
   }
 
   async function responseDialogProcedimentoYes() {
@@ -314,7 +321,7 @@ export const Procedimentos = () => {
       
       <div data-header="header-form">
         <div data-input="input-options">
-          {dataProcedimentos.length && (
+          {dataProcedimentos.length > 1 && (
             <TextField
               fullWidth
               select
@@ -417,6 +424,7 @@ export const Procedimentos = () => {
           formik.touched.procedimentosCodigoUnidadeGestora &&
           formik.errors.procedimentosCodigoUnidadeGestora
         }
+        disabled
       />
 
       <TextField
@@ -591,7 +599,7 @@ export const Procedimentos = () => {
           id="previous"
           onClick={getIdButton}
         >
-          <ArrowCircleLeftIcon />
+          <ArrowCircleLeftIcon id="previous"/>
         </IconButton>
 
         <IconButton
@@ -635,6 +643,12 @@ export const Procedimentos = () => {
         titleMessage={'Deseja incluir informações de outra Unidade Gestora ?'}
         responseYes={responseDialogUnidadeGestoraYes}
         responseNo={responseDialogUnidadeGestoraNo}
+      />
+
+<AlertSucess
+        open={openAlertSave}
+        setOpen={setOpenAlertSave}
+        message={'Os dados do Procedimento foram salvos.'}
       />
     </ProcedimentosStyle>
   )
