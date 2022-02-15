@@ -35,9 +35,9 @@ export const UnidadeGestora = (props: any) => {
   >([] as DataUnidadeGestoraProps[])
   const [selectUnidadeGestora, setSelectUnidadeGestora] = useState(0)
 
-  const [openDialogUnidadeGestora, setOpenDialogUnidadeGestora] = useState(
-    false,
-  )
+  // const [openDialogUnidadeGestora, setOpenDialogUnidadeGestora] = useState(
+  //   false,
+  // )
   const [
     openDialogRemoveUnidadeGestora,
     setOpenDialogRemoveUnidadeGestora,
@@ -130,7 +130,7 @@ export const UnidadeGestora = (props: any) => {
     const valuesUnidadeGestora = {
       unidadeGestoraIdNumRegistro: ``,
       unidadeGestoraNivelControleInterno: `${
-        context.formInfo.codigoUnidadeGestoraCidades !== '001' ? 2 : ''
+        context.formInfo.nomeUnidadeGestora !== 'SECONT' ? 2 : ''
       }`,
       unidadeGestoraCodigoUnidadeGestora: `${context.formInfo.codigoUnidadeGestoraCidades}`,
       unidadeGestoraResponsavelUnidadeGestora: ``,
@@ -150,7 +150,7 @@ export const UnidadeGestora = (props: any) => {
       { headers: baseAPI.HEADERS(token) },
     )
 
-    alert('Unidade Gestora deletada com sucesso.')
+    // alert('Unidade Gestora deletada com sucesso.')
 
     setSelectUnidadeGestora(dataUnidadeGestora.length - 2)
 
@@ -247,12 +247,6 @@ export const UnidadeGestora = (props: any) => {
         context.setValueTab(0)
         return
       }
-
-      if (context.formInfo.nomeUnidadeGestora === 'SECONT') {
-        setOpenDialogUnidadeGestora(true)
-        return
-      }
-
       context.setValueTab(2)
     },
   })
@@ -349,7 +343,7 @@ export const UnidadeGestora = (props: any) => {
           formik.errors.unidadeGestoraNivelControleInterno
         }
         disabled={
-          context.formInfo.codigoUnidadeGestoraCidades !== '001' ? true : false
+          context.formInfo.nomeUnidadeGestora !== 'SECONT' ? true : false
         }
       >
         <MenuItem value={1}>1 – Unidade Central </MenuItem>
@@ -372,7 +366,9 @@ export const UnidadeGestora = (props: any) => {
           formik.touched.unidadeGestoraCodigoUnidadeGestora &&
           formik.errors.unidadeGestoraCodigoUnidadeGestora
         }
-        disabled
+        disabled={
+          context.formInfo.nomeUnidadeGestora !== 'SECONT' ? true : false
+        }
       />
 
       <TextField
@@ -476,13 +472,13 @@ export const UnidadeGestora = (props: any) => {
         responseNo={() => null}
       />
 
-      <ConfirmDialog
+      {/* <ConfirmDialog
         open={openDialogUnidadeGestora}
         setOpen={setOpenDialogUnidadeGestora}
         titleMessage={'Deseja incluir outra Unidade Gestora ?'}
         responseYes={responseDialogUnidadeGestoraYes}
         responseNo={responseDialogUnidadeGestoraNo}
-      />
+      /> */}
 
       <AlertSucess
         open={openAlertSave}

@@ -1,7 +1,6 @@
 import styled from 'styled-components'
 
-export const EstruturaInicialReportStyle = styled.section`
- 
+export const UnidadeGestoraReportStyle = styled.section`
   legend {
     font-size: 1.25rem;
     font-weight: bold;
@@ -12,7 +11,7 @@ export const EstruturaInicialReportStyle = styled.section`
     }
   }
 
-div[data-output="estrutura-inicial"]{
+div[data-output="unidade-gestora"]{
   padding: 1rem;
   display: flex;
   flex-direction: column;
@@ -38,4 +37,4 @@ div[data-output="estrutura-inicial"]{
   }
   
 }
-  `
+`;

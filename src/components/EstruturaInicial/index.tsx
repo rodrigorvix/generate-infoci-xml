@@ -36,7 +36,7 @@ export const EstruturaInicial = (props: any) => {
 
   const [selectEstruturaInicial, setSelectEstruturaInicial] = useState(0)
   const [openDialogEstruturaInicial, setOpenDialogEstruturaInicial] = useState(
-    false,
+     false,
   )
   const [dataEstruturaInicial, setDataEstruturaInicial] = useState<
     DataEstruturaInicialProps[]
@@ -284,10 +284,10 @@ export const EstruturaInicial = (props: any) => {
     onSubmit: () => {
       saveEstruturaInicial()
 
-      if (context.formInfo.nomeUnidadeGestora === 'SECONT') {
-        setOpenDialogEstruturaInicial(true)
+      if (context.formInfo.nomeUnidadeGestora === 'SECONT' && dataEstruturaInicial.length < 2) {
+         setOpenDialogEstruturaInicial(true)
         return
-      }
+       }
 
       context.setValueTab(1)
     },

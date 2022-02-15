@@ -1,8 +1,8 @@
 import styled from 'styled-components'
 
-export const EstruturaInicialReportStyle = styled.section`
- 
-  legend {
+export const TomadaContasEspecialReportStyle = styled.section`
+
+legend {
     font-size: 1.25rem;
     font-weight: bold;
     padding: 0.5rem 0;
@@ -12,7 +12,7 @@ export const EstruturaInicialReportStyle = styled.section`
     }
   }
 
-div[data-output="estrutura-inicial"]{
+div[data-output="tomada-contas-especial"]{
   padding: 1rem;
   display: flex;
   flex-direction: column;
@@ -38,4 +38,5 @@ div[data-output="estrutura-inicial"]{
   }
   
 }
-  `
+
+`;

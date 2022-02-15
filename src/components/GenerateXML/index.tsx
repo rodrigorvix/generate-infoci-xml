@@ -1,4 +1,12 @@
-import { Button } from '@mui/material'
+import { ExpandLess, ExpandMore } from '@mui/icons-material'
+import {
+  Button,
+  Collapse,
+  List,
+  ListItemButton,
+  ListItemText,
+ 
+} from '@mui/material'
 import axios from 'axios'
 import { useContext, useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
@@ -7,6 +15,9 @@ import baseAPI from '../../utils/baseAPI'
 import { createSchemaINFOCIXML } from '../../utils/functions/createSchemaINFOCIXML'
 import { download } from '../../utils/functions/downloadXML'
 import { EstruturaInicialReport } from '../EstruturaInicialReport'
+import { ProcedimentosReport } from '../ProcedimentosReport'
+import { TomadaContasEspecialReport } from '../TomadaContasEspecialReport'
+import { UnidadeGestoraReport } from '../UnidadeGestoraReport'
 import { GenerateXMLStyle } from './style'
 
 interface DataEstruturaInicialProps {
@@ -78,6 +89,24 @@ export const GenerateXML = () => {
   const context = useContext(GlobalContext)
   const token = localStorage.getItem('app-token')
   const navigate = useNavigate()
+
+  const [openEstruturaInicialReport, setOpenEstruturaInicialReport] = useState(true)
+  const [openUnidadeGestoraReport, setOpenUnidadeGestoraReport] = useState(true)
+  const [openProcedimentosReport, setOpenProcedimentosReport] = useState(true)
+  const [openTomadaContasEspecialReport, setOpenTomadaContasEspecialReport] = useState(true)
+
+  const handleClickEstruturaInicialReport = () => {
+    setOpenEstruturaInicialReport(!openEstruturaInicialReport)
+  }
+  const handleClickUnidadeGestoraReport = () => {
+    setOpenUnidadeGestoraReport(!openUnidadeGestoraReport)
+  }
+  const handleClickProcedimentosReport = () => {
+    setOpenProcedimentosReport(!openProcedimentosReport)
+  }
+  const handleClickTomadaContasEspecialReport = () => {
+    setOpenTomadaContasEspecialReport(!openTomadaContasEspecialReport)
+  }
 
   useEffect(() => {
     if (!context.formInfo.id) {
@@ -244,10 +273,7 @@ export const GenerateXML = () => {
     dataUnidadeGestora.length > 0 &&
     dataProcedimentos.length > 0
   ) {
-    console.log(dataEstruturaInicial)
-    console.log(dataUnidadeGestora)
-    console.log(dataProcedimentos)
-    console.log(dataTomadaContasEspecial)
+   
   }
 
   const xml = createSchemaINFOCIXML(
@@ -261,8 +287,6 @@ export const GenerateXML = () => {
     const filename = 'INFOCI.XML'
     download(filename, xml)
   }
-  // let parser = new DOMParser();
-  // let xmlFormat = parser.parseFromString( xml, "application/xml");
 
   return (
     <GenerateXMLStyle>
@@ -270,7 +294,77 @@ export const GenerateXML = () => {
         Clique no botão abaixo para realizar o download do arquivo INFOCI.XML
       </h2>
 
-      <EstruturaInicialReport dataEstruturaInicial={dataEstruturaInicial}/>
+      <List
+        sx={{ width: '100%' }}
+        component="nav"
+        aria-labelledby="Registro da Estrutura Inicial"
+      >
+        <ListItemButton onClick={handleClickEstruturaInicialReport}>
+          <ListItemText primary="Informações de Controle Interno - Estrutura Inicial" />
+          {openEstruturaInicialReport ? <ExpandLess /> : <ExpandMore />}
+        </ListItemButton>
+        <Collapse in={openEstruturaInicialReport} timeout="auto" unmountOnExit>
+          <List component="div" disablePadding>
+            <EstruturaInicialReport
+              dataEstruturaInicial={dataEstruturaInicial}
+            />
+          </List>
+        </Collapse>
+      </List>
+
+      <List
+        sx={{ width: '100%' }}
+        component="nav"
+        aria-labelledby="Registro da Unidade Gestora"
+      >
+        <ListItemButton onClick={handleClickUnidadeGestoraReport}>
+          <ListItemText primary="Informações de Controle Interno - Unidade Gestora" />
+          {openUnidadeGestoraReport ? <ExpandLess /> : <ExpandMore />}
+        </ListItemButton>
+        <Collapse in={openUnidadeGestoraReport} timeout="auto" unmountOnExit>
+          <List component="div" disablePadding>
+            <UnidadeGestoraReport
+              dataUnidadeGestora={dataUnidadeGestora}
+            />
+          </List>
+        </Collapse>
+      </List>
+
+      <List
+        sx={{ width: '100%' }}
+        component="nav"
+        aria-labelledby="Registro dos Procedimentos"
+      >
+        <ListItemButton onClick={handleClickProcedimentosReport}>
+          <ListItemText primary="Informações de Controle Interno - Procedimentos" />
+          {openProcedimentosReport ? <ExpandLess /> : <ExpandMore />}
+        </ListItemButton>
+        <Collapse in={openProcedimentosReport} timeout="auto" unmountOnExit>
+          <List component="div" disablePadding>
+            <ProcedimentosReport
+              dataProcedimentos={dataProcedimentos}
+            />
+          </List>
+        </Collapse>
+      </List>
+
+      <List
+        sx={{ width: '100%' }}
+        component="nav"
+        aria-labelledby="Registro dos Tomada Contas Especial"
+      >
+        <ListItemButton onClick={handleClickTomadaContasEspecialReport}>
+          <ListItemText primary="Informações de Controle Interno - Tomada Contas Especial" />
+          {openTomadaContasEspecialReport ? <ExpandLess /> : <ExpandMore />}
+        </ListItemButton>
+        <Collapse in={openTomadaContasEspecialReport} timeout="auto" unmountOnExit>
+          <List component="div" disablePadding>
+            <TomadaContasEspecialReport
+              dataTomadaContasEspecial={dataTomadaContasEspecial}
+            />
+          </List>
+        </Collapse>
+      </List>
 
       <div data-button="download">
         <Button onClick={downloadXML} variant="contained">

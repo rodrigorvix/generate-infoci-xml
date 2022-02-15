@@ -20,15 +20,17 @@ interface PropsType {
 }
 
 export const EstruturaInicialReport = ({ dataEstruturaInicial }: PropsType) => {
+
+  
   return (
     <EstruturaInicialReportStyle>
-      <legend>Informações de Controle Interno - Estrutura Inicial</legend>
-
+      
       {dataEstruturaInicial.map((data: DataEstruturaInicialProps) => {
         return (
           <div key={data.id} data-output="estrutura-inicial">
+            <h3>Registro - {data.estruturaInicialIdNumRegistro}</h3>
             <TextField
-              variant="outlined"
+              variant="standard"
               fullWidth
               id="estruturaInicialIdNumRegistro"
               label="Identificação do Número do Registro"
@@ -40,6 +42,7 @@ export const EstruturaInicialReport = ({ dataEstruturaInicial }: PropsType) => {
             <TextField
               fullWidth
               select
+              variant="standard"
               inputProps={{ MenuProps: { disableScrollLock: true } }}
               id="estruturaInicialNivelControleInterno"
               name="estruturaInicialNivelControleInterno"
@@ -52,7 +55,7 @@ export const EstruturaInicialReport = ({ dataEstruturaInicial }: PropsType) => {
             </TextField>
 
             <TextField
-              variant="outlined"
+               variant="standard"
               fullWidth
               id="estruturaInicialQuantidadeTotalServidores"
               label="Quantidade Total de Servidores na Estrutura
@@ -63,7 +66,7 @@ export const EstruturaInicialReport = ({ dataEstruturaInicial }: PropsType) => {
             />
 
             <TextField
-              variant="outlined"
+               variant="standard"
               fullWidth
               id="estruturaInicialQuantidadeServidoresEfetivos"
               label="Quantidade de Servidores Efetivos (do Ente)
@@ -73,7 +76,7 @@ export const EstruturaInicialReport = ({ dataEstruturaInicial }: PropsType) => {
               disabled
             />
             <TextField
-              variant="outlined"
+               variant="standard"
               fullWidth
               id="estruturaInicialQuantidadeContadores"
               label="Quantidade de Servidores com formação em
@@ -85,6 +88,7 @@ export const EstruturaInicialReport = ({ dataEstruturaInicial }: PropsType) => {
             />
 
             <TextField
+             variant="standard"
               fullWidth
               select
               inputProps={{ MenuProps: { disableScrollLock: true } }}
@@ -110,6 +114,7 @@ export const EstruturaInicialReport = ({ dataEstruturaInicial }: PropsType) => {
             </TextField>
 
             <TextField
+             variant="standard"
               fullWidth
               select
               inputProps={{ MenuProps: { disableScrollLock: true } }}
@@ -134,6 +139,7 @@ export const EstruturaInicialReport = ({ dataEstruturaInicial }: PropsType) => {
             </TextField>
 
             <TextField
+             variant="standard"
               fullWidth
               select
               inputProps={{ MenuProps: { disableScrollLock: true } }}
@@ -158,6 +164,7 @@ export const EstruturaInicialReport = ({ dataEstruturaInicial }: PropsType) => {
             </TextField>
 
             <TextField
+             variant="standard"
               fullWidth
               select
               inputProps={{ MenuProps: { disableScrollLock: true } }}
@@ -182,6 +189,7 @@ export const EstruturaInicialReport = ({ dataEstruturaInicial }: PropsType) => {
             </TextField>
 
             <TextField
+             variant="standard"
               fullWidth
               select
               inputProps={{ MenuProps: { disableScrollLock: true } }}

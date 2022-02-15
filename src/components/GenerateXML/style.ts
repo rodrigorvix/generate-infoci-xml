@@ -2,11 +2,13 @@ import styled from "styled-components";
 
 
 export const GenerateXMLStyle = styled.main`
-/* display: flex;
-justify-content: center;
-align-items: center;
-flex-direction: column;
-gap: 2rem; */
+
+.MuiListItemText-root {
+  span {
+    font-weight: bold;
+    font-size: 1.125rem;
+  }
+}
 
 h2 {
   font-size: 1.25rem;
@@ -15,6 +17,7 @@ h2 {
 }
 
 div[data-button="download"]{
+    margin-bottom: 1rem;
      text-align: center;
 
       .MuiButton-root {

@@ -153,7 +153,7 @@ export const TomadaContasEspecial = () => {
   async function newTomadaContasEspecial() {
     const valuesTCE = {
       tomadaContasEspecialIdNumRegistro: ``,
-      tomadaContasEspecialCodigoUnidadeGestora: ``,
+      tomadaContasEspecialCodigoUnidadeGestora: `${context.formInfo.nomeUnidadeGestora !== 'SECONT' ? context.formInfo.codigoUnidadeGestoraCidades : ''}`,
       tomadaContasEspecialProcesso: ``,
       tomadaContasEspecialAnoProcesso: ``,
       tomadaContasEspecialFatoMotivo: ``,
@@ -225,13 +225,37 @@ export const TomadaContasEspecial = () => {
   }
 
   function responseDialogTomadaContasEspecialNo() {
-    setOpenDialogUnidadeGestora(true)
+    // setOpenDialogUnidadeGestora(true)
+
+    if(context.formInfo.nomeUnidadeGestora === 'SECONT') {
+      setOpenDialogUnidadeGestora(true)
+      return
+    }
+    context.setValueTab(4)
+   
     return
   }
 
-  function responseDialogUnidadeGestoraYes() {
-    navigate('/select_ug')
-    context.setValueTab(0)
+  async function responseDialogUnidadeGestoraYes() {
+    // navigate('/select_ug')
+    // context.setValueTab(0)
+
+    const valuesUnidadeGestora = {
+      unidadeGestoraIdNumRegistro: ``,
+      unidadeGestoraNivelControleInterno: `${
+        context.formInfo.nomeUnidadeGestora !== 'SECONT' ? 2 : ''
+      }`,
+      unidadeGestoraCodigoUnidadeGestora: ``,
+      unidadeGestoraResponsavelUnidadeGestora: ``,
+      unidadeGestoraExercicioUltimaManifestacaoControleInterno: ``,
+      unidadeGestoraOpiniaoPrestacaoContasControleInterno: ``,
+    }
+    await axios.post(
+      `${baseAPI.URL}/forms/${context.formInfo.id}/unidades`,
+      valuesUnidadeGestora,
+      { headers: baseAPI.HEADERS(token) },
+    )
+      context.setValueTab(1)
     return
   }
 
@@ -414,6 +438,9 @@ export const TomadaContasEspecial = () => {
         helperText={
           formik.touched.tomadaContasEspecialCodigoUnidadeGestora &&
           formik.errors.tomadaContasEspecialCodigoUnidadeGestora
+        }
+        disabled={
+          context.formInfo.nomeUnidadeGestora !== 'SECONT' ? true : false
         }
       />
 
