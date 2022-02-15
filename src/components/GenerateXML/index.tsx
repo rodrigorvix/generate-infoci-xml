@@ -6,6 +6,7 @@ import { GlobalContext } from '../../context/GlobalStorage'
 import baseAPI from '../../utils/baseAPI'
 import { createSchemaINFOCIXML } from '../../utils/functions/createSchemaINFOCIXML'
 import { download } from '../../utils/functions/downloadXML'
+import { EstruturaInicialReport } from '../EstruturaInicialReport'
 import { GenerateXMLStyle } from './style'
 
 interface DataEstruturaInicialProps {
@@ -269,7 +270,9 @@ export const GenerateXML = () => {
         Clique no botão abaixo para realizar o download do arquivo INFOCI.XML
       </h2>
 
-      <div>
+      <EstruturaInicialReport dataEstruturaInicial={dataEstruturaInicial}/>
+
+      <div data-button="download">
         <Button onClick={downloadXML} variant="contained">
           Download
         </Button>
