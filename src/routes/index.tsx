@@ -5,6 +5,7 @@ import { FormUser } from "../pages/FormUser";
 import {PrivateRoute} from '../components/PrivateRoute'
 import { SelectUG } from '../pages/SelectUG';
 
+
 export const RoutesForm = () => {
 
   return (
@@ -22,6 +23,7 @@ export const RoutesForm = () => {
           <Route path="/form" element={<PrivateRoute />} >
             <Route path="/form" element={<FormUser />} />
           </Route>
+
           <Route  path="*" element={<Navigate to="/" />} />
         </Routes>
       </BrowserRouter>

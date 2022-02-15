@@ -1,3 +1,6 @@
+import jsPDF from "jspdf";
+import html2canvas from "html2canvas";
+
 import { ExpandLess, ExpandMore } from '@mui/icons-material'
 import {
   Button,
@@ -8,7 +11,7 @@ import {
  
 } from '@mui/material'
 import axios from 'axios'
-import { useContext, useEffect, useState } from 'react'
+import { useContext, useEffect, useRef, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { GlobalContext } from '../../context/GlobalStorage'
 import baseAPI from '../../utils/baseAPI'
@@ -18,7 +21,11 @@ import { EstruturaInicialReport } from '../EstruturaInicialReport'
 import { ProcedimentosReport } from '../ProcedimentosReport'
 import { TomadaContasEspecialReport } from '../TomadaContasEspecialReport'
 import { UnidadeGestoraReport } from '../UnidadeGestoraReport'
+
+import ReactDOMServer from "react-dom/server";
+
 import { GenerateXMLStyle } from './style'
+
 
 interface DataEstruturaInicialProps {
   id: number
@@ -71,6 +78,8 @@ interface DataTomadaContasEspecialProps {
   tomadaContasEspecialSituacaoEm31do12: string
   tomadaContasEspecialMotivoBaixaDebito: string
 }
+
+
 
 export const GenerateXML = () => {
   const [dataEstruturaInicial, setDataEstruturaInicial] = useState<
@@ -287,9 +296,32 @@ export const GenerateXML = () => {
     const filename = 'INFOCI.XML'
     download(filename, xml)
   }
+  // const printRef = useRef<HTMLDivElement>(null);
+
+  // const TestePDF = () => {
+    
+  //   return(
+  //     <main ref={printRef}>
+  //       <EstruturaInicialReport dataEstruturaInicial={dataEstruturaInicial}/>
+  //     </main>
+  //   );
+  // }
+  
+  async function generatePDF(){
+    
+
+    // const printComponent = document.getElementById("printReport");
+    // if(printComponent){
+    //   const teste = await html2canvas(printComponent);
+    //   const pdf = new jsPDF();
+    //   pdf.add
+    // }
+
+  };
+
 
   return (
-    <GenerateXMLStyle>
+    <GenerateXMLStyle id='printReport'>
       <h2>
         Clique no botão abaixo para realizar o download do arquivo INFOCI.XML
       </h2>
@@ -365,12 +397,17 @@ export const GenerateXML = () => {
           </List>
         </Collapse>
       </List>
-
+    
       <div data-button="download">
         <Button onClick={downloadXML} variant="contained">
           Download
         </Button>
+
+        <Button onClick={generatePDF} variant="contained">
+          DownloadPDF
+        </Button>
       </div>
+      
     </GenerateXMLStyle>
   )
 }
