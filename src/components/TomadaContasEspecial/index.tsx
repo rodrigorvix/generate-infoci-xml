@@ -177,7 +177,7 @@ export const TomadaContasEspecial = () => {
       { headers: baseAPI.HEADERS(token) },
     )
 
-    // alert('TCE deletada com sucesso.')
+  
 
     setSelectTomadaContasEspecial(dataTomadaContasEspecial.length - 2)
 
@@ -185,7 +185,7 @@ export const TomadaContasEspecial = () => {
   }
 
   async function saveTomadaContasEspecial() {
-    // alert('Os dados da TCE foram salvos.')
+   
     setOpenAlertSave(true);
 
     await axios.put(
@@ -225,7 +225,7 @@ export const TomadaContasEspecial = () => {
   }
 
   function responseDialogTomadaContasEspecialNo() {
-    // setOpenDialogUnidadeGestora(true)
+   
 
     if(context.formInfo.nomeUnidadeGestora === 'SECONT') {
       setOpenDialogUnidadeGestora(true)
@@ -237,8 +237,7 @@ export const TomadaContasEspecial = () => {
   }
 
   async function responseDialogUnidadeGestoraYes() {
-    // navigate('/select_ug')
-    // context.setValueTab(0)
+    
 
     const valuesUnidadeGestora = {
       unidadeGestoraIdNumRegistro: ``,

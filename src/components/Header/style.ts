@@ -22,6 +22,10 @@ export const HeaderStyle = styled.header`
     justify-content: space-between;
     align-items: center;
 
+    @media(max-width: 720px) {
+      padding: 0 1rem;
+    }
+
     div[data-nav="items"]{
       display: flex;
       gap: 2rem;
@@ -35,6 +39,10 @@ export const HeaderStyle = styled.header`
         color: white;
         text-decoration: none;
         margin-left: 0.25rem;
+
+        &[data-logout="logout"]{
+          margin-left: 1.5rem;
+        }
       }
       }
     }

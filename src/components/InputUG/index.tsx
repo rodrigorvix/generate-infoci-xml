@@ -6,7 +6,7 @@ import { useContext, useEffect, useState } from 'react'
 import { GlobalContext } from '../../context/GlobalStorage'
 import baseAPI from '../../utils/baseAPI';
 import { InputUGStyle } from './style'
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import axios from "axios";
 
 
@@ -25,9 +25,14 @@ export const InputUG = () => {
   const context = useContext(GlobalContext);
   const [inputUGInfo, setInputUGInfo] = useState<InputUGProps[]>([]);
   const navigate = useNavigate();
+  const location = useLocation();
   const token = localStorage.getItem('app-token');
+  
+
 
   useEffect(() => {
+
+    context.setPath(location.pathname);
 
     axios.get(`${baseAPI.URL}/forms`, { headers: baseAPI.HEADERS(token) })
       .then((response: any) => {

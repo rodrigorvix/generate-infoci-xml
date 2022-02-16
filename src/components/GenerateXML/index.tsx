@@ -296,7 +296,7 @@ export const GenerateXML = () => {
   return (
     <GenerateXMLStyle id='printReport'>
       <h2>
-        Clique no botão abaixo para realizar o download do arquivo INFOCI.XML
+        Verifique se as informações foram preenchidas corretamente e clique no botão <span>INFOCI XML</span> para realizar o download do arquivo. 
       </h2>
 
       <List
@@ -373,7 +373,7 @@ export const GenerateXML = () => {
     
       <div data-button="download">
         <Button onClick={downloadXML} variant="contained">
-          Download
+          INFOCI XML
         </Button>
 
       </div>

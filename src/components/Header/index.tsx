@@ -2,8 +2,16 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {  faFacebookF, faInstagramSquare, faTwitter } from '@fortawesome/free-brands-svg-icons';
 import { faHeadset } from '@fortawesome/free-solid-svg-icons';
 import { HeaderStyle } from "./style";
+import { useContext } from 'react';
+import { GlobalContext } from '../../context/GlobalStorage';
 
 export const Header = () => {
+  const context = useContext(GlobalContext);
+
+  function handleLogout (){
+    localStorage.removeItem('app-token');
+  }
+
   return (
     <HeaderStyle>  
         <nav>
@@ -24,8 +32,10 @@ export const Header = () => {
            <div data-nav="websites">
             <FontAwesomeIcon icon={faHeadset} />
             <a  href="https://ouvidoria.es.gov.br/" title="Site da Ouvidoria ES" >Fale conosco</a>
+  
+            {context.path !== '' && <a data-logout="logout" href='/' title="Sair" onClick={handleLogout}>Logout</a>}
+        
            </div>
-
            
          </div>
         </nav>

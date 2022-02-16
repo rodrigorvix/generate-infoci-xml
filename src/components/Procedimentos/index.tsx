@@ -162,7 +162,7 @@ export const Procedimentos = () => {
       { headers: baseAPI.HEADERS(token) },
     )
 
-    // alert('Procedimento deletado com sucesso.')
+   
 
     setSelectProcedimento(dataProcedimentos.length - 2)
 
@@ -170,7 +170,7 @@ export const Procedimentos = () => {
   }
 
   async function saveProcedimento() {
-    // alert('Os dados do Procedimento foram salvos.')
+   
     setOpenAlertSave(true);
 
     await axios.put(

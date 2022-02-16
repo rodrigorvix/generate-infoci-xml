@@ -20,6 +20,8 @@ interface ResultContext {
   setUserAuth: Dispatch<SetStateAction<UserAuthProps>>,
   formInfo: FormInfoProps,
   setFormInfo: Dispatch<SetStateAction<FormInfoProps>>,
+  path: string,
+  setPath: (value:string) => void,
   
 }
 
@@ -33,11 +35,12 @@ export const GlobalStorage = (props:ContextPropsType) => {
   const [valueTab, setValueTab] = useState(0)
   const [userAuth, setUserAuth] = useState<UserAuthProps>({});
   const [formInfo, setFormInfo] = useState<UserAuthProps>({});
+  const [path, setPath] = useState('');
   
   
 
   return (
-    <GlobalContext.Provider value={{valueTab,setValueTab,userAuth, setUserAuth, formInfo, setFormInfo}}>
+    <GlobalContext.Provider value={{valueTab,setValueTab,userAuth, setUserAuth, formInfo, setFormInfo, path, setPath}}>
       {props.children}
     </GlobalContext.Provider>
   );

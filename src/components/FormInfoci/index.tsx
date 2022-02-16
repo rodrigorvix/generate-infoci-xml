@@ -18,6 +18,7 @@ import { TomadaContasEspecial } from '../TomadaContasEspecial'
 
 import { GlobalContext } from '../../context/GlobalStorage'
 import { GenerateXML } from '../GenerateXML'
+import { useLocation } from 'react-router-dom';
 
 interface TabPanelProps {
   children?: React.ReactNode
@@ -49,31 +50,39 @@ function a11yProps(index: number) {
   }
 }
 
-export const FormInfoci = (props: any) => {
+export const FormInfoci = () => {
   
   const context = React.useContext(GlobalContext);
-  // const theme = useTheme();
+  const location = useLocation();
+
+
+
   const handleChange = (event: React.SyntheticEvent, newValue: number) => {
     context.setValueTab(newValue)
   }
 
+  React.useEffect(() => {
+    context.setPath(location.pathname);
+  },[])
+ 
+
   return (
     <FormInfociStyle >
       <div data-form="description">
-        {/* <p>
-          Preencha todos os campos do formulário abaixo e clique no botão{' '}
-          <span>Próximo</span>.
+        {context.valueTab !== 4 && <><p>
+          O preenchimento do formulário está divido em <span>5 etapas</span>.  
         </p>
         <p>
-          Após finalizar o preenchimento de todos os formulários clique no botão{' '}
-          <span>Gerar XML</span> para realizar o download do arquivo{' '}
-          <span>INFOCI.XML</span>.
-        </p> */}
+          É necessário preencher todos os campos corretamente para avançar de etapa. 
+        </p>
+        <p>Clique no botão <span>SALVAR</span> caso deseje salvar as informações e terminar o preenchimento em outro momento.</p></>}
+        {context.valueTab === 2 && <p>Após clicar no botão <span>Próximo</span> será perguntado se deseja incluir outro Procedimento.</p>}
+        {context.valueTab === 3 && <p>Após clicar no botão <span>Próximo</span> será perguntado se deseja incluir outra Tomada de Contas Especial.</p>}
       </div>
       <Box sx={{ width: '100%' }}>
         <Box sx={{ borderBottom: 1 }} style={{ background: 'var(--blue-300)' }} data-tab="tab">
           <Tabs
-            // value={value}
+
             value={context.valueTab}
             onChange={handleChange}
             aria-label="selecione os formularios"
@@ -83,30 +92,30 @@ export const FormInfoci = (props: any) => {
           >
             <Tab
               style={{ color: 'white', flexDirection:'row'}}
-              label={<><LooksOneIcon style={{verticalAlign:'middle', marginRight:'0.25rem'}}/> <span style={{fontWeight: 'bold',fontSize:'0.88rem'}}>Estrutura Inicial</span></>}
+              label={<><LooksOneIcon style={{verticalAlign:'middle', marginRight:'0.25rem'}}/> <span style={{fontWeight: 'bold'}}>Estrutura Inicial</span></>}
               {...a11yProps(0)}
             />
             <Tab
               style={{ color: 'white',  flexDirection:'row' }}
-              label={<><LooksTwoIcon style={{verticalAlign:'middle', marginRight:'0.25rem'}}/> <span style={{fontWeight: 'bold',fontSize:'0.88rem'}}>Unidade Gestora</span></>}
+              label={<><LooksTwoIcon style={{verticalAlign:'middle', marginRight:'0.25rem'}}/> <span style={{fontWeight: 'bold',}}>Unidade Gestora</span></>}
               disabled
               {...a11yProps(1)}
             />
             <Tab
               style={{ color: 'white',  flexDirection:'row' }}
-              label={<><Looks3Icon style={{verticalAlign:'middle', marginRight:'0.25rem'}}/> <span style={{fontWeight: 'bold',fontSize:'0.88rem'}}>Procedimentos</span></>}
+              label={<><Looks3Icon style={{verticalAlign:'middle', marginRight:'0.25rem'}}/> <span style={{fontWeight: 'bold',}}>Procedimentos</span></>}
               disabled
               {...a11yProps(2)}
             />
             <Tab
               style={{ color: 'white',  flexDirection:'row' }}
-              label={<><Looks4Icon style={{verticalAlign:'middle', marginRight:'0.25rem'}}/> <span style={{fontWeight: 'bold',fontSize:'0.88rem'}}>Tomada de Contas</span></>}
+              label={<><Looks4Icon style={{verticalAlign:'middle', marginRight:'0.25rem'}}/> <span style={{fontWeight: 'bold',}}>Tomada de Contas</span></>}
               disabled
               {...a11yProps(3)}
             />
             <Tab
               style={{ color: 'white',  flexDirection:'row'}}
-              label={<><Looks5Icon style={{verticalAlign:'middle', marginRight:'0.25rem'}}/> <span style={{fontWeight: 'bold',fontSize:'0.88rem'}}>Gerar XML</span></>}
+              label={<><Looks5Icon style={{verticalAlign:'middle', marginRight:'0.25rem'}}/> <span style={{fontWeight: 'bold',}}>Gerar XML</span></>}
               disabled
               {...a11yProps(4)}
             />

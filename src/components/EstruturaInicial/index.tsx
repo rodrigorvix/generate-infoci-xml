@@ -1,19 +1,20 @@
+import axios from 'axios'
 import { useFormik } from 'formik'
+import { useContext, useEffect, useState } from 'react'
+import { useNavigate } from 'react-router-dom'
 
 import {Button, IconButton } from '@mui/material'
 import { TextField, MenuItem } from '@mui/material'
 import ArrowCircleRightIcon from '@mui/icons-material/ArrowCircleRight'
 import RemoveCircleIcon from '@mui/icons-material/RemoveCircle'
 
-import { EstruturaInicialStyle } from './style'
-import validationEstruturaInicial from '../../utils/validationEstruturaInicial'
-import { useContext, useEffect, useState } from 'react'
 import { GlobalContext } from '../../context/GlobalStorage'
-import axios from 'axios'
+import validationEstruturaInicial from '../../utils/validationEstruturaInicial'
 import baseAPI from '../../utils/baseAPI'
-import { useNavigate } from 'react-router-dom'
 import { ConfirmDialog } from '../ConfirmDialog'
 import { AlertSucess } from '../AlertSucess'
+
+import { EstruturaInicialStyle } from './style'
 
 interface DataEstruturaInicialProps {
   id: number
@@ -29,7 +30,7 @@ interface DataEstruturaInicialProps {
   estruturaInicialNormaInternaDemContabeis: string
 }
 
-export const EstruturaInicial = (props: any) => {
+export const EstruturaInicial = () => {
   const context = useContext(GlobalContext)
   const navigate = useNavigate()
   const token = localStorage.getItem('app-token')
@@ -54,9 +55,9 @@ export const EstruturaInicial = (props: any) => {
       navigate('/select_ug')
       return
     }
-    console.log("Entrei aqui")
+   
     requestAPI()
-    console.log(dataEstruturaInicial)
+    
   }, [])
 
   async function requestAPI() {
@@ -169,15 +170,13 @@ export const EstruturaInicial = (props: any) => {
       { headers: baseAPI.HEADERS(token) },
     )
 
-    // alert('Estrutura Inicial deletada com sucesso.')
-
     setSelectEstruturaInicial(dataEstruturaInicial.length - 2)
 
     await estruturaInicialList()
   }
 
   async function saveEstruturaInicial() {
-    // alert('Os dados da Estrutura Inicial foram salvos.')
+  
     setOpenAlertSave(true)
 
     await axios.put(

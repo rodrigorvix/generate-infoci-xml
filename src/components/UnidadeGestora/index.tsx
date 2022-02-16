@@ -25,7 +25,7 @@ interface DataUnidadeGestoraProps {
   unidadeGestoraOpiniaoPrestacaoContasControleInterno: string
 }
 
-export const UnidadeGestora = (props: any) => {
+export const UnidadeGestora = () => {
   const context = useContext(GlobalContext)
   const navigate = useNavigate()
   const token = localStorage.getItem('app-token')
@@ -35,9 +35,6 @@ export const UnidadeGestora = (props: any) => {
   >([] as DataUnidadeGestoraProps[])
   const [selectUnidadeGestora, setSelectUnidadeGestora] = useState(0)
 
-  // const [openDialogUnidadeGestora, setOpenDialogUnidadeGestora] = useState(
-  //   false,
-  // )
   const [
     openDialogRemoveUnidadeGestora,
     setOpenDialogRemoveUnidadeGestora,
@@ -150,7 +147,7 @@ export const UnidadeGestora = (props: any) => {
       { headers: baseAPI.HEADERS(token) },
     )
 
-    // alert('Unidade Gestora deletada com sucesso.')
+   
 
     setSelectUnidadeGestora(dataUnidadeGestora.length - 2)
 
@@ -158,7 +155,7 @@ export const UnidadeGestora = (props: any) => {
   }
 
   async function saveUnidadeGestora() {
-    // alert('Os dados da Unidade Gestora foram salvos.')
+   
 
     setOpenAlertSave(true);
 

@@ -14,8 +14,7 @@ export const RoutesForm = () => {
       <BrowserRouter >
         <Routes >
           <Route path="/" element={<SignIn />} />
-          {/* <Route path="/select_ug" element={<SelectUG />}/> */}
-
+         
           <Route path="/select_ug" element={<PrivateRoute />} >
             <Route path="/select_ug" element={<SelectUG />}/>
           </Route>

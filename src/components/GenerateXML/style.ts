@@ -11,9 +11,16 @@ export const GenerateXMLStyle = styled.main`
 }
 
 h2 {
-  font-size: 1.25rem;
+  font-size: 1.125rem;
   text-align: center;
   margin-bottom: 2rem;
+ 
+  
+  span{
+    text-decoration: underline;
+    font-weight: bold;
+    color: black;
+  }
 
   @media print {
       display: none;
