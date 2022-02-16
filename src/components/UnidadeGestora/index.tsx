@@ -186,18 +186,6 @@ export const UnidadeGestora = (props: any) => {
     setSelectUnidadeGestora(e.target.value)
   }
 
-  async function responseDialogUnidadeGestoraYes() {
-    await newUnidadeGestora()
-    await unidadeGestoraList()
-
-    setSelectUnidadeGestora(selectUnidadeGestora + 1)
-    return
-  }
-
-  async function responseDialogUnidadeGestoraNo() {
-    context.setValueTab(2)
-    return
-  }
 
   const initialValues = {
     unidadeGestoraIdNumRegistro: `${

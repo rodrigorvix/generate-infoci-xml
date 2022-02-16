@@ -21,5 +21,8 @@ export const FooterStyle = styled.footer`
     }
   }
 
+  @media print {
+      display: none;
+    }
 
 `;

@@ -8,13 +8,13 @@ export const Header = () => {
     <HeaderStyle>  
         <nav>
          <div data-nav="items">
-           <a href="https://www.facebook.com/SecontEspiritoSanto" target="_blank" title="Facebook SECONT">
+           <a href="https://www.facebook.com/SecontEspiritoSanto"  title="Facebook SECONT">
             <FontAwesomeIcon icon={faFacebookF} />
            </a>
-           <a href="https://www.instagram.com/secont.es/" target="_blank" title="Instagram SECONT">
+           <a href="https://www.instagram.com/secont.es/"  title="Instagram SECONT">
            <FontAwesomeIcon icon={faInstagramSquare} />
            </a>
-           <a href="https://twitter.com/EStransparencia" target="_blank" title="Twitter SECONT">
+           <a href="https://twitter.com/EStransparencia"  title="Twitter SECONT">
            <FontAwesomeIcon icon={faTwitter} />
            </a>
          </div>
@@ -23,7 +23,7 @@ export const Header = () => {
 
            <div data-nav="websites">
             <FontAwesomeIcon icon={faHeadset} />
-            <a  href="https://ouvidoria.es.gov.br/" title="Site da Ouvidoria ES" target="_blank">Fale conosco</a>
+            <a  href="https://ouvidoria.es.gov.br/" title="Site da Ouvidoria ES" >Fale conosco</a>
            </div>
 
            

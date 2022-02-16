@@ -260,7 +260,7 @@ export const TomadaContasEspecial = () => {
   }
 
   function responseDialogUnidadeGestoraNo() {
-    console.log('Ir para a geração de XML.')
+   
     context.setValueTab(4)
     return
   }

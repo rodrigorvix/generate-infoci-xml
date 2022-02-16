@@ -38,6 +38,9 @@ export const HeaderStyle = styled.header`
       }
       }
     }
+    @media print {
+      display: none;
+    }
   }
 
   h1,h2 {
@@ -55,6 +58,10 @@ export const HeaderStyle = styled.header`
     @media(max-width:720px){
       font-size: 2rem;
     }  
+
+    @media print {
+      margin-top: 0;
+    }
   }
   h2{
     font-size: 1rem;
@@ -67,4 +74,5 @@ export const HeaderStyle = styled.header`
     }  
   }
 
+  
 `;

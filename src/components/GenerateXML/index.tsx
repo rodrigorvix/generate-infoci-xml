@@ -1,6 +1,3 @@
-import jsPDF from "jspdf";
-import html2canvas from "html2canvas";
-
 import { ExpandLess, ExpandMore } from '@mui/icons-material'
 import {
   Button,
@@ -11,7 +8,7 @@ import {
  
 } from '@mui/material'
 import axios from 'axios'
-import { useContext, useEffect, useRef, useState } from 'react'
+import { useContext, useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { GlobalContext } from '../../context/GlobalStorage'
 import baseAPI from '../../utils/baseAPI'
@@ -22,7 +19,6 @@ import { ProcedimentosReport } from '../ProcedimentosReport'
 import { TomadaContasEspecialReport } from '../TomadaContasEspecialReport'
 import { UnidadeGestoraReport } from '../UnidadeGestoraReport'
 
-import ReactDOMServer from "react-dom/server";
 
 import { GenerateXMLStyle } from './style'
 

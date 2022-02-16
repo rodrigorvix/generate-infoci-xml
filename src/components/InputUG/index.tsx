@@ -63,6 +63,7 @@ export const InputUG = () => {
     const form = inputUGInfo.filter(form => form.codigoUnidadeGestoraCidades === values.formValue).reduce((form) => ({...form}));
     
     context.setFormInfo(form);
+    context.setValueTab(0);
 
      navigate('/form')
 

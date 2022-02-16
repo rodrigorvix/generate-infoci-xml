@@ -54,8 +54,9 @@ export const EstruturaInicial = (props: any) => {
       navigate('/select_ug')
       return
     }
-
+    console.log("Entrei aqui")
     requestAPI()
+    console.log(dataEstruturaInicial)
   }, [])
 
   async function requestAPI() {

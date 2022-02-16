@@ -14,6 +14,10 @@ h2 {
   font-size: 1.25rem;
   text-align: center;
   margin-bottom: 2rem;
+
+  @media print {
+      display: none;
+    }
 }
 
 div[data-button="download"]{
@@ -28,5 +32,9 @@ div[data-button="download"]{
          filter:brightness(0.8);
        }
       }
+     
+      @media print {
+      display: none;
+    }
     }
 `;
