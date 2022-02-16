@@ -296,39 +296,7 @@ export const GenerateXML = () => {
     const filename = 'INFOCI.XML'
     download(filename, xml)
   }
-  // const printRef = useRef<HTMLDivElement>(null);
-
-  // const TestePDF = () => {
-    
-  //   return(
-  //     <main ref={printRef}>
-  //       <EstruturaInicialReport dataEstruturaInicial={dataEstruturaInicial}/>
-  //     </main>
-  //   );
-  // }
   
-  async function generatePDF(){
-    
-
-    // const printComponent = document.getElementById("printReport");
-    // if(printComponent){
-    //   const teste = await html2canvas(printComponent);
-    //   const pdf = new jsPDF();
-    //   pdf.add
-    // }
-    const printComponent = document.getElementById("printReport");
-    if(printComponent) { 
-    const pdf = new jsPDF('p','pt','a4');
-    pdf.html(printComponent, {
-      callback: (doc: any) => {
-        doc.save("mypdf.pdf")
-      }
-    })
-
-    }
-  };
-
-
   return (
     <GenerateXMLStyle id='printReport'>
       <h2>
@@ -388,7 +356,7 @@ export const GenerateXML = () => {
           </List>
         </Collapse>
       </List>
-
+    {dataTomadaContasEspecial.length > 0 && 
       <List
         sx={{ width: '100%' }}
         component="nav"
@@ -405,16 +373,13 @@ export const GenerateXML = () => {
             />
           </List>
         </Collapse>
-      </List>
+      </List>}
     
       <div data-button="download">
         <Button onClick={downloadXML} variant="contained">
           Download
         </Button>
 
-        <Button onClick={generatePDF} variant="contained">
-          DownloadPDF
-        </Button>
       </div>
       
     </GenerateXMLStyle>
