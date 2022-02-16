@@ -316,7 +316,16 @@ export const GenerateXML = () => {
     //   const pdf = new jsPDF();
     //   pdf.add
     // }
+    const printComponent = document.getElementById("printReport");
+    if(printComponent) { 
+    const pdf = new jsPDF('p','pt','a4');
+    pdf.html(printComponent, {
+      callback: (doc: any) => {
+        doc.save("mypdf.pdf")
+      }
+    })
 
+    }
   };
 
 
