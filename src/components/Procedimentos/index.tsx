@@ -1,6 +1,6 @@
 import { useFormik } from 'formik'
 
-import { TextField, MenuItem, Button, IconButton } from '@mui/material'
+import { TextField, MenuItem, Button, IconButton, Autocomplete } from '@mui/material'
 import ArrowCircleRightIcon from '@mui/icons-material/ArrowCircleRight'
 import ArrowCircleLeftIcon from '@mui/icons-material/ArrowCircleLeft'
 import RemoveCircleIcon from '@mui/icons-material/RemoveCircle'
@@ -14,6 +14,7 @@ import { ConfirmDialog } from '../ConfirmDialog'
 import axios from 'axios'
 import baseAPI from '../../utils/baseAPI'
 import { AlertSucess } from '../AlertSucess'
+import pontosControle from '../../utils/pontosControle'
 
 interface DataProcedimentoProps {
   id: number
@@ -244,8 +245,7 @@ export const Procedimentos = () => {
   }
 
   async function responseDialogUnidadeGestoraYes() {
-    // navigate('/select_ug')
-    // context.setValueTab(0)
+    
 
     const valuesUnidadeGestora = {
       unidadeGestoraIdNumRegistro: ``,
@@ -339,6 +339,8 @@ export const Procedimentos = () => {
     },
   })
 
+  console.log(formik.values.procedimentosCodigoProcedimento)
+
   return (
     <ProcedimentosStyle onSubmit={formik.handleSubmit}>
       
@@ -363,8 +365,6 @@ export const Procedimentos = () => {
                   </MenuItem>
                 )
               })}
-              {/* <MenuItem value={0}>Procedimento - 00001</MenuItem>
-          <MenuItem value={1}>Procedimento - 00002</MenuItem> */}
             </TextField>
           )}
 
@@ -452,7 +452,7 @@ export const Procedimentos = () => {
         }
       />
 
-      <TextField
+      {/* <TextField
         variant="outlined"
         fullWidth
         id="procedimentosCodigoProcedimento"
@@ -468,7 +468,37 @@ export const Procedimentos = () => {
           formik.touched.procedimentosCodigoProcedimento &&
           formik.errors.procedimentosCodigoProcedimento
         }
-      />
+      /> */}
+    <Autocomplete
+                    id="procedimentosCodigoProcedimento"
+                    options={pontosControle}
+                    getOptionLabel={option => option.label}
+                    
+                    // value={formik.values.procedimentosCodigoProcedimento}
+                    onChange={(event, value) => {
+                      formik.setFieldValue("procedimentosCodigoProcedimento", value?.cod)
+                    }}
+                    renderInput={params => (
+                      <TextField
+                        {...params}
+                        name="procedimentosCodigoProcedimento"
+                        value={formik.values.procedimentosCodigoProcedimento}
+                        onChange={formik.handleChange}
+                        label="Código do Procedimento (Tabela Referencial 1 / IN 68 de 2020)"
+                        variant="outlined"
+                        error={
+                          formik.touched.procedimentosCodigoProcedimento &&
+                          Boolean(formik.errors.procedimentosCodigoProcedimento)
+                        }
+                        helperText={
+                          formik.touched.procedimentosCodigoProcedimento &&
+                          formik.errors.procedimentosCodigoProcedimento
+                        }
+                        fullWidth
+                      />
+                    )}
+                  />
+
 
       <TextField
         fullWidth
