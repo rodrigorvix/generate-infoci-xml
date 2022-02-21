@@ -1,6 +1,12 @@
 import { useFormik } from 'formik'
 
-import { TextField, MenuItem, Button, IconButton, Autocomplete } from '@mui/material'
+import {
+  TextField,
+  MenuItem,
+  Button,
+  IconButton,
+  Autocomplete,
+} from '@mui/material'
 import ArrowCircleRightIcon from '@mui/icons-material/ArrowCircleRight'
 import ArrowCircleLeftIcon from '@mui/icons-material/ArrowCircleLeft'
 import RemoveCircleIcon from '@mui/icons-material/RemoveCircle'
@@ -51,10 +57,7 @@ export const Procedimentos = () => {
     setOpenDialogRemoveProcedimento,
   ] = useState(false)
 
-  const [
-    openAlertSave,
-    setOpenAlertSave
-  ] = useState(false)
+  const [openAlertSave, setOpenAlertSave] = useState(false)
 
   useEffect(() => {
     if (!context.formInfo.id) {
@@ -140,7 +143,9 @@ export const Procedimentos = () => {
   async function newProcedimento() {
     const valuesProcedimento = {
       procedimentosIdNumRegistro: ``,
-      procedimentosNivelControleInterno: `${context.formInfo.codigoUnidadeGestoraCidades !== "001" ? 2 : ''}`,
+      procedimentosNivelControleInterno: `${
+        context.formInfo.codigoUnidadeGestoraCidades !== '001' ? 2 : ''
+      }`,
       procedimentosCodigoUnidadeGestora: `${context.formInfo.codigoUnidadeGestoraCidades}`,
       procedimentosCodigoProcedimento: ``,
       procedimentosTipoPontoControle: ``,
@@ -163,16 +168,13 @@ export const Procedimentos = () => {
       { headers: baseAPI.HEADERS(token) },
     )
 
-   
-
     setSelectProcedimento(dataProcedimentos.length - 2)
 
     await procedimentosList()
   }
 
   async function saveProcedimento() {
-   
-    setOpenAlertSave(true);
+    setOpenAlertSave(true)
 
     await axios.put(
       `${baseAPI.URL}/forms/${context.formInfo.id}/procedimentos/${dataProcedimentos[selectProcedimento].id}`,
@@ -180,7 +182,6 @@ export const Procedimentos = () => {
       { headers: baseAPI.HEADERS(token) },
     )
   }
-
 
   async function handleSelectProcedimento(e: any) {
     const validate = await formik.validateForm(formik.values)
@@ -212,41 +213,37 @@ export const Procedimentos = () => {
   }
 
   async function responseDialogProcedimentoNo() {
-
     const response = await axios.get(
       `${baseAPI.URL}/forms/${context.formInfo.id}/tomada_contas`,
       { headers: baseAPI.HEADERS(token) },
     )
-   const dataGetTomadaContasEspecial = await response.data;
-   
-   if(dataGetTomadaContasEspecial.length > 0) {
-    context.setValueTab(3);
-    return;
-   }
+    const dataGetTomadaContasEspecial = await response.data
+
+    if (dataGetTomadaContasEspecial.length > 0) {
+      context.setValueTab(3)
+      return
+    }
     setOpenDialogTomadaContas(true)
     return
   }
 
   function responseDialogTomadaContasYes() {
     context.setValueTab(3)
-   
+
     return
   }
 
   function responseDialogTomadaContasNo() {
-
-    if(context.formInfo.nomeUnidadeGestora === 'SECONT') {
+    if (context.formInfo.nomeUnidadeGestora === 'SECONT') {
       setOpenDialogUnidadeGestora(true)
       return
     }
     context.setValueTab(4)
-   
+
     return
   }
 
   async function responseDialogUnidadeGestoraYes() {
-    
-
     const valuesUnidadeGestora = {
       unidadeGestoraIdNumRegistro: ``,
       unidadeGestoraNivelControleInterno: `${
@@ -262,7 +259,7 @@ export const Procedimentos = () => {
       valuesUnidadeGestora,
       { headers: baseAPI.HEADERS(token) },
     )
-      context.setValueTab(1)
+    context.setValueTab(1)
     return
   }
 
@@ -338,12 +335,18 @@ export const Procedimentos = () => {
       setOpenDialogProcedimento(true)
     },
   })
+  
+  let opt = {cod:"", label:""}
 
-  console.log(formik.values.procedimentosCodigoProcedimento)
+  if(dataProcedimentos.length > 0) {
+    const cod = dataProcedimentos[selectProcedimento].procedimentosCodigoProcedimento
+    opt = pontosControle.filter(ponto => ponto.cod === cod)[0]
 
+    console.log(opt)
+  }
+  
   return (
     <ProcedimentosStyle onSubmit={formik.handleSubmit}>
-      
       <div data-header="header-form">
         <div data-input="input-options">
           {dataProcedimentos.length > 1 && (
@@ -425,7 +428,9 @@ export const Procedimentos = () => {
           formik.touched.procedimentosNivelControleInterno &&
           formik.errors.procedimentosNivelControleInterno
         }
-        disabled={context.formInfo.codigoUnidadeGestoraCidades !== "001" ? true : false}
+        disabled={
+          context.formInfo.codigoUnidadeGestoraCidades !== '001' ? true : false
+        }
       >
         <MenuItem value={1}>1 – Unidade Central </MenuItem>
         <MenuItem value={2}>2 – Unidade Setorial</MenuItem>
@@ -469,36 +474,36 @@ export const Procedimentos = () => {
           formik.errors.procedimentosCodigoProcedimento
         }
       /> */}
-    <Autocomplete
-                    id="procedimentosCodigoProcedimento"
-                    options={pontosControle}
-                    getOptionLabel={option => option.label}
-                    
-                    // value={formik.values.procedimentosCodigoProcedimento}
-                    onChange={(event, value) => {
-                      formik.setFieldValue("procedimentosCodigoProcedimento", value?.cod)
-                    }}
-                    renderInput={params => (
-                      <TextField
-                        {...params}
-                        name="procedimentosCodigoProcedimento"
-                        value={formik.values.procedimentosCodigoProcedimento}
-                        onChange={formik.handleChange}
-                        label="Código do Procedimento (Tabela Referencial 1 / IN 68 de 2020)"
-                        variant="outlined"
-                        error={
-                          formik.touched.procedimentosCodigoProcedimento &&
-                          Boolean(formik.errors.procedimentosCodigoProcedimento)
-                        }
-                        helperText={
-                          formik.touched.procedimentosCodigoProcedimento &&
-                          formik.errors.procedimentosCodigoProcedimento
-                        }
-                        fullWidth
-                      />
-                    )}
-                  />
-
+     <Autocomplete
+        id="procedimentosCodigoProcedimento"
+        options={pontosControle}
+        getOptionLabel={(option) => option.label || ""}
+        value={opt}
+        // value={optionCodigoProcedimento as OptionCodigoProcedimentoType}
+        onChange={(event, value) => {
+          formik.setFieldValue('procedimentosCodigoProcedimento', value?.cod)
+        }}
+       
+        renderInput={(params) => (
+          <TextField
+            {...params}
+            name="procedimentosCodigoProcedimento"
+            // value={formik.values.procedimentosCodigoProcedimento}
+            // onChange={formik.handleChange}
+            label="Código do Procedimento (Tabela Referencial 1 / IN 68 de 2020)"
+            variant="outlined"
+            error={
+              formik.touched.procedimentosCodigoProcedimento &&
+              Boolean(formik.errors.procedimentosCodigoProcedimento)
+            }
+            helperText={
+              formik.touched.procedimentosCodigoProcedimento &&
+              formik.errors.procedimentosCodigoProcedimento
+            }
+            fullWidth
+          />
+        )}
+      />
 
       <TextField
         fullWidth
@@ -654,7 +659,7 @@ export const Procedimentos = () => {
           id="previous"
           onClick={getIdButton}
         >
-          <ArrowCircleLeftIcon id="previous"/>
+          <ArrowCircleLeftIcon id="previous" />
         </IconButton>
 
         <IconButton
@@ -700,7 +705,7 @@ export const Procedimentos = () => {
         responseNo={responseDialogUnidadeGestoraNo}
       />
 
-<AlertSucess
+      <AlertSucess
         open={openAlertSave}
         setOpen={setOpenAlertSave}
         message={'Os dados do Procedimento foram salvos.'}
