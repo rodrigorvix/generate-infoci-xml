@@ -462,7 +462,6 @@ export const Procedimentos = () => {
           }
           formik.setFieldValue('procedimentosCodigoProcedimento', "")
           
-          console.log(value)
         }}
        
         renderInput={(params) => (
