@@ -284,10 +284,9 @@ export const Procedimentos = () => {
       dataProcedimentos.length &&
       dataProcedimentos[selectProcedimento].procedimentosCodigoUnidadeGestora
     }`,
-    procedimentosCodigoProcedimento: `${
-      dataProcedimentos.length &&
-      dataProcedimentos[selectProcedimento].procedimentosCodigoProcedimento
-    }`,
+    procedimentosCodigoProcedimento:`${ dataProcedimentos.length ?
+      dataProcedimentos[selectProcedimento].procedimentosCodigoProcedimento : ''}`,
+
     procedimentosTipoPontoControle: `${
       dataProcedimentos.length
         ? dataProcedimentos[selectProcedimento].procedimentosTipoPontoControle
@@ -335,16 +334,7 @@ export const Procedimentos = () => {
       setOpenDialogProcedimento(true)
     },
   })
-  
-  let opt = {cod:"", label:""}
-
-  if(dataProcedimentos.length > 0) {
-    const cod = dataProcedimentos[selectProcedimento].procedimentosCodigoProcedimento
-    opt = pontosControle.filter(ponto => ponto.cod === cod)[0]
-
-    console.log(opt)
-  }
-  
+   
   return (
     <ProcedimentosStyle onSubmit={formik.handleSubmit}>
       <div data-header="header-form">
@@ -457,39 +447,28 @@ export const Procedimentos = () => {
         }
       />
 
-      {/* <TextField
-        variant="outlined"
-        fullWidth
-        id="procedimentosCodigoProcedimento"
-        label="Código do Procedimento (Tabela Referencial 1 / IN 68 de 2020)"
-        name="procedimentosCodigoProcedimento"
-        value={formik.values.procedimentosCodigoProcedimento}
-        onChange={formik.handleChange}
-        error={
-          formik.touched.procedimentosCodigoProcedimento &&
-          Boolean(formik.errors.procedimentosCodigoProcedimento)
-        }
-        helperText={
-          formik.touched.procedimentosCodigoProcedimento &&
-          formik.errors.procedimentosCodigoProcedimento
-        }
-      /> */}
-     <Autocomplete
+     {dataProcedimentos.length > 0 && <Autocomplete
         id="procedimentosCodigoProcedimento"
         options={pontosControle}
+        noOptionsText={'Não encontrado'}
         getOptionLabel={(option) => option.label || ""}
-        value={opt}
-        // value={optionCodigoProcedimento as OptionCodigoProcedimentoType}
+        value={pontosControle.filter(ponto => ponto.cod === formik.values.procedimentosCodigoProcedimento)[0]}
+        isOptionEqualToValue={(option, value) => option === value}
+        defaultValue={{cod:"", label:""}}
         onChange={(event, value) => {
-          formik.setFieldValue('procedimentosCodigoProcedimento', value?.cod)
+          if(value) {
+            formik.setFieldValue('procedimentosCodigoProcedimento', value?.cod)
+            return
+          }
+          formik.setFieldValue('procedimentosCodigoProcedimento', "")
+          
+          console.log(value)
         }}
        
         renderInput={(params) => (
           <TextField
             {...params}
             name="procedimentosCodigoProcedimento"
-            // value={formik.values.procedimentosCodigoProcedimento}
-            // onChange={formik.handleChange}
             label="Código do Procedimento (Tabela Referencial 1 / IN 68 de 2020)"
             variant="outlined"
             error={
@@ -503,7 +482,7 @@ export const Procedimentos = () => {
             fullWidth
           />
         )}
-      />
+      />}
 
       <TextField
         fullWidth
