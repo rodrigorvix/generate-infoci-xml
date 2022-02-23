@@ -420,28 +420,7 @@ export const TomadaContasEspecial = () => {
         disabled
       />
 
-      {/* <TextField
-        variant="outlined"
-        fullWidth
-        id="tomadaContasEspecialCodigoUnidadeGestora"
-        label="Código da Unidade Gestora em que as
-      Tomadas de Contas Especiais foram
-      realizadas"
-        name="tomadaContasEspecialCodigoUnidadeGestora"
-        value={formik.values.tomadaContasEspecialCodigoUnidadeGestora}
-        onChange={formik.handleChange}
-        error={
-          formik.touched.tomadaContasEspecialCodigoUnidadeGestora &&
-          Boolean(formik.errors.tomadaContasEspecialCodigoUnidadeGestora)
-        }
-        helperText={
-          formik.touched.tomadaContasEspecialCodigoUnidadeGestora &&
-          formik.errors.tomadaContasEspecialCodigoUnidadeGestora
-        }
-        disabled={
-          context.formInfo.nomeUnidadeGestora !== 'SECONT' ? true : false
-        }
-      /> */}
+      
       {context.formInfo.nomeUnidadeGestora !== 'SECONT' ? <TextField
         variant="outlined"
         fullWidth
