@@ -1,7 +1,7 @@
 
 const pontosControle = [
   {cod:"", label:""},
-  {cod: "1.1.1", label:"1.1.1 - Prestação	de contas anual – execução orçamentária"},
+  {cod:"1.1.1", label:"1.1.1 - Prestação	de contas anual – execução orçamentária"},
   {cod:"1.1.2" , label:"1.1.2 - Despesa – realização sem prévio empenho"},
   {cod:"1.1.3" , label:"1.1.3 - Transferência de recursos orçamentários ao Poder Legislativo."},
   {cod:"1.2.1" , label:"1.2.1 - Registro por competência - despesas previdenciárias patronais"},

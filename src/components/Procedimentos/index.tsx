@@ -419,7 +419,7 @@ export const Procedimentos = () => {
           formik.errors.procedimentosNivelControleInterno
         }
         disabled={
-          context.formInfo.codigoUnidadeGestoraCidades !== '001' ? true : false
+          context.formInfo.nomeUnidadeGestora !== 'SECONT' ? true : false
         }
       >
         <MenuItem value={1}>1 – Unidade Central </MenuItem>
