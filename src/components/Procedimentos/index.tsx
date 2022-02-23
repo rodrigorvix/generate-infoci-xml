@@ -145,7 +145,7 @@ export const Procedimentos = () => {
     const valuesProcedimento = {
       procedimentosIdNumRegistro: ``,
       procedimentosNivelControleInterno: `${
-        context.formInfo.codigoUnidadeGestoraCidades !== '001' ? 2 : ''
+        context.formInfo.nomeUnidadeGestora !== 'SECONT' ? 2 : ''
       }`,
       procedimentosCodigoUnidadeGestora: `${context.formInfo.nomeUnidadeGestora !== 'SECONT' ? context.formInfo.codigoUnidadeGestoraCidades : ''}`,
       procedimentosCodigoProcedimento: ``,
