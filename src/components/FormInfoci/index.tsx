@@ -64,7 +64,8 @@ export const FormInfoci = () => {
   React.useEffect(() => {
     context.setPath(location.pathname);
   },[])
- 
+  
+  
 
   return (
     <FormInfociStyle >
