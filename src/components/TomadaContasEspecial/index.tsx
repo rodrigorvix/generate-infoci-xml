@@ -178,8 +178,10 @@ export const TomadaContasEspecial = () => {
       { headers: baseAPI.HEADERS(token) },
     )
 
-  
-
+    if(dataTomadaContasEspecial.length === 1) {
+      context.setValueTab(4)
+      return
+    }
     setSelectTomadaContasEspecial(dataTomadaContasEspecial.length - 2)
 
     await tomadaContasEspecialList()
@@ -348,8 +350,8 @@ export const TomadaContasEspecial = () => {
     <TomadaContasEspecialraStyle onSubmit={formik.handleSubmit}>
       <div data-header="headerForm">
         <div data-input="input-options">
-          {dataTomadaContasEspecial.length > 1 && (
-            <TextField
+          
+            {dataTomadaContasEspecial.length && <TextField
               fullWidth
               select
               inputProps={{ MenuProps: { disableScrollLock: true } }}
@@ -376,10 +378,8 @@ export const TomadaContasEspecial = () => {
                 },
               )}
              
-            </TextField>
-          )}
-
-          {dataTomadaContasEspecial.length > 1 && (
+            </TextField>}
+         
             <IconButton
               title="Remover Tomada de Contas Especial"
               aria-label="Remover Tomada de Contas Especial"
@@ -388,7 +388,7 @@ export const TomadaContasEspecial = () => {
             >
               <RemoveCircleIcon />
             </IconButton>
-          )}
+          
         </div>
 
         <div data-button="save">
