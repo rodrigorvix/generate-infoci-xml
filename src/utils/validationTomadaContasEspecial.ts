@@ -56,7 +56,6 @@ const validationSchema = yup.object({
 
     tomadaContasEspecialMotivoBaixaDebito: yup
     .number()
-    .required('O campo é obrigatório'),
 });
 
 const validationEstruturaInicial = {
