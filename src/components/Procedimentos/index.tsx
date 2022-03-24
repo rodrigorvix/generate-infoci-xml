@@ -583,7 +583,7 @@ export const Procedimentos = () => {
         variant="outlined"
         fullWidth
         id="procedimentosDescricaoAnalise"
-        label="Descrição da Análise"
+        label="Descrição da Análise (Máximo de 250 caracteres)"
         name="procedimentosDescricaoAnalise"
         value={formik.values.procedimentosDescricaoAnalise}
         onChange={formik.handleChange}
@@ -595,6 +595,9 @@ export const Procedimentos = () => {
           formik.touched.procedimentosDescricaoAnalise &&
           formik.errors.procedimentosDescricaoAnalise
         }
+        inputProps={{
+          maxLength: 250
+        }}
       />
 
       <TextField
